@@ -1,26 +1,132 @@
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { Calculator, Brain, Trophy, Sparkles } from 'lucide-react'
 import ConversionForm from './components/ConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import { useConversion } from './hooks/useConversion'
+import './styles/MathStyles.css'
 
 export default function App() {
   const { resultado, error, loading, convertir } = useConversion()
+  const [showResult, setShowResult] = useState(false)
+
+  const handleConvert = async (campos) => {
+    setShowResult(false)
+    await convertir(campos)
+    setShowResult(true)
+  }
 
   return (
-    <div className="container">
-      <header className="header">
-        <h1>📐 Math Tutor</h1>
-        <p>Convertidor de números periódicos a fracciones</p>
-      </header>
-      <main className="content">
-        <ConversionForm onSubmit={convertir} loading={loading} />
-        {error && <p className="error">{error}</p>}
-        {resultado && (
-          <>
-            <NumberDisplay input={resultado.input} />
-            <ResultPanel resultado={resultado} />
-          </>
-        )}
+    <div className="math-tutor-app">
+      <motion.header 
+        className="math-header"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="header-content">
+          <motion.div 
+            className="logo-section"
+            whileHover={{ scale: 1.05 }}
+          >
+            <div className="logo-icon">
+              <Calculator size={32} />
+            </div>
+            <div>
+              <h1>📐 Math Tutor Pro</h1>
+              <p>Convierte números periódicos a fracciones con estilo</p>
+            </div>
+          </motion.div>
+          
+          <div className="header-stats">
+            <motion.div 
+              className="stat-item"
+              whileHover={{ y: -2 }}
+            >
+              <Brain size={20} />
+              <span>Aprendizaje Activo</span>
+            </motion.div>
+            <motion.div 
+              className="stat-item"
+              whileHover={{ y: -2 }}
+            >
+              <Trophy size={20} />
+              <span>Progreso</span>
+            </motion.div>
+          </div>
+        </div>
+      </motion.header>
+
+      <main className="math-main">
+        <div className="container">
+          <motion.div 
+            className="content-grid"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+              <AnimatePresence mode="wait">
+              {!showResult && (
+                <motion.div
+                  className="form-section"
+                  initial={{ opacity: 0, height: 0, y: 20 }}
+                  animate={{ opacity: 1, height: 'auto', y: 0 }}
+                  exit={{ opacity: 0, height: 0, y: -20, transition: { duration: 0.35 } }}
+                  transition={{ delay: 0.1, duration: 0.35 }}
+                  style={{ overflow: 'hidden' }}
+                  key="form-section"
+                >
+                  <div className="section-header">
+                    <Sparkles size={24} />
+                    <h2>🚀 Inicia tu Conversión</h2>
+                  </div>
+                  <ConversionForm onSubmit={handleConvert} loading={loading} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {error && (
+              <motion.div 
+                className="error-message"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                ⚠️ {error}
+              </motion.div>
+            )}
+
+            <AnimatePresence mode="wait">
+              {resultado && showResult && (
+                <motion.div
+                  className="result-section"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: 0.1, duration: 0.45 }}
+                  key="result-section"
+                >
+                  <div className="section-header" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Trophy size={24} />
+                      <h2>🎯 ¡Resultado Obtenido!</h2>
+                    </div>
+                    <button
+                      className="math-btn btn-outline"
+                      onClick={() => setShowResult(false)}
+                      style={{ padding: '8px 16px', fontSize: '0.88rem', borderRadius: '8px' }}
+                    >
+                      ↩️ Volver
+                    </button>
+                  </div>
+                  <NumberDisplay input={resultado.input} />
+                  <ResultPanel resultado={resultado} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </div>
       </main>
     </div>
   )

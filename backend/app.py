@@ -13,10 +13,15 @@ app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
 # Configurar CORS para permitir solicitudes desde el frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://nmal-fraccion.vercel.app/"],  # Permite solicitudes de cualquier origen
+    allow_origins=[
+        "https://nmal-fraccion.vercel.app",
+        "https://nmal-fraccion.onrender.com",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
     allow_credentials=True,
-    allow_methods=["*"],  # Permite todos los métodos (GET, POST, etc.)
-    allow_headers=["*"],  # Permite todos los headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 class PeriodicoInput(BaseModel):

@@ -50,6 +50,36 @@
   gap: 16px;
 }
 
+@media (max-width: 768px) {
+  .math-header {
+    padding: 12px 0;
+  }
+
+  .header-content {
+    padding: 0 14px;
+  }
+
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo-section h1 {
+    font-size: 1.25rem;
+  }
+  .logo-section p {
+    font-size: 0.8rem;
+  }
+
+  .header-stats {
+    display: none;
+  }
+
+  .math-main {
+    padding: 16px 0;
+  }
+}
+
 .logo-icon {
   width: 56px;
   height: 56px;

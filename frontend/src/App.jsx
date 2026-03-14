@@ -39,22 +39,7 @@ export default function App() {
             </div>
           </motion.div>
           
-          <div className="header-stats">
-            <motion.div 
-              className="stat-item"
-              whileHover={{ y: -2 }}
-            >
-              <Brain size={20} />
-              <span>Aprendizaje Activo</span>
-            </motion.div>
-            <motion.div 
-              className="stat-item"
-              whileHover={{ y: -2 }}
-            >
-              <Trophy size={20} />
-              <span>Progreso</span>
-            </motion.div>
-          </div>
+
         </div>
       </motion.header>
 

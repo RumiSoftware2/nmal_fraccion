@@ -31,9 +31,7 @@ export default function App() {
             className="logo-section"
             whileHover={{ scale: 1.05 }}
           >
-            <div className="logo-icon">
-              <Calculator size={32} />
-            </div>
+            
             <img
               src={escudo}
               alt="Escudo Universidad Pedagógica"

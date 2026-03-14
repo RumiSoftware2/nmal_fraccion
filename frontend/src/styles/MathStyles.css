@@ -68,7 +68,17 @@
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+}
+
+.univ-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  padding: 4px;
+  background: white;
 }
 
 @media (max-width: 768px) {

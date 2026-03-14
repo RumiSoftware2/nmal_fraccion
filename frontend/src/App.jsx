@@ -5,6 +5,7 @@ import ConversionForm from './components/ConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import { useConversion } from './hooks/useConversion'
+import escudo from './assets/hero.png' // reemplaza con tu imagen de escudo subida a assets
 import './styles/MathStyles.css'
 
 export default function App() {
@@ -33,6 +34,12 @@ export default function App() {
             <div className="logo-icon">
               <Calculator size={32} />
             </div>
+            <img
+              src={escudo}
+              alt="Escudo Universidad Pedagógica"
+              className="univ-logo"
+              title="Escudo Universidad Pedagógica"
+            />
             <div>
               <h1>📐 Math Tutor Pro</h1>
               <p>Convierte números periódicos a divisiones de números naturales</p>

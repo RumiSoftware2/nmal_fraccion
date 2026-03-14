@@ -35,7 +35,7 @@ export default function ConversionForm({ onSubmit, loading }) {
             name="entero"
             value={campos.entero}
             onChange={handleChange}
-            placeholder="Ej: 0"
+            placeholder=""
             type="text"
             icon={<Hash size={16} />}
             helpText="La parte entera del número periódico"
@@ -46,7 +46,7 @@ export default function ConversionForm({ onSubmit, loading }) {
             name="no_periodo"
             value={campos.no_periodo}
             onChange={handleChange}
-            placeholder="Ej: 1"
+            placeholder=""
             type="text"
             icon={<Square size={16} />}
             helpText="Los dígitos que no se repiten, si no hay puedes dejar en blanco"
@@ -57,7 +57,7 @@ export default function ConversionForm({ onSubmit, loading }) {
             name="periodo"
             value={campos.periodo}
             onChange={handleChange}
-            placeholder="Ej: 6"
+            placeholder=""
             type="text"
             icon={<Repeat size={16} />}
             helpText="Los dígitos que se repiten indefinidamente"
@@ -68,7 +68,7 @@ export default function ConversionForm({ onSubmit, loading }) {
             name="base"
             value={campos.base}
             onChange={handleChange}
-            placeholder="Ej: 7"
+            placeholder=""
             type="number"
             icon={<Hash size={16} />}
             helpText="Base numérica (generalmente 10)"

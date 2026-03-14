@@ -50,7 +50,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4 }}
           >
-            📄 Regresar Sistemas Numéricos
+            📄 Regresar a Sistemas Numéricos
           </motion.a>
 
         </div>

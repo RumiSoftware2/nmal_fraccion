@@ -120,7 +120,7 @@ export default function App() {
                       onClick={() => setShowResult(false)}
                       style={{ padding: '8px 16px', fontSize: '0.88rem', borderRadius: '8px' }}
                     >
-                      ↩️ Volver
+                      ↩️ Volver a Calcular
                     </button>
                   </div>
                   <NumberDisplay input={resultado.input} />

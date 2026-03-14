@@ -11,8 +11,9 @@ export default function ResultPanel({ resultado }) {
           <div className="fraccion-part denominador">{resultado.denominador}</div>
         </div>
         <div className="fraccion-subtext">
-          <span>{resultado.fraccion_decimal} (base 10)</span>
           <span>{resultado.fraccion_base_original} (base {resultado.input.base})</span>
+          <span>{resultado.fraccion_decimal} (base 10)</span>
+          
         </div>
       </div>
 

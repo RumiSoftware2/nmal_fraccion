@@ -45,6 +45,11 @@ export default function App() {
 
       <main className="math-main">
         <div className="container">
+          {loading && (
+            <div className="server-wake-message">
+              ⚠️ Servidor gratuito: si está dormido, puede tomar unos minutos despertar.
+            </div>
+          )}
           <motion.div 
             className="content-grid"
             initial={{ opacity: 0 }}

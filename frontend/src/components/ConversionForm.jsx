@@ -71,7 +71,7 @@ export default function ConversionForm({ onSubmit, loading }) {
             placeholder=""
             type="number"
             icon={<Hash size={16} />}
-            helpText="Base numérica (generalmente 10)"
+            helpText="Base numérica (entre 2 y 36)"
           />
         </div>
 

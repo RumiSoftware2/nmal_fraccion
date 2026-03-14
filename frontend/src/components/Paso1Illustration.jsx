@@ -1,6 +1,14 @@
 import { motion } from 'framer-motion'
 import 'katex/dist/katex.min.css'
-import { BlockMath, InlineMath } from 'react-katex'
+import katex from 'katex'
+
+const BlockMath = ({ math }) => {
+  const html = katex.renderToString(math, { 
+    throwOnError: false,
+    displayMode: true
+  })
+  return <div dangerouslySetInnerHTML={{ __html: html }} />
+}
 
 export default function Paso1Illustration({ input }) {
   const { entero, no_periodo, periodo, base } = input

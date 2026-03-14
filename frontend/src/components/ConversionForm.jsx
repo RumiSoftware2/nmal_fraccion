@@ -49,7 +49,7 @@ export default function ConversionForm({ onSubmit, loading }) {
             placeholder="Ej: 1"
             type="text"
             icon={<Square size={16} />}
-            helpText="Los dígitos que no se repiten"
+            helpText="Los dígitos que no se repiten, si no hay puedes dejar en blanco"
           />
           
           <MathInput

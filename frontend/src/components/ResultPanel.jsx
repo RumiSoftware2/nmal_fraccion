@@ -5,8 +5,15 @@ export default function ResultPanel({ resultado }) {
     <div className="resultado">
       <div className="resultado-header">
         <h2>Resultado</h2>
-        <p className="fraccion">{resultado.fraccion_decimal}</p>
-        <p className="fraccion">{resultado.fraccion_base_original}</p>
+        <div className="fraccion-display">
+          <div className="fraccion-part numerador">{resultado.numerador}</div>
+          <div className="fraccion-barra"></div>
+          <div className="fraccion-part denominador">{resultado.denominador}</div>
+        </div>
+        <div className="fraccion-subtext">
+          <span>{resultado.fraccion_decimal} (base 10)</span>
+          <span>{resultado.fraccion_base_original} (base {resultado.input.base})</span>
+        </div>
       </div>
 
       <Paso1Illustration input={resultado.input} />

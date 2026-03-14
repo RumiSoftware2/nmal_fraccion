@@ -211,16 +211,54 @@
   color: var(--math-primary-dark);
 }
 
-.resultado-header .fraccion {
-  margin: 0;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 1.05rem;
-  min-width: 172px;
+.fraccion-display {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(99, 102, 241, 0.13);
+  border: 1px solid rgba(99, 102, 241, 0.35);
+  box-shadow: 0 8px 15px rgba(99, 102, 241, 0.2);
+}
+
+.fraccion-part {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  min-width: 120px;
   text-align: center;
-  color: white;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  color: #1e3a8a;
+}
+
+.fraccion-part.numerador {
+  color: #7c3aed;
+}
+
+.fraccion-part.denominador {
+  color: #10b981;
+}
+
+.fraccion-barra {
+  width: 106px;
+  height: 6px;
+  background: linear-gradient(90deg, #6366f1, #14b8a6, #a855f7);
+  border-radius: 4px;
+  margin: 0 0 2px 0;
+}
+
+.fraccion-subtext {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.95rem;
+  color: #334155;
+  padding-top: 4px;
+}
+
+.fraccion-subtext span {
+  font-weight: 600;
 }
 
 .resultado-header .fraccion:first-of-type {

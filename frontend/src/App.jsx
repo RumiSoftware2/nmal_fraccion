@@ -5,7 +5,7 @@ import ConversionForm from './components/ConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import { useConversion } from './hooks/useConversion'
-import escudo from './assets/hero.png' // reemplaza con tu imagen de escudo subida a assets
+import escudo from './assets/logoupn.png' // reemplaza con tu imagen de escudo subida a assets
 import './styles/MathStyles.css'
 
 export default function App() {

@@ -6,10 +6,10 @@ import { Hash, Repeat, Square } from 'lucide-react'
 
 export default function ConversionForm({ onSubmit, loading }) {
   const [campos, setCampos] = useState({
-    entero: '0', 
-    no_periodo: '1', 
-    periodo: '6', 
-    base: '7'
+    entero: '', 
+    no_periodo: '', 
+    periodo: '', 
+    base: ''
   })
 
   const handleSubmit = (e) => {

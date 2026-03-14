@@ -35,7 +35,7 @@ export default function App() {
             </div>
             <div>
               <h1>📐 Math Tutor Pro</h1>
-              <p>Convierte números periódicos a fracciones con estilo</p>
+              <p>Convierte números periódicos a divisiones de números naturales</p>
             </div>
           </motion.div>
 
@@ -50,7 +50,7 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.4 }}
           >
-            📄 Ir al reporte de códigos
+            📄 Regresar Sistemas Numéricos
           </motion.a>
 
         </div>

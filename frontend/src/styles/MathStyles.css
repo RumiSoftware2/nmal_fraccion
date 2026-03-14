@@ -257,8 +257,20 @@
   padding-top: 4px;
 }
 
+.fraccion-usuario {
+  color: #7c3aed;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.fraccion-decimal {
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
 .fraccion-subtext span {
-  font-weight: 600;
+  display: block;
 }
 
 .resultado-header .fraccion:first-of-type {

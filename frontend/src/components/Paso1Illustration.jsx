@@ -14,9 +14,9 @@ export default function Paso1Illustration({ input }) {
   const fullValue10 = parseInt(fullDigits, base)
   const beforeValue10 = parseInt(beforeDigits, base)
 
-  const latexX = `x = ${entero}${no_periodo ? `.${no_periodo}` : ''}${periodo ? `(${periodo})` : ''}`
+  const latexX = `x = ${entero}${no_periodo ? `.${no_periodo}` : ''}${periodo ? `\\overline{${periodo}}` : ''}`
   const latexAllDigits = `${base}^{${m + n}} \cdot x = ${fullDigits}`
-  const latexAllDigits10 = `${fullDigits}_{${base}} = ${fullValue10}_{10}`
+  const latexAllDigits10 = `(${fullDigits})_{${base}} = ${fullValue10}_{10}`
   const latexBefore = `${base}^{${m}} \cdot x = ${beforeDigits}`
   const latexBefore10 = `${beforeDigits}_{${base}} = ${beforeValue10}_{10}`
   const latexDiff = `${base}^{${m + n}}x - ${base}^{${m}}x = ${fullDigits} - ${beforeDigits}`

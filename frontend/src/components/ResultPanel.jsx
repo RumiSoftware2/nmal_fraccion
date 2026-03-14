@@ -1,16 +1,17 @@
 import Paso1Illustration from './Paso1Illustration'
 
 export default function ResultPanel({ resultado }) {
-  const [denomBase, numerBase] = resultado.fraccion_base_original.split('/');
+  const fraccionBase = resultado.fraccion_base_original || ''
+  const [numerBase, denomBase] = fraccionBase.split('/')
 
   return (
     <div className="resultado">
       <div className="resultado-header">
         <h2>Resultado</h2>
         <div className="fraccion-display">
-          <div className="fraccion-part numerador">{numerBase || resultado.numerador}</div>
+          <div className="fraccion-part numerador">{numerBase}</div>
           <div className="fraccion-barra"></div>
-          <div className="fraccion-part denominador">{denomBase || resultado.denominador}</div>
+          <div className="fraccion-part denominador">{denomBase }</div>
         </div>
         <div className="fraccion-subtext">
           <span className="fraccion-usuario">{resultado.fraccion_base_original} (base {resultado.input.base})</span>

@@ -65,7 +65,7 @@ export default function App() {
         <div className="container">
           {loading && (
             <div className="server-wake-message">
-              ⚠️ Servidor gratuito: si está dormido, puede tomar unos minutos despertar.
+              ⚠️ Servidor gratuito: si está dormido, puede tomar unos minutos en  despertar.
             </div>
           )}
           <motion.div 

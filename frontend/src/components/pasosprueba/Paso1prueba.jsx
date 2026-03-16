@@ -93,9 +93,7 @@ export default function Paso1prueba({ input }) {
 
       <div className="step-content">{steps[activeStep].component}</div>
 
-      <p>
-        Número: <strong>{xString}</strong> (base {base})
-      </p>
+      
     </motion.div>
   )
 }

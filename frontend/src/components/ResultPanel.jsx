@@ -1,4 +1,5 @@
 import Paso1Illustration from './Paso1Illustration'
+import Paso1prueba from './pasosprueba/Paso1prueba'
 
 export default function ResultPanel({ resultado }) {
   const fraccionBase = resultado.fraccion_base_original || ''

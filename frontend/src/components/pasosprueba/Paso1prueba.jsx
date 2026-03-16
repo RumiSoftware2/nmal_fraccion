@@ -17,7 +17,7 @@ export default function Paso1prueba({ input }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
     >
-      <h3>Paso 1: multiplicación en base {base} y resta</h3>
+      <h3>Paso prueba: multiplicación en base {base} y resta</h3>
 
       <PasoDefinimos
         entero={entero}

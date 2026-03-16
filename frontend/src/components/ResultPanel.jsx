@@ -20,6 +20,7 @@ export default function ResultPanel({ resultado }) {
       </div>
 
       <Paso1Illustration input={resultado.input} />
+      <Paso1prueba input={resultado.input} />
 
       <h3>Pasos del cálculo:</h3>
       <div className="pasos">

@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import { Calculator, Brain, Trophy, Sparkles } from 'lucide-react'
 import ConversionForm from './components/ConversionForm'
+import SimpleConversionForm from './components/SimpleConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import { useConversion } from './hooks/useConversion'
@@ -89,7 +90,7 @@ export default function App() {
                     <Sparkles size={24} />
                     <h2>🚀 Inicia tu Conversión</h2>
                   </div>
-                  <ConversionForm onSubmit={handleConvert} loading={loading} />
+                  <SimpleConversionForm onSubmit={handleConvert} loading={loading} />
                 </motion.div>
               )}
             </AnimatePresence>

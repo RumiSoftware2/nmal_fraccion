@@ -1,8 +1,10 @@
 /* SimpleConversionForm Styles */
 .conversion-form {
   width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(249, 250, 251, 0.9));
-  border-radius: clamp(16px, 3vw, 20px);
+  border-radius: 0;
   padding: clamp(20px, 5vw, 32px);
   box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
   border: 1px solid rgba(99, 102, 241, 0.1);
@@ -21,7 +23,7 @@
   gap: clamp(16px, 3vw, 24px);
 }
 
-@media (min-width: 640px) {
+@media (min-width: 768px) {
   .input-grid {
     grid-template-columns: repeat(2, 1fr);
   }

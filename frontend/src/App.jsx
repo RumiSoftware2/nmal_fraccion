@@ -108,12 +108,11 @@ export default function App() {
                     animate={{ opacity: 1, height: 'auto', y: 0 }}
                     exit={{ opacity: 0, height: 0, y: -20, transition: { duration: 0.35 } }}
                     transition={{ delay: 0.1, duration: 0.35 }}
-                    style={{ overflow: 'hidden' }}
                     key="form-section"
                   >
                     <div className="section-header">
                       <Sparkles size={24} />
-                      <h2>🚀 Inicia tu Conversión</h2>
+                      <h2>🚀 Inicia Conversión</h2>
                     </div>
                     <SimpleConversionForm onSubmit={handleConvert} loading={loading} />
                   </motion.div>

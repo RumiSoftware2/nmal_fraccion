@@ -52,40 +52,52 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
   return (
     <motion.div 
       className="conversion-form"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, type: "spring" }}
     >
       <form onSubmit={handleSubmit} className="math-form">
         <div className="input-grid">
-          <MathInput
-            label="Número Periódico"
-            name="numero"
-            value={campos.numero}
-            onChange={handleChange}
-            placeholder="ej: 0.1(6)"
-            type="text"
-            icon={<Hash size={16} />}
-            helpText="Ingresa el número en formato: entero.no_periodo(periodo), ej: 1.23(45)"
-          />
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+          >
+            <MathInput
+              label="Número Periódico"
+              name="numero"
+              value={campos.numero}
+              onChange={handleChange}
+              placeholder="ej: 0.1(6)"
+              type="text"
+              icon={<Hash size={16} />}
+              helpText="Ingresa el número en formato: entero.no_periodo(periodo), ej: 1.23(45)"
+            />
+          </motion.div>
           
-          <MathInput
-            label="Base"
-            name="base"
-            value={campos.base}
-            onChange={handleChange}
-            placeholder=""
-            type="number"
-            icon={<Hash size={16} />}
-            helpText="Base numérica (entre 2 y 36)"
-          />
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.4 }}
+          >
+            <MathInput
+              label="Base"
+              name="base"
+              value={campos.base}
+              onChange={handleChange}
+              placeholder=""
+              type="number"
+              icon={<Hash size={16} />}
+              helpText="Base numérica (entre 2 y 36)"
+            />
+          </motion.div>
         </div>
 
         <motion.div 
           className="form-actions"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.4 }}
+          transition={{ delay: 0.4, duration: 0.4 }}
         >
           <MathButton
             type="submit"

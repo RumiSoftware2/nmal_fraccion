@@ -3,7 +3,7 @@
   background: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 12px;
-  padding: 16px;
+  padding: clamp(12px, 3vw, 16px);
   margin: 16px 0;
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
 }
@@ -16,7 +16,7 @@
 }
 
 .display-header h3 {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
   color: #374151;
   margin: 0;
 }

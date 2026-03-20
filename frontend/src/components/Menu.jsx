@@ -8,14 +8,14 @@ const programs = [
     title: 'Math Tutor Pro',
     description: 'Convierte números periódicos a fracciones',
     icon: Calculator,
-    color: 'from-blue-500 to-purple-600'
+    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
   },
   {
     id: 'coming-soon',
     title: 'Próximamente',
     description: 'Más herramientas matemáticas',
     icon: Sparkles,
-    color: 'from-green-500 to-teal-600',
+    gradient: 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
     disabled: true
   }
 ]
@@ -50,7 +50,7 @@ export default function Menu({ onSelectProgram }) {
             whileTap={!program.disabled ? { scale: 0.95 } : {}}
             onClick={() => !program.disabled && onSelectProgram(program.id)}
           >
-            <div className={`program-icon bg-gradient-to-br ${program.color}`}>
+            <div className="program-icon" style={{ background: program.gradient }}>
               <program.icon size={32} />
             </div>
             <h3>{program.title}</h3>

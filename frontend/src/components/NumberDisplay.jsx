@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Eye, Calculator } from 'lucide-react'
+import './NumberDisplay.css'
 
 export default function NumberDisplay({ input }) {
   const { entero, no_periodo, periodo, base } = input

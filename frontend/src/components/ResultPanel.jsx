@@ -1,4 +1,5 @@
 import Paso1prueba from './pasosprueba/Paso1prueba'
+import NumberDisplay from './NumberDisplay'
 import './ResultPanel.css'
 
 export default function ResultPanel({ resultado }) {
@@ -7,6 +8,8 @@ export default function ResultPanel({ resultado }) {
 
   return (
     <div className="resultado">
+      <NumberDisplay input={resultado.input} />
+
       <div className="resultado-header">
         <h2>Resultado</h2>
         <div className="fraccion-display">

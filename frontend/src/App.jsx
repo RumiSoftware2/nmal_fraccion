@@ -101,54 +101,48 @@ export default function App() {
             transition={{ delay: 0.2, duration: 0.6 }}
           >
               <AnimatePresence mode="wait">
-              {!showResult && (
-                <motion.div
-                  className="form-section"
-                  initial={{ opacity: 0, height: 0, y: 20 }}
-                  animate={{ opacity: 1, height: 'auto', y: 0 }}
-                  exit={{ opacity: 0, height: 0, y: -20, transition: { duration: 0.35 } }}
-                  transition={{ delay: 0.1, duration: 0.35 }}
-                  style={{ overflow: 'hidden' }}
-                  key="form-section"
-                >
-                  <div className="section-header">
-                    <Sparkles size={24} />
-                    <h2>🚀 Inicia tu Conversión</h2>
-                  </div>
-                  <SimpleConversionForm onSubmit={handleConvert} loading={loading} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {error && (
-              <motion.div 
-                className="error-message"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <strong>Error:</strong> {error}
-              </motion.div>
-            )}
-
-            <AnimatePresence>
-              {showResult && resultado && (
-                <motion.div
-                  className="result-section"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4 }}
-                  key="result-section"
-                >
-                  <div className="section-header">
-                    <Trophy size={24} />
-                    <h2>🎯 Resultado</h2>
-                  </div>
-                  <ResultPanel resultado={resultado} />
-                </motion.div>
-              )}
-            </AnimatePresence>
+                {!showResult ? (
+                  <motion.div
+                    className="form-section"
+                    initial={{ opacity: 0, height: 0, y: 20 }}
+                    animate={{ opacity: 1, height: 'auto', y: 0 }}
+                    exit={{ opacity: 0, height: 0, y: -20, transition: { duration: 0.35 } }}
+                    transition={{ delay: 0.1, duration: 0.35 }}
+                    style={{ overflow: 'hidden' }}
+                    key="form-section"
+                  >
+                    <div className="section-header">
+                      <Sparkles size={24} />
+                      <h2>🚀 Inicia tu Conversión</h2>
+                    </div>
+                    <SimpleConversionForm onSubmit={handleConvert} loading={loading} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    className="result-section"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.4 }}
+                    key="result-section"
+                  >
+                    <div className="section-header" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Trophy size={24} />
+                        <h2>🎯 ¡Resultado Obtenido!</h2>
+                      </div>
+                      <button
+                        className="math-btn btn-outline"
+                        onClick={() => setShowResult(false)}
+                        style={{ padding: '8px 16px', fontSize: '0.88rem', borderRadius: '8px' }}
+                      >
+                        ↩️ Volver a Calcular
+                      </button>
+                    </div>
+                    <ResultPanel resultado={resultado} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
           </motion.div>
         </div>
       </main>

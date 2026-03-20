@@ -1,0 +1,95 @@
+/* NumberDisplay Styles */
+.number-display-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.display-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.display-header h3 {
+  font-size: 1.1rem;
+  color: #374151;
+  margin: 0;
+}
+
+.numero-visual {
+  text-align: center;
+}
+
+.display-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.math-expression {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  margin: 8px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 1.2rem;
+}
+
+.math-inline {
+  color: #374151;
+}
+
+.math-value {
+  font-weight: 700;
+  color: #6366f1;
+}
+
+.subscript {
+  font-size: 0.8rem;
+  color: #6b7280;
+  vertical-align: sub;
+}
+
+.numero-display {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  font-size: 2rem;
+  font-weight: 800;
+  margin-top: 12px;
+}
+
+.entero-parte {
+  color: #1f2937;
+}
+
+.punto {
+  color: #374151;
+}
+
+.no-periodo-parte {
+  color: #7c3aed;
+}
+
+.periodo-parte {
+  color: #ec4899;
+  position: relative;
+}
+
+.periodo-parte::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ec4899;
+  border-radius: 1px;
+}

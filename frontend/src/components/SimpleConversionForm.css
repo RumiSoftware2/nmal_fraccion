@@ -1,0 +1,22 @@
+/* SimpleConversionForm Styles */
+.conversion-form {
+  width: 100%;
+}
+
+.math-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}

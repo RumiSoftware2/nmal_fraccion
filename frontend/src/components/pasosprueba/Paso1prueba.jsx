@@ -6,6 +6,7 @@ import PasoRestaColumnas from './PasoRestaColumnas'
 import PasoResultado from './PasoResultado'
 
 import { useMemo, useState } from 'react'
+import './Paso1prueba.css'
 
 export default function Paso1prueba({ input }) {
   const { entero, no_periodo, periodo, base } = input

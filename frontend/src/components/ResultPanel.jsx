@@ -1,4 +1,5 @@
 import Paso1prueba from './pasosprueba/Paso1prueba'
+import './ResultPanel.css'
 
 export default function ResultPanel({ resultado }) {
   const fraccionBase = resultado.fraccion_base_original || ''

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import MathInput from './MathInput'
 import MathButton from './MathButton'
 import { Hash } from 'lucide-react'
+import './SimpleConversionForm.css'
 
 function parseNumero(numero) {
   let entero = ''

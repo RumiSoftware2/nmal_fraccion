@@ -5,13 +5,15 @@ import ConversionForm from './components/ConversionForm'
 import SimpleConversionForm from './components/SimpleConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
+import Menu from './components/Menu'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png' // reemplaza con tu imagen de escudo subida a assets
-import './styles/MathStyles.css'
+import './components/App.css'
 
 export default function App() {
   const { resultado, error, loading, convertir } = useConversion()
   const [showResult, setShowResult] = useState(false)
+  const [currentView, setCurrentView] = useState('menu')
 
   const handleConvert = async (campos) => {
     setShowResult(false)
@@ -19,6 +21,17 @@ export default function App() {
     setShowResult(true)
   }
 
+  const handleSelectProgram = (programId) => {
+    if (programId === 'math-tutor') {
+      setCurrentView('app')
+    }
+  }
+
+  if (currentView === 'menu') {
+    return <Menu onSelectProgram={handleSelectProgram} />
+  }
+
+  // App content
   return (
     <div className="math-tutor-app">
       <motion.header 
@@ -58,6 +71,18 @@ export default function App() {
           >
             📄 Regresar a Sistemas Numéricos
           </motion.a>
+
+          <motion.button
+            className="return-menu-btn"
+            onClick={() => setCurrentView('menu')}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.4 }}
+          >
+            🏠 Menú Principal
+          </motion.button>
 
         </div>
       </motion.header>
@@ -102,34 +127,24 @@ export default function App() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                ⚠️ {error}
+                <strong>Error:</strong> {error}
               </motion.div>
             )}
 
-            <AnimatePresence mode="wait">
-              {resultado && showResult && (
+            <AnimatePresence>
+              {showResult && resultado && (
                 <motion.div
                   className="result-section"
-                  initial={{ opacity: 0, y: 50 }}
+                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  transition={{ delay: 0.1, duration: 0.45 }}
+                  transition={{ duration: 0.4 }}
                   key="result-section"
                 >
-                  <div className="section-header" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Trophy size={24} />
-                      <h2>🎯 ¡Resultado Obtenido!</h2>
-                    </div>
-                    <button
-                      className="math-btn btn-outline"
-                      onClick={() => setShowResult(false)}
-                      style={{ padding: '8px 16px', fontSize: '0.88rem', borderRadius: '8px' }}
-                    >
-                      ↩️ Volver a Calcular
-                    </button>
+                  <div className="section-header">
+                    <Trophy size={24} />
+                    <h2>🎯 Resultado</h2>
                   </div>
-                  <NumberDisplay input={resultado.input} />
                   <ResultPanel resultado={resultado} />
                 </motion.div>
               )}

@@ -3,6 +3,15 @@ import NumberDisplay from './NumberDisplay'
 import './ResultPanel.css'
 
 export default function ResultPanel({ resultado }) {
+  // Validar que resultado exista
+  if (!resultado) {
+    return (
+      <div className="resultado">
+        <p style={{ color: '#ef4444', textAlign: 'center' }}>Error: No hay resultados disponibles</p>
+      </div>
+    )
+  }
+
   const fraccionBase = resultado.fraccion_base_original || ''
   const [numerBase, denomBase] = fraccionBase.split('/')
 

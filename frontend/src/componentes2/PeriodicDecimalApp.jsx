@@ -21,8 +21,17 @@ export default function PeriodicDecimalApp() {
   const [error, setError] = useState('')
 
   const handleConvert = async () => {
+    // Validar que al menos la parte entera esté completa
     if (!entero1 || !base1 || !entero2 || !base2) {
-      setError('Por favor ingresa todos los campos requeridos')
+      setError('Por favor ingresa la parte entera y la base de cada número')
+      return
+    }
+
+    // Validar que la base sea válida (mayor a 1)
+    const baseNum1 = parseInt(base1)
+    const baseNum2 = parseInt(base2)
+    if (isNaN(baseNum1) || isNaN(baseNum2) || baseNum1 < 2 || baseNum2 < 2) {
+      setError('La base debe ser un número mayor a 1')
       return
     }
 
@@ -33,25 +42,31 @@ export default function PeriodicDecimalApp() {
 
     try {
       const data1 = {
-        entero: entero1,
-        no_periodo: noPeriodo1,
-        periodo: periodo1,
-        base: parseInt(base1)
+        entero: entero1.trim(),
+        no_periodo: noPeriodo1.trim(),
+        periodo: periodo1.trim(),
+        base: baseNum1
       }
       const data2 = {
-        entero: entero2,
-        no_periodo: noPeriodo2,
-        periodo: periodo2,
-        base: parseInt(base2)
+        entero: entero2.trim(),
+        no_periodo: noPeriodo2.trim(),
+        periodo: periodo2.trim(),
+        base: baseNum2
       }
 
       const res1 = await convertirPeriodico(data1)
       const res2 = await convertirPeriodico(data2)
 
+      if (!res1 || !res2) {
+        setError('Error: No se recibieron resultados del servidor')
+        return
+      }
+
       setResult1(res1)
       setResult2(res2)
     } catch (err) {
-      setError(err.message)
+      console.error('Error en conversión:', err)
+      setError(err.message || 'Error al convertir los números. Verifica que los valores sean válidos para la base especificada.')
     } finally {
       setLoading(false)
     }

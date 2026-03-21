@@ -108,20 +108,6 @@ export default function App() {
             </div>
           </motion.div>
 
-          <motion.a
-            className="return-report-btn"
-            href="https://sites.google.com/view/cursodesistemasnumericos/c%C3%B3digos"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.97 }}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-          >
-            📄 Regresar a Sistemas Numéricos
-          </motion.a>
-
           <motion.button
             className="return-menu-btn"
             onClick={() => setCurrentView('menu')}

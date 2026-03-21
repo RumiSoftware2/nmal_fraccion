@@ -80,6 +80,8 @@ def convertir_periodico(input_data: PeriodicoInput):
     """
     try:
         pasos = []
+        numerador = None
+        denominador = None
         
         # Detectar si es número sin período o periódico
         es_sin_periodo = not input_data.periodo or input_data.periodo == ""
@@ -169,6 +171,10 @@ def convertir_periodico(input_data: PeriodicoInput):
                 ))
             except Exception as e:
                 raise HTTPException(status_code=400, detail=f"Error en Paso 4: {str(e)}")
+        
+        # VALIDAR que se calcularon numerador y denominador
+        if numerador is None or denominador is None:
+            raise HTTPException(status_code=400, detail="Error: No se pudieron calcular numerador y denominador")
         
         # PASO FINAL: Convertir fracción a la base original (para ambos casos)
         try:

@@ -6,6 +6,7 @@ from pasos.paso1_numero_sin_periodo import numero_sin_periodo
 from pasos.paso2_numero_antes_periodo import numero_antes_periodo
 from pasos.paso3_calcular_numerador import calcular_numerador
 from pasos.paso4_calcular_denominador import calcular_denominador
+from pasos.paso_numero_sin_periodo_fraccion import calcular_fraccion_sin_periodo
 from utils.convertir_fraccion_base import convertir_fraccion_base
 
 app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
@@ -59,84 +60,129 @@ def root():
 @app.post("/convertir-periodico", response_model=FraccionResponse)
 def convertir_periodico(input_data: PeriodicoInput):
     """
-    Convierte un número periódico en una base dada a una fracción.
+    Convierte un número periódico o sin período en una base dada a una fracción.
     
-    Ejemplo:
+    Para periódicos:
     {
         "entero": "0",
         "no_periodo": "1",
         "periodo": "6",
         "base": 7
     }
+    
+    Para números sin período:
+    {
+        "entero": "2",
+        "no_periodo": "5",
+        "periodo": "",
+        "base": 8
+    }
     """
     try:
         pasos = []
         
-        # PASO 1: Número sin período convertido a base 10
-        try:
-            num_sin_periodo = numero_sin_periodo(input_data.entero, input_data.no_periodo, input_data.periodo, input_data.base)
-            pasos.append(PasoResponse(
-                paso=1,
-                descripcion="Convertir número completo (entero + no período + período) a base 10",
-                resultado=f"{input_data.entero}{input_data.no_periodo}{input_data.periodo} (base {input_data.base}) = {num_sin_periodo} (base 10)",
-                valor=num_sin_periodo
-            ))
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Error en Paso 1: {str(e)}")
+        # Detectar si es número sin período o periódico
+        es_sin_periodo = not input_data.periodo or input_data.periodo == ""
         
-        # PASO 2: Número antes del período convertido a base 10
-        try:
-            num_antes_periodo = numero_antes_periodo(input_data.entero, input_data.no_periodo, input_data.base)
-            pasos.append(PasoResponse(
-                paso=2,
-                descripcion="Convertir número sin período (entero + no período) a base 10",
-                resultado=f"{input_data.entero}{input_data.no_periodo} (base {input_data.base}) = {num_antes_periodo} (base 10)",
-                valor=num_antes_periodo
-            ))
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Error en Paso 2: {str(e)}")
+        if es_sin_periodo:
+            # CASO: NÚMERO SIN PERÍODO (ej: 2.5 en base 8)
+            try:
+                numerador, denominador = calcular_fraccion_sin_periodo(
+                    input_data.entero, 
+                    input_data.no_periodo, 
+                    input_data.base
+                )
+                
+                # Descripción del proceso
+                numero_display = f"{input_data.entero}.{input_data.no_periodo}"
+                pasos.append(PasoResponse(
+                    paso=1,
+                    descripcion=f"Número sin período: {numero_display} en base {input_data.base}",
+                    resultado=f"{numero_display} (base {input_data.base})",
+                    valor=None
+                ))
+                
+                pasos.append(PasoResponse(
+                    paso=2,
+                    descripcion="Calcular numerador (número sin la coma)",
+                    resultado=f"{input_data.entero}{input_data.no_periodo} (base {input_data.base}) = {numerador} (base 10)",
+                    valor=numerador
+                ))
+                
+                cantidad_decimales = len(input_data.no_periodo)
+                pasos.append(PasoResponse(
+                    paso=3,
+                    descripcion="Calcular denominador (base^cantidad_decimales)",
+                    resultado=f"{input_data.base}^{cantidad_decimales} = {denominador}",
+                    valor=denominador
+                ))
+                
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Error procesando número sin período: {str(e)}")
         
-        # PASO 3: Calcular numerador
-        try:
-            numerador = calcular_numerador(num_sin_periodo, num_antes_periodo)
-            pasos.append(PasoResponse(
-                paso=3,
-                descripcion="Calcular numerador restando número sin período del número completo",
-                resultado=f"{num_sin_periodo} - {num_antes_periodo} = {numerador}",
-                valor=numerador
-            ))
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Error en Paso 3: {str(e)}")
+        else:
+            # CASO: NÚMERO PERIÓDICO (lógica original)
+            try:
+                num_sin_periodo = numero_sin_periodo(input_data.entero, input_data.no_periodo, input_data.periodo, input_data.base)
+                pasos.append(PasoResponse(
+                    paso=1,
+                    descripcion="Convertir número completo (entero + no período + período) a base 10",
+                    resultado=f"{input_data.entero}{input_data.no_periodo}{input_data.periodo} (base {input_data.base}) = {num_sin_periodo} (base 10)",
+                    valor=num_sin_periodo
+                ))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Error en Paso 1: {str(e)}")
+            
+            try:
+                num_antes_periodo = numero_antes_periodo(input_data.entero, input_data.no_periodo, input_data.base)
+                pasos.append(PasoResponse(
+                    paso=2,
+                    descripcion="Convertir número sin período (entero + no período) a base 10",
+                    resultado=f"{input_data.entero}{input_data.no_periodo} (base {input_data.base}) = {num_antes_periodo} (base 10)",
+                    valor=num_antes_periodo
+                ))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Error en Paso 2: {str(e)}")
+            
+            try:
+                numerador = calcular_numerador(num_sin_periodo, num_antes_periodo)
+                pasos.append(PasoResponse(
+                    paso=3,
+                    descripcion="Calcular numerador restando número sin período del número completo",
+                    resultado=f"{num_sin_periodo} - {num_antes_periodo} = {numerador}",
+                    valor=numerador
+                ))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Error en Paso 3: {str(e)}")
+            
+            m = len(input_data.no_periodo)
+            n = len(input_data.periodo)
+            
+            try:
+                denominador = calcular_denominador(input_data.base, m, n)
+                formula = f"{input_data.base}^{m} × ({input_data.base}^{n} - 1) = {denominador}"
+                pasos.append(PasoResponse(
+                    paso=4,
+                    descripcion="Calcular denominador con la fórmula: base^m × (base^n - 1)",
+                    resultado=formula,
+                    valor=denominador
+                ))
+            except Exception as e:
+                raise HTTPException(status_code=400, detail=f"Error en Paso 4: {str(e)}")
         
-        # Obtener longitudes de no período y período
-        m = len(input_data.no_periodo)
-        n = len(input_data.periodo)
-        
-        # PASO 4: Calcular denominador
-        try:
-            denominador = calcular_denominador(input_data.base, m, n)
-            formula = f"{input_data.base}^{m} × ({input_data.base}^{n} - 1) = {denominador}"
-            pasos.append(PasoResponse(
-                paso=4,
-                descripcion="Calcular denominador con la fórmula: base^m × (base^n - 1)",
-                resultado=formula,
-                valor=denominador
-            ))
-        except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Error en Paso 4: {str(e)}")
-        
-        # PASO 5: Convertir fracción a la base original
+        # PASO FINAL: Convertir fracción a la base original (para ambos casos)
         try:
             num_base, den_base = convertir_fraccion_base(numerador, denominador, input_data.base)
+            paso_final = 4 if es_sin_periodo else 5
             pasos.append(PasoResponse(
-                paso=5,
+                paso=paso_final,
                 descripcion=f"Convertir fracción a base {input_data.base}",
                 resultado=f"{numerador} (base 10) = {num_base} (base {input_data.base}), {denominador} (base 10) = {den_base} (base {input_data.base})",
                 valor=None
             ))
             fraccion_base = f"{num_base}/{den_base}"
         except Exception as e:
-            raise HTTPException(status_code=400, detail=f"Error en Paso 5: {str(e)}")
+            raise HTTPException(status_code=400, detail=f"Error en paso final: {str(e)}")
         
         # Retornar respuesta completa
         return FraccionResponse(

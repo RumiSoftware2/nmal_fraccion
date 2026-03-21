@@ -42,7 +42,9 @@ export default function NumberDisplay({ input }) {
           >
             {entero}
           </motion.span>
-          <span className="punto">,</span>
+          {(no_periodo || periodo) && (
+            <span className="punto">.</span>
+          )}
           {no_periodo && (
             <motion.span 
               className="no-periodo-parte"
@@ -52,19 +54,21 @@ export default function NumberDisplay({ input }) {
               {no_periodo}
             </motion.span>
           )}
-          <motion.span 
-            className="periodo-parte"
-            whileHover={{ scale: 1.1, color: "#ec4899" }}
-            transition={{ type: "spring" }}
-          >
-            {periodo}
-            <motion.div 
-              className="periodo-underline"
-              initial={{ width: 0, top: 0 }}
-              animate={{ width: "100%", top: -6 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-            />
-          </motion.span>
+          {periodo && (
+            <motion.span 
+              className="periodo-parte"
+              whileHover={{ scale: 1.1, color: "#ec4899" }}
+              transition={{ type: "spring" }}
+            >
+              {periodo}
+              <motion.div 
+                className="periodo-underline"
+                initial={{ width: 0, top: 0 }}
+                animate={{ width: "100%", top: -6 }}
+                transition={{ delay: 0.2, duration: 0.6 }}
+              />
+            </motion.span>
+          )}
           <sub className="base-subscript">{base}</sub>
         </motion.div>
       </motion.div>
@@ -79,14 +83,18 @@ export default function NumberDisplay({ input }) {
           <div className="legend-color entero-color"></div>
           <span>Parte Entera</span>
         </div>
-        <div className="legend-item">
-          <div className="legend-color no-periodo-color"></div>
-          <span>No Período</span>
-        </div>
-        <div className="legend-item">
-          <div className="legend-color periodo-color"></div>
-          <span>Período (se repite)</span>
-        </div>
+        {no_periodo && (
+          <div className="legend-item">
+            <div className="legend-color no-periodo-color"></div>
+            <span>No Período</span>
+          </div>
+        )}
+        {periodo && (
+          <div className="legend-item">
+            <div className="legend-color periodo-color"></div>
+            <span>Período (se repite)</span>
+          </div>
+        )}
       </motion.div>
     </motion.div>
   )

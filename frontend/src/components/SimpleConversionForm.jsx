@@ -6,6 +6,13 @@ import { Hash } from 'lucide-react'
 import './SimpleConversionForm.css'
 
 function parseNumero(numero) {
+  /**
+   * Parsea un número en diferentes formatos:
+   * - Periódico puro: 0.(3) => entero="0", no_periodo="", periodo="3"
+   * - Periódico mixto: 0.1(6) => entero="0", no_periodo="1", periodo="6"
+   * - Sin período: 2.5 => entero="2", no_periodo="5", periodo=""
+   * - Solo entero: 5 => entero="5", no_periodo="", periodo=""
+   */
   let entero = ''
   let no_periodo = ''
   let periodo = ''
@@ -14,19 +21,29 @@ function parseNumero(numero) {
   const parenIndex = numero.indexOf('(')
 
   if (dotIndex !== -1) {
+    // Hay punto decimal
     entero = numero.substring(0, dotIndex)
     if (parenIndex !== -1) {
+      // Hay paréntesis después del punto: número periódico mixto
       no_periodo = numero.substring(dotIndex + 1, parenIndex)
       periodo = numero.substring(parenIndex + 1, numero.indexOf(')'))
     } else {
+      // No hay paréntesis: número sin período (decimal finito)
       no_periodo = numero.substring(dotIndex + 1)
+      periodo = ''
     }
   } else {
+    // No hay punto decimal
     if (parenIndex !== -1) {
+      // Hay paréntesis: número periódico puro como 5(3)
       entero = numero.substring(0, parenIndex)
       periodo = numero.substring(parenIndex + 1, numero.indexOf(')'))
+      no_periodo = ''
     } else {
+      // Solo número entero
       entero = numero
+      no_periodo = ''
+      periodo = ''
     }
   }
 
@@ -64,14 +81,14 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
             transition={{ delay: 0.2, duration: 0.4 }}
           >
             <MathInput
-              label="Número Periódico"
+              label="Número (Periódico o Sin Período)"
               name="numero"
               value={campos.numero}
               onChange={handleChange}
-              placeholder="ej: 0.1(6)"
+              placeholder="ej: 0.1(6) o 2.5"
               type="text"
               icon={<Hash size={16} />}
-              helpText="Ingresa el número en formato: entero.no_periodo(periodo), ej: 1.23(45)"
+              helpText="Periódico: 0.1(6) | Periódico puro: 0.(3) | Sin período: 2.5 | Entero: 5"
             />
           </motion.div>
           

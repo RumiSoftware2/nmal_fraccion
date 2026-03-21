@@ -6,6 +6,7 @@ import SimpleConversionForm from './components/SimpleConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import Menu from './components/Menu'
+import PeriodicDecimalApp from './componentes2/PeriodicDecimalApp'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png' // reemplaza con tu imagen de escudo subida a assets
 import './components/App.css'
@@ -24,11 +25,60 @@ export default function App() {
   const handleSelectProgram = (programId) => {
     if (programId === 'math-tutor') {
       setCurrentView('app')
+    } else if (programId === 'periodic-decimal') {
+      setCurrentView('periodic-app')
     }
   }
 
   if (currentView === 'menu') {
     return <Menu onSelectProgram={handleSelectProgram} />
+  }
+
+  if (currentView === 'periodic-app') {
+    return (
+      <div className="math-tutor-app">
+        <motion.header 
+          className="math-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="header-content">
+            <motion.div 
+              className="logo-section"
+              whileHover={{ scale: 1.05 }}
+            >
+              <img
+                src={escudo}
+                alt="Escudo Universidad Pedagógica"
+                className="univ-logo"
+                title="Escudo Universidad Pedagógica"
+              />
+              <div>
+                <h1>📐 Conversor de Decimales</h1>
+                <p>Convierte decimales periódicos y normales a fracciones</p>
+              </div>
+            </motion.div>
+
+            <motion.button
+              className="return-menu-btn"
+              onClick={() => setCurrentView('menu')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            >
+              🏠 Menú Principal
+            </motion.button>
+          </div>
+        </motion.header>
+
+        <main className="math-main">
+          <PeriodicDecimalApp />
+        </main>
+      </div>
+    )
   }
 
   // App content

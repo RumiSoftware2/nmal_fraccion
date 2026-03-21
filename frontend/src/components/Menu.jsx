@@ -5,10 +5,17 @@ import './Menu.css'
 const programs = [
   {
     id: 'math-tutor',
-    title: 'Math Tutor Pro',
+    title: 'n-mal como división de dos naturales',
     description: 'Convierte números periódicos a fracciones',
     icon: Calculator,
     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+  },
+  {
+    id: 'periodic-decimal',
+    title: 'Operaciones de n-males',
+    description: 'Convierte decimales periódicos y normales a fracciones',
+    icon: Brain,
+    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
   },
   {
     id: 'coming-soon',

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { convertirPeriodico } from '../services/api'
 import '../componentes2Styles/SimplePeriodicDecimalApp.css'
+import SimplePeriodicResultPanel from './SimplePeriodicResultPanel'
 
 function parsePeriodicNumber(numberString) {
   // Parse a string like "0.1(6)" or "0.25" into { entero, noPeriodo, periodo }
@@ -37,6 +38,8 @@ export default function SimplePeriodicDecimalApp() {
   const [result2, setResult2] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [showResult, setShowResult] = useState(false)
+  const [commonPrimeFactors, setCommonPrimeFactors] = useState(null)
 
   const handleConvert = async () => {
     if (!number1 || !base1 || !number2 || !base2) {
@@ -59,6 +62,8 @@ export default function SimplePeriodicDecimalApp() {
     setError('')
     setResult1(null)
     setResult2(null)
+    setShowResult(false)
+    setCommonPrimeFactors(null)
 
     try {
       const data1 = {
@@ -84,6 +89,34 @@ export default function SimplePeriodicDecimalApp() {
 
       setResult1(res1)
       setResult2(res2)
+
+      // Obtener factores primos comunes
+      try {
+        const denominators = {
+          denominador1: res1.fraccion_decimal.split('/')[1],
+          denominador2: res2.fraccion_decimal.split('/')[1]
+        }
+        
+        const primeFactorsResponse = await fetch(
+          `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/common-prime-factors`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(denominators)
+          }
+        )
+
+        if (primeFactorsResponse.ok) {
+          const primeFactorsData = await primeFactorsResponse.json()
+          setCommonPrimeFactors(primeFactorsData.common_factors)
+        }
+      } catch (primeErr) {
+        console.warn('Advertencia: No se pudieron obtener los factores primos comunes', primeErr)
+      }
+
+      setShowResult(true)
     } catch (err) {
       console.error('Error en conversión:', err)
       setError(err.message || 'Error al convertir los números. Verifica que los valores sean válidos para la base especificada.')
@@ -145,19 +178,14 @@ export default function SimplePeriodicDecimalApp() {
         {loading ? 'Convirtiendo...' : 'Convertir'}
       </button>
       {error && <p className="error">{error}</p>}
-      {result1 && result2 && (
-        <div className="results">
-          <div className="result">
-            <h3>Número 1</h3>
-            <p>Fracción en base {base1}: {result1.fraccion_base_original}</p>
-            <p>Fracción decimal: {result1.fraccion_decimal}</p>
-          </div>
-          <div className="result">
-            <h3>Número 2</h3>
-            <p>Fracción en base {base2}: {result2.fraccion_base_original}</p>
-            <p>Fracción decimal: {result2.fraccion_decimal}</p>
-          </div>
-        </div>
+      {showResult && result1 && result2 && (
+        <SimplePeriodicResultPanel 
+          result1={result1} 
+          result2={result2} 
+          base1={base1} 
+          base2={base2}
+          commonPrimeFactors={commonPrimeFactors}
+        />
       )}
     </div>
   )

@@ -8,6 +8,7 @@ from pasos.paso3_calcular_numerador import calcular_numerador
 from pasos.paso4_calcular_denominador import calcular_denominador
 from pasos.paso_numero_sin_periodo_fraccion import calcular_fraccion_sin_periodo
 from utils.convertir_fraccion_base import convertir_fraccion_base
+from utils.prime_factors import get_common_prime_factors
 
 app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
 
@@ -47,6 +48,18 @@ class FraccionResponse(BaseModel):
     numerador: int
     denominador: int
     fraccion_base_original: str
+
+class CommonPrimeFactorsInput(BaseModel):
+    """Modelo de entrada para obtener factores primos comunes"""
+    denominador1: str
+    denominador2: str
+
+class CommonPrimeFactorsResponse(BaseModel):
+    """Respuesta con factores primos comunes"""
+    denominador1: str
+    denominador2: str
+    common_factors: str
+    factores_dict: dict
 
 @app.get("/")
 def root():
@@ -219,6 +232,43 @@ def convertir_periodico_simple(entero: str, no_periodo: str, periodo: str, base:
         base=base
     )
     return convertir_periodico(input_data)
+
+@app.post("/common-prime-factors", response_model=CommonPrimeFactorsResponse)
+def common_prime_factors(input_data: CommonPrimeFactorsInput):
+    """
+    Calcula los factores primos comunes entre dos denominadores.
+    
+    Los factores comunes son aquellos que aparecen en ambos denominadores,
+    sin importar el exponente (se toma el menor exponente).
+    
+    Ejemplo:
+    {
+        "denominador1": "12",
+        "denominador2": "18"
+    }
+    
+    Respuesta:
+    {
+        "denominador1": "12",
+        "denominador2": "18",
+        "common_factors": "2 × 3",
+        "factores_dict": {"2": 1, "3": 1}
+    }
+    """
+    try:
+        denom1 = input_data.denominador1
+        denom2 = input_data.denominador2
+        
+        factores_dict, common_factors_string = get_common_prime_factors(denom1, denom2)
+        
+        return CommonPrimeFactorsResponse(
+            denominador1=denom1,
+            denominador2=denom2,
+            common_factors=common_factors_string,
+            factores_dict={str(k): v for k, v in factores_dict.items()}
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al calcular factores primos: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

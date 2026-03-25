@@ -236,10 +236,10 @@ def convertir_periodico_simple(entero: str, no_periodo: str, periodo: str, base:
 @app.post("/common-prime-factors", response_model=CommonPrimeFactorsResponse)
 def common_prime_factors(input_data: CommonPrimeFactorsInput):
     """
-    Calcula los factores primos comunes entre dos denominadores.
+    Calcula el conjunto de todos los factores primos únicos entre dos denominadores.
     
-    Los factores comunes son aquellos que aparecen en ambos denominadores,
-    sin importar el exponente (se toma el menor exponente).
+    Retorna todos los factores primos de ambos denominadores, cada uno una sola vez,
+    con su menor exponente (si aparece en ambos, toma el menor; si aparece en uno, toma ese).
     
     Ejemplo:
     {
@@ -251,8 +251,8 @@ def common_prime_factors(input_data: CommonPrimeFactorsInput):
     {
         "denominador1": "12",
         "denominador2": "18",
-        "common_factors": "2 × 3",
-        "factores_dict": {"2": 1, "3": 1}
+        "common_factors": "2 × 3²",
+        "factores_dict": {"2": 1, "3": 2}
     }
     """
     try:

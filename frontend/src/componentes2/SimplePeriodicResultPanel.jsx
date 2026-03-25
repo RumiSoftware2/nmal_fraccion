@@ -84,11 +84,15 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8, duration: 0.5 }}
           >
-            <h3>🎯 Base en Común (Factores Primos Comunes)</h3>
+            <h3>📊 Conjunto de Factores Primos Únicos</h3>
             <div className="common-factors-display">
-              <p className="factors-result">{commonPrimeFactors}</p>
+              <p className="factors-result">
+                {"{"}
+                {commonPrimeFactors}
+                {"}"}
+              </p>
               <p className="description">
-                Estos son los factores primos compartidos entre los denominadores de ambas fracciones
+                Todos los factores primos únicos con su menor exponente de ambos denominadores
               </p>
             </div>
           </motion.div>

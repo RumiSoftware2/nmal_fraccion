@@ -21,36 +21,38 @@ def get_prime_factors(n):
 
 def get_common_prime_factors(denominador1, denominador2):
     """
-    Obtiene los factores primos comunes entre dos denominadores (sin importar exponente)
+    Obtiene todos los factores primos únicos de ambos denominadores con su menor exponente
     
     Args:
         denominador1: primer denominador (int o str)
         denominador2: segundo denominador (int o str)
     
     Returns:
-        Diccionario con los factores primos comunes y sus exponentes
-        Cadena formateada con los factores comunes
+        Diccionario con todos los factores primos únicos y sus menores exponentes
+        Cadena formateada con los factores
     """
     factors1 = get_prime_factors(denominador1)
     factors2 = get_prime_factors(denominador2)
     
-    # Encontrar la intersección de los factores primos
-    common_primes = set(factors1.keys()) & set(factors2.keys())
+    # Obtener la unión de todos los factores primos (únicos)
+    all_primes = set(factors1.keys()) | set(factors2.keys())
     
-    # Crear diccionario con los factores primos comunes
-    # Tomar el menor exponente entre los dos
-    common_factors_dict = {}
-    for prime in common_primes:
-        common_factors_dict[prime] = min(factors1[prime], factors2[prime])
+    # Crear diccionario con todos los factores primos únicos
+    # Tomar el menor exponente (si existe en ambos, tomar el menor; si existe en uno, tomar ese)
+    all_factors_dict = {}
+    for prime in all_primes:
+        exp1 = factors1.get(prime, 1)  # Si no existe, consideramos exponente 1
+        exp2 = factors2.get(prime, 1)  # Si no existe, consideramos exponente 1
+        all_factors_dict[prime] = min(exp1, exp2)
     
     # Formatear resultado
-    if not common_factors_dict:
-        return common_factors_dict, "Sin factores primos comunes"
+    if not all_factors_dict:
+        return all_factors_dict, "Sin factores primos"
     
-    # Crear cadena legible: "2² × 3 × 5"
+    # Crear cadena legible: "2 × 3² × 5"
     factor_strings = []
-    for prime in sorted(common_factors_dict.keys()):
-        exp = common_factors_dict[prime]
+    for prime in sorted(all_factors_dict.keys()):
+        exp = all_factors_dict[prime]
         if exp == 1:
             factor_strings.append(str(prime))
         else:
@@ -58,4 +60,4 @@ def get_common_prime_factors(denominador1, denominador2):
     
     common_factors_string = " × ".join(factor_strings)
     
-    return common_factors_dict, common_factors_string
+    return all_factors_dict, common_factors_string

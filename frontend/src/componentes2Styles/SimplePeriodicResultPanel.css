@@ -137,6 +137,8 @@
   color: #667eea;
   font-family: 'Courier New', monospace;
   margin-bottom: 10px;
+  word-break: break-word;
+  letter-spacing: 1px;
 }
 
 .description {

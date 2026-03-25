@@ -1,7 +1,21 @@
 import { motion } from 'framer-motion'
 import '../componentes2Styles/SimplePeriodicResultPanel.css'
 
+function calculatePrimeProduct(factorsString) {
+  if (!factorsString || factorsString === "Sin factores primos") {
+    return { product: 1, factors: [] }
+  }
+  
+  // Parse factors like "2, 3, 5"
+  const factors = factorsString.split(', ').map(factor => parseInt(factor.trim())).filter(f => !isNaN(f))
+  
+  const product = factors.reduce((acc, curr) => acc * curr, 1)
+  return { product, factors }
+}
+
 export default function SimplePeriodicResultPanel({ result1, result2, base1, base2, commonPrimeFactors }) {
+  const { product, factors } = calculatePrimeProduct(commonPrimeFactors)
+  const canTransform = product <= 36
   const curtainVariants = {
     hidden: { scaleY: 0, originY: 0 },
     visible: { 
@@ -87,12 +101,20 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
             <h3>📊 Conjunto de Factores Primos Únicos</h3>
             <div className="common-factors-display">
               <p className="factors-result">
-                {"{"}
                 {commonPrimeFactors}
-                {"}"}
               </p>
+              <p className="product-result">
+                Producto: {product}
+              </p>
+              <div className={`transformation-message ${canTransform ? 'success' : 'error'}`}>
+                {canTransform ? (
+                  <p>✅ La base común para el n-mal finito es: <strong>{product}</strong></p>
+                ) : (
+                  <p>❌ No se puede transformar computacionalmente (producto &gt; 36)</p>
+                )}
+              </div>
               <p className="description">
-                Todos los factores primos únicos con su menor exponente de ambos denominadores
+                Factores primos únicos de ambos denominadores (sin repeticiones)
               </p>
             </div>
           </motion.div>

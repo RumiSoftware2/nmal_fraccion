@@ -59,7 +59,7 @@ class CommonPrimeFactorsResponse(BaseModel):
     denominador1: str
     denominador2: str
     common_factors: str
-    factores_dict: dict
+    factores_list: list
 
 @app.get("/")
 def root():
@@ -238,8 +238,8 @@ def common_prime_factors(input_data: CommonPrimeFactorsInput):
     """
     Calcula el conjunto de todos los factores primos únicos entre dos denominadores.
     
-    Retorna todos los factores primos de ambos denominadores, cada uno una sola vez,
-    con su menor exponente (si aparece en ambos, toma el menor; si aparece en uno, toma ese).
+    Retorna todos los factores primos de ambos denominadores como un conjunto único,
+    sin repeticiones ni exponentes.
     
     Ejemplo:
     {
@@ -251,21 +251,21 @@ def common_prime_factors(input_data: CommonPrimeFactorsInput):
     {
         "denominador1": "12",
         "denominador2": "18",
-        "common_factors": "2 × 3²",
-        "factores_dict": {"2": 1, "3": 2}
+        "common_factors": "2, 3",
+        "factores_list": [2, 3]
     }
     """
     try:
         denom1 = input_data.denominador1
         denom2 = input_data.denominador2
         
-        factores_dict, common_factors_string = get_common_prime_factors(denom1, denom2)
+        factores_list, common_factors_string = get_common_prime_factors(denom1, denom2)
         
         return CommonPrimeFactorsResponse(
             denominador1=denom1,
             denominador2=denom2,
             common_factors=common_factors_string,
-            factores_dict={str(k): v for k, v in factores_dict.items()}
+            factores_list=factores_list
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al calcular factores primos: {str(e)}")

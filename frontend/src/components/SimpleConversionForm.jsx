@@ -85,7 +85,7 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
               name="numero"
               value={campos.numero}
               onChange={handleChange}
-              placeholder="ej: 0.1(6) o 2.5"
+              placeholder=""
               type="text"
               icon={<Hash size={16} />}
               helpText="Periódico: 0.1(6) | Periódico puro: 0.(3) | Sin período: 2.5 | Entero: 5"

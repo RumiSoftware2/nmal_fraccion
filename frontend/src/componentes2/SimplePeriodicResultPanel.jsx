@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import '../componentes2Styles/SimplePeriodicResultPanel.css'
 
@@ -33,6 +34,10 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
     }
   }
 
+  const [show1Fractions, setShow1Fractions] = useState(false)
+  const [show2Fractions, setShow2Fractions] = useState(false)
+  const [showCommon, setShowCommon] = useState(false)
+
   return (
     <div className="simple-periodic-result-panel">
       <motion.div 
@@ -54,49 +59,67 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
           {/* Número 1 */}
           <div className="result-card">
             <h3>Número 1 (Base {base1})</h3>
-            <div className="fraction-display">
-              <p className="label">Fracción en base {base1}:</p>
-              <p className="fraction">{result1.fraccion_base_original}</p>
+            <div className="button-row">
+              <button onClick={() => setShow1Fractions(prev => !prev)}>
+                {show1Fractions ? 'Ocultar fracciones' : 'Mostrar fracciones'}
+              </button>
             </div>
-            <div className="fraction-display">
-              <p className="label">Fracción decimal:</p>
-              <p className="fraction">{result1.fraccion_decimal}</p>
-            </div>
-            {result1.factores_primos && (
-              <div className="prime-factors">
-                <p className="label">Factores primos del denominador:</p>
-                <p className="factors">{result1.factores_primos}</p>
-              </div>
+
+            {show1Fractions && (
+              <>
+                <div className="fraction-display">
+                  <p className="label">Fracción en base {base1}:</p>
+                  <p className="fraction">{result1.fraccion_base_original}</p>
+                </div>
+                <div className="fraction-display">
+                  <p className="label">Fracción decimal:</p>
+                  <p className="fraction">{result1.fraccion_decimal}</p>
+                </div>
+              </>
             )}
           </div>
 
           {/* Número 2 */}
           <div className="result-card">
             <h3>Número 2 (Base {base2})</h3>
-            <div className="fraction-display">
-              <p className="label">Fracción en base {base2}:</p>
-              <p className="fraction">{result2.fraccion_base_original}</p>
+            <div className="button-row">
+              <button onClick={() => setShow2Fractions(prev => !prev)}>
+                {show2Fractions ? 'Ocultar fracciones' : 'Mostrar fracciones'}
+              </button>
             </div>
-            <div className="fraction-display">
-              <p className="label">Fracción decimal:</p>
-              <p className="fraction">{result2.fraccion_decimal}</p>
-            </div>
-            {result2.factores_primos && (
-              <div className="prime-factors">
-                <p className="label">Factores primos del denominador:</p>
-                <p className="factors">{result2.factores_primos}</p>
-              </div>
+
+            {show2Fractions && (
+              <>
+                <div className="fraction-display">
+                  <p className="label">Fracción en base {base2}:</p>
+                  <p className="fraction">{result2.fraccion_base_original}</p>
+                </div>
+                <div className="fraction-display">
+                  <p className="label">Fracción decimal:</p>
+                  <p className="fraction">{result2.fraccion_decimal}</p>
+                </div>
+              </>
             )}
           </div>
         </div>
 
         {/* Factores primos comunes */}
         {commonPrimeFactors && (
+          <div className="common-factors-control">
+            <button 
+              onClick={() => setShowCommon(prev => !prev)}
+            >
+              {showCommon ? 'Ocultar factores primos comunes' : 'Mostrar factores primos comunes'}
+            </button>
+          </div>
+        )}
+
+        {commonPrimeFactors && showCommon && (
           <motion.div 
             className="common-factors-section"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8, duration: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
           >
             <h3>📊 Conjunto de Factores Primos Únicos</h3>
             <div className="common-factors-display">

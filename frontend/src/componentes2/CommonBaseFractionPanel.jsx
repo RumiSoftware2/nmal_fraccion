@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { convertirAFraccionBaseComun } from '../services/api'
-import './CommonBaseFractionPanel.css'
+import '../componentes2Styles/CommonBaseFractionPanel.css'
 
 export default function CommonBaseFractionPanel({ fraccion1, fraccion2, baseComun }) {
   const [loading, setLoading] = useState(false)

@@ -9,6 +9,7 @@ from pasos.paso4_calcular_denominador import calcular_denominador
 from pasos.paso_numero_sin_periodo_fraccion import calcular_fraccion_sin_periodo
 from utils.convertir_fraccion_base import convertir_fraccion_base
 from utils.prime_factors import get_common_prime_factors
+from utils.convertir_fraccion_base_comun import convertir_fracciones_a_base_comun
 
 app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
 
@@ -60,6 +61,20 @@ class CommonPrimeFactorsResponse(BaseModel):
     denominador2: str
     common_factors: str
     factores_list: list
+
+class CommonBaseConversionInput(BaseModel):
+    fraccion1: str
+    fraccion2: str
+    base_comun: int
+
+class CommonBaseConversionResponse(BaseModel):
+    fraccion1_base_comun: str
+    fraccion2_base_comun: str
+    numerador1: int
+    numerador2: int
+    denominador_comun: int
+    factor1: int
+    factor2: int
 
 @app.get("/")
 def root():
@@ -270,6 +285,30 @@ def common_prime_factors(input_data: CommonPrimeFactorsInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al calcular factores primos: {str(e)}")
 
+@app.post("/convertir-base-comun", response_model=CommonBaseConversionResponse)
+def convertir_base_comun(input_data: CommonBaseConversionInput):
+    try:
+        resultado = convertir_fracciones_a_base_comun(
+            input_data.fraccion1,
+            input_data.fraccion2,
+            input_data.base_comun
+        )
+
+        return CommonBaseConversionResponse(
+            fraccion1_base_comun=resultado['fraccion1_base_comun'],
+            fraccion2_base_comun=resultado['fraccion2_base_comun'],
+            numerador1=resultado['numerador1'],
+            numerador2=resultado['numerador2'],
+            denominador_comun=resultado['denominador_comun'],
+            factor1=resultado['factor1'],
+            factor2=resultado['factor2']
+        )
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al convertir a base común: {str(e)}")
+
 if __name__ == "__main__":
+
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

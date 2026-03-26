@@ -1,0 +1,19 @@
+.common-base-fraction-panel {
+  border: 1px solid #b9b9b9;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 12px;
+  background: #f9faff;
+}
+
+.common-base-fraction-panel h4 {
+  margin: 0 0 10px;
+}
+
+.common-base-fraction-panel .common-base-result p {
+  margin: 4px 0;
+}
+
+.common-base-fraction-panel .error {
+  color: #a00;
+}

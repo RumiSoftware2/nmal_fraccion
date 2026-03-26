@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import '../componentes2Styles/SimplePeriodicResultPanel.css'
+import CommonBaseFractionPanel from './CommonBaseFractionPanel'
 
 function calculatePrimeProduct(factorsString) {
   if (!factorsString || factorsString === "Sin factores primos") {
@@ -37,6 +38,7 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
   const [show1Fractions, setShow1Fractions] = useState(false)
   const [show2Fractions, setShow2Fractions] = useState(false)
   const [showCommon, setShowCommon] = useState(false)
+  const [showCommonBasePanel, setShowCommonBasePanel] = useState(false)
 
   return (
     <div className="simple-periodic-result-panel">
@@ -141,6 +143,23 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
               </p>
             </div>
           </motion.div>
+        )}
+
+        {/* Conversión a denominador/base común */}
+        {commonPrimeFactors && (
+          <div className="common-base-control">
+            <button onClick={() => setShowCommonBasePanel(prev => !prev)}>
+              {showCommonBasePanel ? 'Ocultar conversión base común' : 'Mostrar conversión base común'}
+            </button>
+          </div>
+        )}
+
+        {commonPrimeFactors && showCommonBasePanel && (
+          <CommonBaseFractionPanel
+            fraccion1={result1.fraccion_decimal}
+            fraccion2={result2.fraccion_decimal}
+            baseComun={product}
+          />
         )}
       </motion.div>
     </div>

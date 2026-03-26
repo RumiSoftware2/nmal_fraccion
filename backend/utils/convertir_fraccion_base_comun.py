@@ -1,55 +1,32 @@
-from typing import Tuple
 from .prime_factors import get_common_prime_factors
-
-
-def _parse_fraction(fraccion: str) -> Tuple[int, int]:
-    parts = fraccion.split('/')
-    
-    numerador = int(parts[0].strip())
-    denominador = int(parts[1].strip())
-    
-    return numerador, denominador
+from .convertir_fraccion_base import convertir_fraccion_base
 
 
 def convertir_fracciones_a_base_comun(fraccion1: str, fraccion2: str):
     """
-    Convierte dos fracciones a una base común multiplicando los factores primos comunes.
-    
-    Args:
-        fraccion1: Primera fracción como string "numerador/denominador"
-        fraccion2: Segunda fracción como string "numerador/denominador"
-    
-    Returns:
-        Diccionario con las fracciones convertidas a base común
+    Toma dos fracciones, obtiene factores primos comunes, los multiplica para obtener base,
+    y convierte las fracciones a esa base usando convertir_fraccion_base.
     """
-    numerador1, denominador1 = _parse_fraction(fraccion1)
-    numerador2, denominador2 = _parse_fraction(fraccion2)
+    # Parsear fracciones
+    num1, den1 = map(int, fraccion1.split('/'))
+    num2, den2 = map(int, fraccion2.split('/'))
     
-    # Obtener factores primos comunes de los denominadores
-    factores_comunes, _ = get_common_prime_factors(denominador1, denominador2)
+    # Obtener factores primos comunes y multiplicarlos
+    factores, _ = get_common_prime_factors(den1, den2)
+    base_cambio = 1
+    for factor in factores:
+        base_cambio *= factor
     
-    # Multiplicar los factores para obtener la base común
-    base_comun = 1
-    for factor in factores_comunes:
-        base_comun *= factor
+    # Validar base < 36
+    if base_cambio >= 36:
+        raise ValueError(f"Base {base_cambio} debe ser menor a 36")
     
-    # Validación única: base debe ser menor a 36
-    if base_comun >= 36:
-        raise ValueError(f"La base común {base_comun} debe ser menor a 36")
-    
-    # Calcular los factores de escala y nuevos numeradores
-    factor1 = base_comun // denominador1
-    factor2 = base_comun // denominador2
-    
-    nuevo_num1 = numerador1 * factor1
-    nuevo_num2 = numerador2 * factor2
+    # Convertir fracciones a la base calculada
+    num1_base, den1_base = convertir_fraccion_base(num1, den1, base_cambio)
+    num2_base, den2_base = convertir_fraccion_base(num2, den2, base_cambio)
     
     return {
-        'fraccion1_base_comun': f'{nuevo_num1}/{base_comun}',
-        'fraccion2_base_comun': f'{nuevo_num2}/{base_comun}',
-        'numerador1': nuevo_num1,
-        'numerador2': nuevo_num2,
-        'denominador_comun': base_comun,
-        'factor1': factor1,
-        'factor2': factor2
+        'fraccion1_base_cambio': f'{num1_base}/{den1_base}',
+        'fraccion2_base_cambio': f'{num2_base}/{den2_base}',
+        'base_cambio': base_cambio
     }

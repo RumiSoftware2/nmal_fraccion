@@ -161,7 +161,6 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
           <CommonBaseFractionPanel
             fraccion1={result1.fraccion_decimal}
             fraccion2={result2.fraccion_decimal}
-            baseComun={product}
           />
         )}
       </motion.div>

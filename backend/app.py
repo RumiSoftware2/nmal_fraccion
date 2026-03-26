@@ -67,13 +67,9 @@ class CommonBaseConversionInput(BaseModel):
     fraccion2: str
 
 class CommonBaseConversionResponse(BaseModel):
-    fraccion1_base_comun: str
-    fraccion2_base_comun: str
-    numerador1: int
-    numerador2: int
-    denominador_comun: int
-    factor1: int
-    factor2: int
+    fraccion1_base_cambio: str
+    fraccion2_base_cambio: str
+    base_cambio: int
 
 @app.get("/")
 def root():
@@ -294,13 +290,9 @@ def convertir_base_comun(input_data: CommonBaseConversionInput):
         )
 
         return CommonBaseConversionResponse(
-            fraccion1_base_comun=resultado['fraccion1_base_comun'],
-            fraccion2_base_comun=resultado['fraccion2_base_comun'],
-            numerador1=resultado['numerador1'],
-            numerador2=resultado['numerador2'],
-            denominador_comun=resultado['denominador_comun'],
-            factor1=resultado['factor1'],
-            factor2=resultado['factor2']
+            fraccion1_base_cambio=resultado['fraccion1_base_cambio'],
+            fraccion2_base_cambio=resultado['fraccion2_base_cambio'],
+            base_cambio=resultado['base_cambio']
         )
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))

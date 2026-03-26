@@ -65,7 +65,6 @@ class CommonPrimeFactorsResponse(BaseModel):
 class CommonBaseConversionInput(BaseModel):
     fraccion1: str
     fraccion2: str
-    base_comun: int
 
 class CommonBaseConversionResponse(BaseModel):
     fraccion1_base_comun: str
@@ -288,10 +287,10 @@ def common_prime_factors(input_data: CommonPrimeFactorsInput):
 @app.post("/convertir-base-comun", response_model=CommonBaseConversionResponse)
 def convertir_base_comun(input_data: CommonBaseConversionInput):
     try:
+        # Convertir fracciones - base_comun se calcula internamente usando factores primos
         resultado = convertir_fracciones_a_base_comun(
             input_data.fraccion1,
-            input_data.fraccion2,
-            input_data.base_comun
+            input_data.fraccion2
         )
 
         return CommonBaseConversionResponse(

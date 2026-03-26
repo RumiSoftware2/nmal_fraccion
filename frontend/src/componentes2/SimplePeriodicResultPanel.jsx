@@ -148,8 +148,11 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
         {/* Conversión a denominador/base común */}
         {commonPrimeFactors && (
           <div className="common-base-control">
-            <button onClick={() => setShowCommonBasePanel(prev => !prev)}>
-              {showCommonBasePanel ? 'Ocultar conversión base común' : 'Mostrar conversión base común'}
+            <button 
+              className="go-to-common-base-btn"
+              onClick={() => setShowCommonBasePanel(prev => !prev)}
+            >
+              {showCommonBasePanel ? '✕ Ocultar Conversión Base Común' : '→ Ir a Conversión Base Común'}
             </button>
           </div>
         )}

@@ -1,4 +1,5 @@
 from typing import Tuple
+from prime_factors import get_common_prime_factors
 
 
 def _parse_fraction(fraccion: str) -> Tuple[int, int]:
@@ -18,12 +19,24 @@ def _parse_fraction(fraccion: str) -> Tuple[int, int]:
     return numerador, denominador
 
 
-def convertir_fracciones_a_base_comun(fraccion1: str, fraccion2: str, base_comun: int):
-    if base_comun <= 0:
-        raise ValueError("La base común debe ser un entero positivo")
-
+def convertir_fracciones_a_base_comun(fraccion1: str, fraccion2: str, base_comun: int = None):
     numerador1, denominador1 = _parse_fraction(fraccion1)
     numerador2, denominador2 = _parse_fraction(fraccion2)
+
+    # Si no se proporciona base_comun, calcularla multiplicando los factores primos comunes
+    if base_comun is None:
+        factores_comunes, _ = get_common_prime_factors(denominador1, denominador2)
+        
+        if not factores_comunes:
+            raise ValueError("No hay factores primos comunes disponibles")
+        
+        # Multiplicar los factores primos para obtener la base común
+        base_comun = 1
+        for factor in factores_comunes:
+            base_comun *= factor
+    
+    if base_comun <= 0:
+        raise ValueError("La base común debe ser un entero positivo")
 
     if base_comun % denominador1 != 0 or base_comun % denominador2 != 0:
         raise ValueError("La base común debe ser múltiplo de ambos denominadores")

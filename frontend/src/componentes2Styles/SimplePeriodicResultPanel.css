@@ -31,6 +31,69 @@
   font-size: 28px;
 }
 
+/* Control Bar Styling */
+.control-bar {
+  margin-bottom: 30px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.control-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.control-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 12px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-btn .btn-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.control-btn .btn-text {
+  font-size: 13px;
+  text-align: center;
+}
+
+.control-btn:hover {
+  background: #f5f5f5;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+}
+
+.control-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.control-btn:active {
+  transform: translateY(0);
+}
+
 .results-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -56,6 +119,16 @@
   color: #667eea;
   margin-bottom: 15px;
   font-size: 18px;
+}
+
+.placeholder-text {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border: 1px dashed #ddd;
 }
 
 .fraction-display {
@@ -204,35 +277,20 @@
   .factors-result {
     font-size: 24px;
   }
+
+  .control-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .control-btn {
+    padding: 14px 10px;
+  }
 }
 
-.common-base-control {
+.common-base-section {
   margin-top: 30px;
-  text-align: center;
-}
-
-.go-to-common-base-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 14px 32px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.go-to-common-base-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-}
-
-.go-to-common-base-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  padding: 25px;
+  background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+  border: 2px solid #667eea;
+  border-radius: 12px;
 }

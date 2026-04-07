@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { convertirPeriodico } from '../services/api'
-import '../componentes2Styles/SimplePeriodicDecimalApp.css'
+import '../componentes2Styles/SingleBasePeriodicApp.css'
 import SimplePeriodicResultPanel from './SimplePeriodicResultPanel'
 
 function parsePeriodicNumber(numberString) {
@@ -28,10 +28,10 @@ function parsePeriodicNumber(numberString) {
   return { entero, noPeriodo, periodo }
 }
 
-export default function SimplePeriodicDecimalApp() {
+export default function SingleBasePeriodicApp() {
+  const [base, setBase] = useState('10')  // Solo una base para ambos números
   const [number1, setNumber1] = useState('')
   const [number2, setNumber2] = useState('')
-  const [base, setBase] = useState('10')
 
   const [result1, setResult1] = useState(null)
   const [result2, setResult2] = useState(null)
@@ -51,9 +51,6 @@ export default function SimplePeriodicDecimalApp() {
       setError('La base debe ser un número mayor a 1')
       return
     }
-    
-    const baseNum1 = baseNum
-    const baseNum2 = baseNum
 
     // Parse numbers
     const parsed1 = parsePeriodicNumber(number1.trim())
@@ -67,17 +64,18 @@ export default function SimplePeriodicDecimalApp() {
     setCommonPrimeFactors(null)
 
     try {
+      // Usar la misma base para ambos números
       const data1 = {
         entero: parsed1.entero,
         no_periodo: parsed1.noPeriodo,
         periodo: parsed1.periodo,
-        base: baseNum1
+        base: baseNum
       }
       const data2 = {
         entero: parsed2.entero,
         no_periodo: parsed2.noPeriodo,
         periodo: parsed2.periodo,
-        base: baseNum2
+        base: baseNum
       }
 
       const res1 = await convertirPeriodico(data1)
@@ -127,9 +125,10 @@ export default function SimplePeriodicDecimalApp() {
   }
 
   return (
-    <div className="simple-periodic-decimal-app">
-      <h2>Conversor Simple de Números Periódicos</h2>
+    <div className="periodic-decimal-app">
+      <h2>Conversor de Números Periódicos (Base Única)</h2>
       <div className="inputs">
+        {/* Base única */}
         <div className="input-group">
           <label>Base para ambos números:</label>
           <input
@@ -140,6 +139,7 @@ export default function SimplePeriodicDecimalApp() {
             min="2"
           />
         </div>
+
         <div className="number-section">
           <h3>Número 1</h3>
           <div className="input-group">
@@ -173,7 +173,7 @@ export default function SimplePeriodicDecimalApp() {
         <SimplePeriodicResultPanel 
           result1={result1} 
           result2={result2} 
-          base1={base} 
+          base1={base}  // Usar la base única para ambos
           base2={base}
           commonPrimeFactors={commonPrimeFactors}
         />

@@ -130,7 +130,7 @@ export default function SimplePeriodicDecimalApp() {
     <div className="simple-periodic-decimal-app">
       <h2>Conversor Simple de Números Periódicos</h2>
       <div className="inputs">
-        <div className="input-group">
+        <div className="base-group">
           <label>Base para ambos números:</label>
           <input
             type="number"
@@ -140,28 +140,30 @@ export default function SimplePeriodicDecimalApp() {
             min="2"
           />
         </div>
-        <div className="number-section">
-          <h3>Número 1</h3>
-          <div className="input-group">
-            <label>Número (formato: entero.decimal(periodo)):</label>
-            <input
-              type="text"
-              value={number1}
-              onChange={(e) => setNumber1(e.target.value)}
-              placeholder="Ej: 0.1(6)"
-            />
+        <div className="numbers-row">
+          <div className="number-section">
+            <h3>Número 1</h3>
+            <div className="input-group">
+              <label>Número (formato: entero.decimal(periodo)):</label>
+              <input
+                type="text"
+                value={number1}
+                onChange={(e) => setNumber1(e.target.value)}
+                placeholder="Ej: 0.1(6)"
+              />
+            </div>
           </div>
-        </div>
-        <div className="number-section">
-          <h3>Número 2</h3>
-          <div className="input-group">
-            <label>Número (formato: entero.decimal(periodo)):</label>
-            <input
-              type="text"
-              value={number2}
-              onChange={(e) => setNumber2(e.target.value)}
-              placeholder="Ej: 0.1(6)"
-            />
+          <div className="number-section">
+            <h3>Número 2</h3>
+            <div className="input-group">
+              <label>Número (formato: entero.decimal(periodo)):</label>
+              <input
+                type="text"
+                value={number2}
+                onChange={(e) => setNumber2(e.target.value)}
+                placeholder="Ej: 0.1(6)"
+              />
+            </div>
           </div>
         </div>
       </div>

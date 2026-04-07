@@ -39,6 +39,8 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
   const [show2Fractions, setShow2Fractions] = useState(false)
   const [showCommon, setShowCommon] = useState(false)
   const [showCommonBasePanel, setShowCommonBasePanel] = useState(false)
+  const [showOperations, setShowOperations] = useState(false)
+  const [selectedOperation, setSelectedOperation] = useState(null)
 
   return (
     <div className="simple-periodic-result-panel">
@@ -96,6 +98,14 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                   <span className="btn-text">Base Común</span>
                 </button>
               )}
+
+              <button 
+                className={`control-btn ${showOperations ? 'active' : ''}`}
+                onClick={() => setShowOperations(prev => !prev)}
+              >
+                <span className="btn-icon">➕</span>
+                <span className="btn-text">Elegir Operación</span>
+              </button>
             </div>
           </div>
 
@@ -190,8 +200,66 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
               </motion.div>
             )}
 
+            {/* Elegir Operación */}
+            {showOperations && (
+              <motion.div
+                className="content-section"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3>➕ Elegir Operación</h3>
+                <div className="operations-grid">
+                  <button 
+                    className={`operation-card ${selectedOperation === 'suma' ? 'active' : ''}`}
+                    onClick={() => setSelectedOperation('suma')}
+                  >
+                    <span className="op-icon">➕</span>
+                    <span className="op-name">Suma</span>
+                  </button>
+                  
+                  <button 
+                    className={`operation-card ${selectedOperation === 'resta' ? 'active' : ''}`}
+                    onClick={() => setSelectedOperation('resta')}
+                  >
+                    <span className="op-icon">➖</span>
+                    <span className="op-name">Resta</span>
+                  </button>
+                  
+                  <button 
+                    className={`operation-card ${selectedOperation === 'multiplicacion' ? 'active' : ''}`}
+                    onClick={() => setSelectedOperation('multiplicacion')}
+                  >
+                    <span className="op-icon">✖️</span>
+                    <span className="op-name">Multiplicación</span>
+                  </button>
+                  
+                  <button 
+                    className={`operation-card ${selectedOperation === 'division' ? 'active' : ''}`}
+                    onClick={() => setSelectedOperation('division')}
+                  >
+                    <span className="op-icon">÷</span>
+                    <span className="op-name">División</span>
+                  </button>
+                </div>
+
+                {/* Renderizar componentes según operación seleccionada */}
+                {selectedOperation && (
+                  <motion.div
+                    className="operation-result"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.3 }}
+                  >
+                    {/* Aquí irán los componentes de cada operación */}
+                    <p>Componente para {selectedOperation} - A crear</p>
+                  </motion.div>
+                )}
+              </motion.div>
+            )}
+
             {/* Empty state */}
-            {!show1Fractions && !show2Fractions && !showCommon && !showCommonBasePanel && (
+            {!show1Fractions && !show2Fractions && !showCommon && !showCommonBasePanel && !showOperations && (
               <div className="empty-state">
                 <p>Selecciona una opción en el menú para ver los detalles</p>
               </div>

@@ -302,6 +302,67 @@
   font-style: italic;
 }
 
+/* Operations Grid */
+.operations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.operation-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.operation-card .op-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.operation-card .op-name {
+  font-size: 14px;
+  text-align: center;
+}
+
+.operation-card:hover {
+  background: #f5f5f5;
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+}
+
+.operation-card.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+.operation-result {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: center;
+  color: #666;
+}
+
 @media (max-width: 768px) {
   .result-content {
     padding: 20px;
@@ -336,6 +397,10 @@
 
   .control-btn {
     padding: 14px 10px;
+  }
+
+  .operations-grid {
+    grid-template-columns: 1fr;
   }
 }
 

@@ -31,6 +31,21 @@
   font-size: 28px;
 }
 
+/* Main Layout Container */
+.results-container {
+  display: flex;
+  gap: 30px;
+  min-height: 400px;
+}
+
+/* Control Sidebar */
+.control-sidebar {
+  flex: 0 0 250px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
 /* Control Bar Styling */
 .control-bar {
   margin-bottom: 30px;
@@ -42,8 +57,8 @@
 }
 
 .control-buttons {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
@@ -94,11 +109,41 @@
   transform: translateY(0);
 }
 
+/* Content Area */
+.content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 40px;
+  color: #999;
+  font-size: 16px;
+  background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+}
+
+/* Content Sections - Expandable areas */
+.content-section {
+  padding: 25px;
+  background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
+  border: 2px solid #667eea;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+}
+
+.content-section h3 {
+  color: #667eea;
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .results-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-  margin-bottom: 30px;
+  display: none;
 }
 
 .result-card {
@@ -266,8 +311,19 @@
     font-size: 22px;
   }
 
-  .results-grid {
-    grid-template-columns: 1fr;
+  .results-container {
+    flex-direction: column;
+    gap: 20px;
+    min-height: auto;
+  }
+
+  .control-sidebar {
+    flex: 1;
+    position: static;
+  }
+
+  .content-area {
+    flex: 1;
   }
 
   .fraction-display .fraction {
@@ -276,10 +332,6 @@
 
   .factors-result {
     font-size: 24px;
-  }
-
-  .control-buttons {
-    grid-template-columns: 1fr;
   }
 
   .control-btn {

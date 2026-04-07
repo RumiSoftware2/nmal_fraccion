@@ -57,54 +57,59 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
       >
         <h2>Resultados de Conversión</h2>
 
-        {/* Control Bar - Visible button options */}
-        <div className="control-bar">
-          <div className="control-buttons">
-            <button 
-              className={`control-btn ${show1Fractions ? 'active' : ''}`}
-              onClick={() => setShow1Fractions(prev => !prev)}
-            >
-              <span className="btn-icon">1️⃣</span>
-              <span className="btn-text">Número 1</span>
-            </button>
-            
-            <button 
-              className={`control-btn ${show2Fractions ? 'active' : ''}`}
-              onClick={() => setShow2Fractions(prev => !prev)}
-            >
-              <span className="btn-icon">2️⃣</span>
-              <span className="btn-text">Número 2</span>
-            </button>
-            
-            {commonPrimeFactors && (
+        <div className="results-container">
+          {/* Control Bar - Visible button options */}
+          <div className="control-sidebar">
+            <div className="control-buttons">
               <button 
-                className={`control-btn ${showCommon ? 'active' : ''}`}
-                onClick={() => setShowCommon(prev => !prev)}
+                className={`control-btn ${show1Fractions ? 'active' : ''}`}
+                onClick={() => setShow1Fractions(prev => !prev)}
               >
-                <span className="btn-icon">🔢</span>
-                <span className="btn-text">Factores Primos</span>
+                <span className="btn-icon">1️⃣</span>
+                <span className="btn-text">Número 1</span>
               </button>
-            )}
-            
-            {commonPrimeFactors && (
+              
               <button 
-                className={`control-btn ${showCommonBasePanel ? 'active' : ''}`}
-                onClick={() => setShowCommonBasePanel(prev => !prev)}
+                className={`control-btn ${show2Fractions ? 'active' : ''}`}
+                onClick={() => setShow2Fractions(prev => !prev)}
               >
-                <span className="btn-icon">🔄</span>
-                <span className="btn-text">Base Común</span>
+                <span className="btn-icon">2️⃣</span>
+                <span className="btn-text">Número 2</span>
               </button>
-            )}
+              
+              {commonPrimeFactors && (
+                <button 
+                  className={`control-btn ${showCommon ? 'active' : ''}`}
+                  onClick={() => setShowCommon(prev => !prev)}
+                >
+                  <span className="btn-icon">🔢</span>
+                  <span className="btn-text">Factores Primos</span>
+                </button>
+              )}
+              
+              {commonPrimeFactors && (
+                <button 
+                  className={`control-btn ${showCommonBasePanel ? 'active' : ''}`}
+                  onClick={() => setShowCommonBasePanel(prev => !prev)}
+                >
+                  <span className="btn-icon">🔄</span>
+                  <span className="btn-text">Base Común</span>
+                </button>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div className="results-grid">
-          {/* Número 1 */}
-          <div className="result-card">
-            <h3>📍 Número 1 (Base {base1})</h3>
-
+          {/* Content Display Area */}
+          <div className="content-area">
+            {/* Número 1 - Expandible */}
             {show1Fractions && (
-              <>
+              <motion.div 
+                className="content-section"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3>📍 Número 1 (Base {base1})</h3>
                 <div className="fraction-display">
                   <p className="label">Fracción en base {base1}:</p>
                   <p className="fraction">{result1.fraccion_base_original}</p>
@@ -113,20 +118,18 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                   <p className="label">Fracción decimal:</p>
                   <p className="fraction">{result1.fraccion_decimal}</p>
                 </div>
-              </>
+              </motion.div>
             )}
 
-            {!show1Fractions && (
-              <p className="placeholder-text">Haz clic en el botón "Número 1" para ver los detalles</p>
-            )}
-          </div>
-
-          {/* Número 2 */}
-          <div className="result-card">
-            <h3>📍 Número 2 (Base {base2})</h3>
-
+            {/* Número 2 - Expandible */}
             {show2Fractions && (
-              <>
+              <motion.div 
+                className="content-section"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3>📍 Número 2 (Base {base2})</h3>
                 <div className="fraction-display">
                   <p className="label">Fracción en base {base2}:</p>
                   <p className="fraction">{result2.fraccion_base_original}</p>
@@ -135,63 +138,66 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                   <p className="label">Fracción decimal:</p>
                   <p className="fraction">{result2.fraccion_decimal}</p>
                 </div>
-              </>
+              </motion.div>
             )}
 
-            {!show2Fractions && (
-              <p className="placeholder-text">Haz clic en el botón "Número 2" para ver los detalles</p>
+            {/* Factores primos comunes */}
+            {commonPrimeFactors && showCommon && (
+              <motion.div 
+                className="content-section"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <h3>📊 Factores Primos Comunes</h3>
+                <div className="common-factors-display">
+                  <p className="factors-result">
+                    {commonPrimeFactors}
+                  </p>
+                  <p className="product-result">
+                    Producto: {product}
+                  </p>
+                  <div className={`transformation-message ${canTransform ? 'success' : 'error'}`}>
+                    {canTransform ? (
+                      <p>✅ La base común para el decimal finito es: <strong>{product}</strong></p>
+                    ) : (
+                      <p>❌ No se puede transformar computacionalmente (producto &gt; 36)</p>
+                    )}
+                  </div>
+                  <p className="description">
+                    Factores primos únicos de ambos denominadores (sin repeticiones)
+                  </p>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Conversión a denominador/base común */}
+            {commonPrimeFactors && showCommonBasePanel && (
+              <motion.div
+                className="content-section"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <CommonBaseFractionPanel
+                  fraccion1={result1.fraccion_decimal}
+                  fraccion2={result2.fraccion_decimal}
+                  fraccion1BaseOriginal={result1.fraccion_base_original}
+                  fraccion2BaseOriginal={result2.fraccion_base_original}
+                  base1={base1}
+                  base2={base2}
+                />
+              </motion.div>
+            )}
+
+            {/* Empty state */}
+            {!show1Fractions && !show2Fractions && !showCommon && !showCommonBasePanel && (
+              <div className="empty-state">
+                <p>Selecciona una opción en el menú para ver los detalles</p>
+              </div>
             )}
           </div>
         </div>
-
-        {/* Factores primos comunes */}
-        {commonPrimeFactors && showCommon && (
-          <motion.div 
-            className="common-factors-section"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-          >
-            <h3>📊 Factores Primos Comunes</h3>
-            <div className="common-factors-display">
-              <p className="factors-result">
-                {commonPrimeFactors}
-              </p>
-              <p className="product-result">
-                Producto: {product}
-              </p>
-              <div className={`transformation-message ${canTransform ? 'success' : 'error'}`}>
-                {canTransform ? (
-                  <p>✅ La base común para el decimal finito es: <strong>{product}</strong></p>
-                ) : (
-                  <p>❌ No se puede transformar computacionalmente (producto &gt; 36)</p>
-                )}
-              </div>
-              <p className="description">
-                Factores primos únicos de ambos denominadores (sin repeticiones)
-              </p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Conversión a denominador/base común */}
-        {commonPrimeFactors && showCommonBasePanel && (
-          <motion.div
-            className="common-base-section"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.4 }}
-          >
-            <CommonBaseFractionPanel
-              fraccion1={result1.fraccion_decimal}
-              fraccion2={result2.fraccion_decimal}
-              fraccion1BaseOriginal={result1.fraccion_base_original}
-              fraccion2BaseOriginal={result2.fraccion_base_original}
-              base1={base1}
-              base2={base2}
-            />
-          </motion.div>
-        )}
       </motion.div>
     </div>
   )

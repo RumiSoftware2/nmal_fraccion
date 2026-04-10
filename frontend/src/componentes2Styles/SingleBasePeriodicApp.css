@@ -5,6 +5,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
   min-height: 100vh;
+  color: #333;
+  color-scheme: light;
 }
 
 /* ===== INPUT VIEW ===== */
@@ -166,6 +168,8 @@
   font-family: 'Courier New', monospace;
   transition: all 0.3s ease;
   background: white;
+  color: #333;
+  color-scheme: light;
 }
 
 .input-group input:focus {

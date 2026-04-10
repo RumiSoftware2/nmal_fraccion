@@ -13,6 +13,22 @@ function truncateDecimal(value, maxDecimals = 4) {
   return value.slice(0, dotIndex + 1 + maxDecimals) + '…'
 }
 
+// Redondea automáticamente si hay dos ceros seguidos en los decimales
+function roundOnDoubleZeros(value) {
+  if (!value || typeof value !== 'string') return value
+  const dotIndex = value.indexOf('.')
+  if (dotIndex === -1) return value // No tiene decimales
+  
+  const decimalPart = value.slice(dotIndex + 1)
+  const zeroIndex = decimalPart.indexOf('00')
+  
+  if (zeroIndex === -1) return value // No hay dos ceros seguidos
+  
+  // Redondear en el punto donde comienzan los dos ceros
+  const beforeZeros = value.slice(0, dotIndex + 1 + zeroIndex)
+  return beforeZeros
+}
+
 export default function Suma({ result1, result2, base1, base2 }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -161,12 +177,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
           <div className="resultado-row">
             <div className="resultado-item">
               <p className="label">En base {base}:</p>
-              <p className="valor resultado-fraccion">{truncateDecimal(resultado.resultado_completo)}</p>
-            </div>
-
-            <div className="resultado-item">
-              <p className="label">En base 10 (verificación):</p>
-              <p className="valor">{truncateDecimal(String(resultado.decimal_base10))}</p>
+              <p className="valor resultado-fraccion">{roundOnDoubleZeros(resultado.resultado_completo)}</p>
             </div>
           </div>
 
@@ -198,7 +209,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
             </div>
             <div className="desglose-item">
               <p className="label">Parte Decimal:</p>
-              <p className="valor">{resultado.resultado_decimal ? truncateDecimal(resultado.resultado_decimal) : '(sin parte decimal)'}</p>
+              <p className="valor">{resultado.resultado_decimal ? roundOnDoubleZeros(resultado.resultado_decimal) : '(sin parte decimal)'}</p>
             </div>
           </div>
         </motion.div>

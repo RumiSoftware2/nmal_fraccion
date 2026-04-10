@@ -173,6 +173,32 @@
   cursor: not-allowed;
 }
 
+/* Botón pasos */
+.btn-pasos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-pasos:hover {
+  box-shadow: 0 8px 25px rgba(20, 184, 166, 0.3);
+  transform: translateY(-2px);
+}
+
 .spinner {
   display: inline-block;
   width: 16px;
@@ -312,6 +338,16 @@
   font-family: 'Courier New', monospace;
   margin: 0;
   color: #333;
+}
+
+/* Contenedor de pasos */
+.pasos-suma-container {
+  background: linear-gradient(135deg, #14b8a608 0%, #0d948808 100%);
+  border: 2px solid #14b8a6;
+  border-radius: 8px;
+  padding: 25px;
+  margin: 20px 0;
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.1);
 }
 
 /* Responsive */

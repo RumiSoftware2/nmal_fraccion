@@ -33,6 +33,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resultado, setResultado] = useState(null)
+  const [showPasos, setShowPasos] = useState(false)
 
   // Parsear la fracción (ej: "1/2" -> { num: "1", den: "2" })
   const parseFraccion = (fractionStr) => {
@@ -151,6 +152,28 @@ export default function Suma({ result1, result2, base1, base2 }) {
         ) : (
           '🔢 Calcular Suma'
         )}
+      </motion.button>
+
+      {/* Botón papasos */}
+      {showPasos && (
+        <motion.div
+          className="pasos-suma-container"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {/* Los pasos se renderizarán aquí */}
+        </motion.div>
+      )}
+
+      {/* Mostrar ra mostrar pasos */}
+      <motion.button
+        className="btn-pasos"
+        onClick={() => setShowPasos(!showPasos)}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        📋 Pasos de la Suma Base Común
       </motion.button>
 
       {/* Mostrar errores */}

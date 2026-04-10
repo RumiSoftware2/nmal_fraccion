@@ -86,8 +86,9 @@ export default function Paso1prueba({ input }) {
             className={`step-tab ${index === activeStep ? 'active' : ''}`}
             onClick={() => setActiveStep(index)}
             type="button"
+            title={`${index + 1}. ${step.label}`}
           >
-            <strong>{index + 1}</strong>. {step.label}
+            {step.label}
           </button>
         ))}
       </div>

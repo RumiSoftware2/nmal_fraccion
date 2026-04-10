@@ -3,7 +3,7 @@
   background: #ffffff;
   border: 1px solid rgba(99, 102, 241, 0.2);
   border-radius: 14px;
-  padding: 18px;
+  padding: 14px;
   margin: 16px 0;
   box-shadow: 0 8px 20px rgba(99, 102, 241, 0.1);
 }
@@ -11,39 +11,67 @@
 .math-step-card h3 {
   margin: 0 0 10px;
   color: #4f46e5;
-  font-size: 1.1rem;
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
 }
 
 .step-tabs {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 4px;
   margin-bottom: 14px;
 }
 
 .step-tab {
   border: 1px solid rgba(99, 102, 241, 0.3);
   background: #f8faff;
-  border-radius: 10px;
-  padding: 10px 14px;
+  border-radius: 6px;
+  padding: 5px 6px;
   cursor: pointer;
   font-weight: 600;
+  font-size: clamp(0.6rem, 1.8vw, 0.78rem);
   color: #333;
   transition: all 0.2s ease;
+  flex: 1 1 0;
+  text-align: center;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.step-tab strong {
+  display: none;
 }
 
 .step-tab:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 10px rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.6);
 }
 
 .step-tab.active {
   border-color: rgba(99, 102, 241, 0.9);
   background: #e9edff;
   color: #1f35a8;
-  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.25);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 .step-content {
   padding: 10px 0 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+  .math-step-card {
+    padding: 10px;
+  }
+
+  .step-tab {
+    padding: 4px 3px;
+    font-size: 0.6rem;
+  }
+
+  .step-tabs {
+    gap: 3px;
+  }
 }

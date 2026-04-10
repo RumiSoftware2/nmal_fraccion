@@ -1,19 +1,77 @@
 .common-base-fraction-panel {
-  border: 1px solid #b9b9b9;
+  background: white;
   border-radius: 8px;
-  padding: 12px;
-  margin-top: 12px;
-  background: #f9faff;
+  padding: 25px;
+  border-left: 4px solid #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .common-base-fraction-panel h4 {
-  margin: 0 0 10px;
+  margin: 0 0 20px;
+  color: #667eea;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
 }
 
-.common-base-fraction-panel .common-base-result p {
-  margin: 4px 0;
+.common-base-result {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-.common-base-fraction-panel .error {
-  color: #a00;
+.common-base-result p {
+  margin: 12px 0;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border-left: 3px solid #667eea;
+  font-size: 14px;
+}
+
+.common-base-result p .label {
+  font-size: 11px;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.common-base-result p strong {
+  font-size: 18px;
+  color: #333;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+  display: block;
+  margin-top: 5px;
+}
+
+.common-base-result .error {
+  color: #d32f2f;
+  background: #ffebee;
+  border-left-color: #d32f2f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .common-base-fraction-panel {
+    padding: 20px;
+  }
+
+  .common-base-result {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .common-base-result p {
+    margin: 8px 0;
+    padding: 12px;
+  }
+
+  .common-base-result p strong {
+    font-size: 16px;
+  }
 }

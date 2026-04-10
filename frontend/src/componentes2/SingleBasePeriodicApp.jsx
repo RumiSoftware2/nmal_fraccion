@@ -126,54 +126,101 @@ export default function SingleBasePeriodicApp() {
 
   return (
     <div className="periodic-decimal-app">
-      <h2>Conversor de Números Periódicos (Base Única)</h2>
-      <div className="inputs">
-        {/* Base única */}
-        <div className="input-group">
-          <label>Base para ambos números:</label>
-          <input
-            type="number"
-            value={base}
-            onChange={(e) => setBase(e.target.value)}
-            placeholder="Ej: 10"
-            min="2"
-          />
-        </div>
+      <div className="app-header">
+        <h2>📊 Conversor de Números Periódicos</h2>
+        <p className="subtitle">Convierte números periódicos a fracciones en una base única</p>
+      </div>
 
-        <div className="number-section">
-          <h3>Número 1</h3>
+      <div className="inputs-container">
+        {/* Base única */}
+        <div className="base-section">
+          <h3>🔢 Base De Conversión</h3>
           <div className="input-group">
-            <label>Número (formato: entero.decimal(periodo)):</label>
-            <input
-              type="text"
-              value={number1}
-              onChange={(e) => setNumber1(e.target.value)}
-              placeholder="Ej: 0.1(6)"
-            />
+            <label>Base para ambos números:</label>
+            <div className="input-wrapper">
+              <input
+                type="number"
+                value={base}
+                onChange={(e) => setBase(e.target.value)}
+                placeholder="Ej: 10"
+                min="2"
+                max="36"
+              />
+              <span className="input-hint">Entre 2 y 36</span>
+            </div>
           </div>
         </div>
-        <div className="number-section">
-          <h3>Número 2</h3>
-          <div className="input-group">
-            <label>Número (formato: entero.decimal(periodo)):</label>
-            <input
-              type="text"
-              value={number2}
-              onChange={(e) => setNumber2(e.target.value)}
-              placeholder="Ej: 0.1(6)"
-            />
+
+        {/* Números */}
+        <div className="numbers-grid">
+          <div className="number-section">
+            <div className="section-header">
+              <span className="section-icon">1️⃣</span>
+              <h3>Número 1</h3>
+            </div>
+            <div className="input-group">
+              <label>Número (formato: entero.decimal(periodo)):</label>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  value={number1}
+                  onChange={(e) => setNumber1(e.target.value)}
+                  placeholder="Ej: 0.1(6)"
+                />
+                <span className="input-hint">Con o sin período</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="number-section">
+            <div className="section-header">
+              <span className="section-icon">2️⃣</span>
+              <h3>Número 2</h3>
+            </div>
+            <div className="input-group">
+              <label>Número (formato: entero.decimal(periodo)):</label>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  value={number2}
+                  onChange={(e) => setNumber2(e.target.value)}
+                  placeholder="Ej: 0.1(6)"
+                />
+                <span className="input-hint">Con o sin período</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <button onClick={handleConvert} disabled={loading}>
-        {loading ? 'Convirtiendo...' : 'Convertir'}
+
+      <button 
+        className={`btn-convert ${loading ? 'loading' : ''}`}
+        onClick={handleConvert} 
+        disabled={loading}
+      >
+        {loading ? (
+          <>
+            <span className="spinner"></span> Convirtiendo...
+          </>
+        ) : (
+          <>
+            <span className="btn-icon">🚀</span> Convertir
+          </>
+        )}
       </button>
-      {error && <p className="error">{error}</p>}
+
+      {error && (
+        <div className="error-message">
+          <span className="error-icon">⚠️</span>
+          <p>{error}</p>
+        </div>
+      )}
+
       {showResult && result1 && result2 && (
         <SimplePeriodicResultPanel 
           result1={result1} 
           result2={result2} 
-          base1={base}  // Usar la base única para ambos
+          base1={base}
           base2={base}
           commonPrimeFactors={commonPrimeFactors}
         />

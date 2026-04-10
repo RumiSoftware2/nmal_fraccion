@@ -25,3 +25,16 @@ export async function convertirAFraccionBaseComun(datos) {
   }
   return response.json()
 }
+
+export async function dividirFracciones(datos) {
+  const response = await fetch(`${BASE_URL}/dividir-fracciones`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos)
+  })
+  if (!response.ok) {
+    const err = await response.json()
+    throw new Error(err.detail || 'Error al dividir fracciones')
+  }
+  return response.json()
+}

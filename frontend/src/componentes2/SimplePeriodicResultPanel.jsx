@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import '../componentes2Styles/SimplePeriodicResultPanel.css'
 import CommonBaseFractionPanel from './CommonBaseFractionPanel'
+import Suma from './Suma'
 
 function calculatePrimeProduct(factorsString) {
   if (!factorsString || factorsString === "Sin factores primos") {
@@ -251,8 +252,22 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.3 }}
                   >
-                    {/* Aquí irán los componentes de cada operación */}
-                    <p>Componente para {selectedOperation} - A crear</p>
+                    {/* Componentes de operaciones */}
+                    {selectedOperation === 'suma' && (
+                      <Suma result1={result1} result2={result2} base1={base1} base2={base2} />
+                    )}
+                    
+                    {selectedOperation === 'resta' && (
+                      <p style={{ color: 'white', textAlign: 'center' }}>Componente para resta - A crear</p>
+                    )}
+                    
+                    {selectedOperation === 'multiplicacion' && (
+                      <p style={{ color: 'white', textAlign: 'center' }}>Componente para multiplicación - A crear</p>
+                    )}
+                    
+                    {selectedOperation === 'division' && (
+                      <p style={{ color: 'white', textAlign: 'center' }}>Componente para división - A crear</p>
+                    )}
                   </motion.div>
                 )}
               </motion.div>

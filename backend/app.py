@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
+import numpy as np
 from pasos.paso1_numero_sin_periodo import numero_sin_periodo
 from pasos.paso2_numero_antes_periodo import numero_antes_periodo
 from pasos.paso3_calcular_numerador import calcular_numerador
@@ -349,10 +350,14 @@ def dividir_fracciones_endpoint(input_data: DividirFraccionInput):
         numerador_resultado = (num1_base10 * den2_base10) + (num2_base10 * den1_base10)
         denominador_resultado = den1_base10 * den2_base10
         
+        # Convertir resultado a la base original para pasar a dividir_fraccion_en_base
+        numerador_resultado_str = np.base_repr(numerador_resultado, input_data.base).upper()
+        denominador_resultado_str = np.base_repr(denominador_resultado, input_data.base).upper()
+        
         # Usar la función fraccion_nmal para dividir y obtener el resultado en la base original
         resultado = dividir_fraccion_en_base(
-            str(numerador_resultado),
-            str(denominador_resultado),
+            numerador_resultado_str,
+            denominador_resultado_str,
             input_data.base
         )
         

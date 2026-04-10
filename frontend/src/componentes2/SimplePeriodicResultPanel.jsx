@@ -254,7 +254,12 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                   >
                     {/* Componentes de operaciones */}
                     {selectedOperation === 'suma' && (
-                      <Suma result1={result1} result2={result2} base1={base1} base2={base2} />
+                      <Suma 
+                        result1={result1} 
+                        result2={result2} 
+                        base1={base1} 
+                        base2={base2}
+                      />
                     )}
                     
                     {selectedOperation === 'resta' && (

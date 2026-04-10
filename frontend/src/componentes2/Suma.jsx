@@ -8,7 +8,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
   const [error, setError] = useState('')
   const [resultado, setResultado] = useState(null)
 
-  // Parsear la fracción base original (ej: "1/2" -> { num: "1", den: "2" })
+  // Parsear la fracción (ej: "1/2" -> { num: "1", den: "2" })
   const parseFraccion = (fractionStr) => {
     const parts = fractionStr.split('/')
     return {
@@ -89,7 +89,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
               <span className="denominador">{frac1.denominador}</span>
             </div>
           </div>
-          <p className="base-label">Base {base1}</p>
+          <p className="base-label">Base {base}</p>
         </div>
 
         {/* Operador */}
@@ -106,7 +106,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
               <span className="denominador">{frac2.denominador}</span>
             </div>
           </div>
-          <p className="base-label">Base {base2}</p>
+          <p className="base-label">Base {base}</p>
         </div>
       </div>
 

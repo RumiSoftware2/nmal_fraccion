@@ -6,7 +6,7 @@ import SimpleConversionForm from './components/SimpleConversionForm'
 import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import Menu from './components/Menu'
-import SimplePeriodicDecimalApp from './componentes2/SimplePeriodicDecimalApp'
+import PeriodicDecimalApp from './componentes2/PeriodicDecimalApp'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png' // reemplaza con tu imagen de escudo subida a assets
 import './components/App.css'
@@ -75,7 +75,7 @@ export default function App() {
         </motion.header>
 
         <main className="math-main">
-          <SimplePeriodicDecimalApp />
+          <PeriodicDecimalApp />
         </main>
       </div>
     )

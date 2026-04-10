@@ -3,6 +3,16 @@ import { motion } from 'framer-motion'
 import { dividirFracciones } from '../services/api'
 import '../componentes2Styles/Suma.css'
 
+// Trunca la parte decimal de un string numérico a maxDecimals dígitos
+function truncateDecimal(value, maxDecimals = 4) {
+  if (!value || typeof value !== 'string') return value
+  const dotIndex = value.indexOf('.')
+  if (dotIndex === -1) return value
+  const decimalPart = value.slice(dotIndex + 1)
+  if (decimalPart.length <= maxDecimals) return value
+  return value.slice(0, dotIndex + 1 + maxDecimals) + '…'
+}
+
 export default function Suma({ result1, result2, base1, base2 }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -151,12 +161,12 @@ export default function Suma({ result1, result2, base1, base2 }) {
           <div className="resultado-row">
             <div className="resultado-item">
               <p className="label">En base {base}:</p>
-              <p className="valor resultado-fraccion">{resultado.resultado_completo}</p>
+              <p className="valor resultado-fraccion">{truncateDecimal(resultado.resultado_completo)}</p>
             </div>
 
             <div className="resultado-item">
               <p className="label">En base 10 (verificación):</p>
-              <p className="valor">{resultado.decimal_base10}</p>
+              <p className="valor">{truncateDecimal(String(resultado.decimal_base10))}</p>
             </div>
           </div>
 
@@ -188,7 +198,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
             </div>
             <div className="desglose-item">
               <p className="label">Parte Decimal:</p>
-              <p className="valor">{resultado.resultado_decimal || '(sin parte decimal)'}</p>
+              <p className="valor">{resultado.resultado_decimal ? truncateDecimal(resultado.resultado_decimal) : '(sin parte decimal)'}</p>
             </div>
           </div>
         </motion.div>

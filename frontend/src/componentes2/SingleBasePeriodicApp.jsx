@@ -124,106 +124,133 @@ export default function SingleBasePeriodicApp() {
     }
   }
 
+  const handleReset = () => {
+    setShowResult(false)
+    setResult1(null)
+    setResult2(null)
+    setCommonPrimeFactors(null)
+    setError('')
+  }
+
   return (
     <div className="periodic-decimal-app">
-      <div className="app-header">
-        <h2>📊 Conversor de Números Periódicos</h2>
-        <p className="subtitle">Convierte números periódicos a fracciones en una base única</p>
-      </div>
-
-      <div className="inputs-container">
-        {/* Base única */}
-        <div className="base-section">
-          <h3>🔢 Base De Conversión</h3>
-          <div className="input-group">
-            <label>Base para ambos números:</label>
-            <div className="input-wrapper">
-              <input
-                type="number"
-                value={base}
-                onChange={(e) => setBase(e.target.value)}
-                placeholder="Ej: 10"
-                min="2"
-                max="36"
-              />
-              <span className="input-hint">Entre 2 y 36</span>
-            </div>
+      {/* Sección de entrada - Se oculta cuando hay resultados */}
+      {!showResult && (
+        <div className="input-view">
+          <div className="app-header">
+            <h2>📊 Conversor de Números Periódicos</h2>
+            <p className="subtitle">Convierte números periódicos a fracciones en una base única</p>
           </div>
-        </div>
 
-        {/* Números */}
-        <div className="numbers-grid">
-          <div className="number-section">
-            <div className="section-header">
-              <span className="section-icon">1️⃣</span>
-              <h3>Número 1</h3>
+          <div className="inputs-container">
+            {/* Base única */}
+            <div className="base-section">
+              <h3>🔢 Base De Conversión</h3>
+              <div className="input-group">
+                <label>Base para ambos números:</label>
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    value={base}
+                    onChange={(e) => setBase(e.target.value)}
+                    placeholder="Ej: 10"
+                    min="2"
+                    max="36"
+                  />
+                  <span className="input-hint">Entre 2 y 36</span>
+                </div>
+              </div>
             </div>
-            <div className="input-group">
-              <label>Número (formato: entero.decimal(periodo)):</label>
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  value={number1}
-                  onChange={(e) => setNumber1(e.target.value)}
-                  placeholder="Ej: 0.1(6)"
-                />
-                <span className="input-hint">Con o sin período</span>
+
+            {/* Números */}
+            <div className="numbers-grid">
+              <div className="number-section">
+                <div className="section-header">
+                  <span className="section-icon">1️⃣</span>
+                  <h3>Número 1</h3>
+                </div>
+                <div className="input-group">
+                  <label>Número (formato: entero.decimal(periodo)):</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      value={number1}
+                      onChange={(e) => setNumber1(e.target.value)}
+                      placeholder="Ej: 0.1(6)"
+                    />
+                    <span className="input-hint">Con o sin período</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="number-section">
+                <div className="section-header">
+                  <span className="section-icon">2️⃣</span>
+                  <h3>Número 2</h3>
+                </div>
+                <div className="input-group">
+                  <label>Número (formato: entero.decimal(periodo)):</label>
+                  <div className="input-wrapper">
+                    <input
+                      type="text"
+                      value={number2}
+                      onChange={(e) => setNumber2(e.target.value)}
+                      placeholder="Ej: 0.1(6)"
+                    />
+                    <span className="input-hint">Con o sin período</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="number-section">
-            <div className="section-header">
-              <span className="section-icon">2️⃣</span>
-              <h3>Número 2</h3>
-            </div>
-            <div className="input-group">
-              <label>Número (formato: entero.decimal(periodo)):</label>
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  value={number2}
-                  onChange={(e) => setNumber2(e.target.value)}
-                  placeholder="Ej: 0.1(6)"
-                />
-                <span className="input-hint">Con o sin período</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          <button 
+            className={`btn-convert ${loading ? 'loading' : ''}`}
+            onClick={handleConvert} 
+            disabled={loading}
+          >
+            {loading ? (
+              <>
+                <span className="spinner"></span> Convirtiendo...
+              </>
+            ) : (
+              <>
+                <span className="btn-icon">🚀</span> Convertir
+              </>
+            )}
+          </button>
 
-      <button 
-        className={`btn-convert ${loading ? 'loading' : ''}`}
-        onClick={handleConvert} 
-        disabled={loading}
-      >
-        {loading ? (
-          <>
-            <span className="spinner"></span> Convirtiendo...
-          </>
-        ) : (
-          <>
-            <span className="btn-icon">🚀</span> Convertir
-          </>
-        )}
-      </button>
-
-      {error && (
-        <div className="error-message">
-          <span className="error-icon">⚠️</span>
-          <p>{error}</p>
+          {error && (
+            <div className="error-message">
+              <span className="error-icon">⚠️</span>
+              <p>{error}</p>
+            </div>
+          )}
         </div>
       )}
 
+      {/* Sección de resultados - Reemplaza los inputs */}
       {showResult && result1 && result2 && (
-        <SimplePeriodicResultPanel 
-          result1={result1} 
-          result2={result2} 
-          base1={base}
-          base2={base}
-          commonPrimeFactors={commonPrimeFactors}
-        />
+        <div className="results-view">
+          <div className="results-header">
+            <button className="btn-back" onClick={handleReset}>
+              <span className="back-icon">←</span>
+              Volver a ingresar números
+            </button>
+            <div className="results-summary">
+              <span className="summary-badge">Base {base}</span>
+              <span className="summary-number">N1: {number1}</span>
+              <span className="summary-number">N2: {number2}</span>
+            </div>
+          </div>
+          <SimplePeriodicResultPanel 
+            result1={result1} 
+            result2={result2} 
+            base1={base}
+            base2={base}
+            commonPrimeFactors={commonPrimeFactors}
+          />
+        </div>
       )}
     </div>
   )

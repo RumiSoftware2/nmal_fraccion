@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import '../componentes2Styles/SimplePeriodicResultPanel.css'
 import CommonBaseFractionPanel from './CommonBaseFractionPanel'
 import Suma from './Suma'
+import { convertirAFraccionBaseComun } from '../services/api'
 
 function calculatePrimeProduct(factorsString) {
   if (!factorsString || factorsString === "Sin factores primos") {
@@ -42,6 +43,19 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
   const [showCommonBasePanel, setShowCommonBasePanel] = useState(false)
   const [showOperations, setShowOperations] = useState(false)
   const [selectedOperation, setSelectedOperation] = useState(null)
+  const [commonBaseResult, setCommonBaseResult] = useState(null)
+
+  // Obtener resultado de conversión a base común
+  useEffect(() => {
+    if (!result1 || !result2) return
+
+    convertirAFraccionBaseComun({
+      fraccion1: result1.fraccion_decimal,
+      fraccion2: result2.fraccion_decimal
+    })
+      .then((data) => setCommonBaseResult(data))
+      .catch((err) => console.error('Error al obtener conversión:', err.message))
+  }, [result1, result2])
 
   return (
     <div className="simple-periodic-result-panel">
@@ -253,12 +267,12 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                     transition={{ delay: 0.2, duration: 0.3 }}
                   >
                     {/* Componentes de operaciones */}
-                    {selectedOperation === 'suma' && (
+                    {selectedOperation === 'suma' && commonBaseResult && (
                       <Suma 
-                        result1={result1} 
-                        result2={result2} 
-                        base1={base1} 
-                        base2={base2}
+                        result1={{ fraccion_base_original: commonBaseResult.fraccion1_base_cambio }} 
+                        result2={{ fraccion_base_original: commonBaseResult.fraccion2_base_cambio }} 
+                        base1={commonBaseResult.base_cambio} 
+                        base2={commonBaseResult.base_cambio}
                       />
                     )}
                     

@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { dividirFracciones } from '../services/api'
+import PasosSuma from './PasosSuma'
 import '../componentes2Styles/Suma.css'
 
 // Trunca la parte decimal de un string numérico a maxDecimals dígitos
@@ -33,7 +34,8 @@ export default function Suma({ result1, result2, base1, base2 }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resultado, setResultado] = useState(null)
-  const [showPasos, setShowPasos] = useState(false)
+  // 'none' | 'resultado' | 'pasos'
+  const [activeView, setActiveView] = useState('none')
 
   // Parsear la fracción (ej: "1/2" -> { num: "1", den: "2" })
   const parseFraccion = (fractionStr) => {
@@ -72,11 +74,24 @@ export default function Suma({ result1, result2, base1, base2 }) {
 
       const respuesta = await dividirFracciones(datos)
       setResultado(respuesta)
+      setActiveView('resultado')
     } catch (err) {
       console.error('Error en suma:', err)
       setError(err.message || 'Error al realizar la suma')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleShowPasos = () => {
+    setActiveView(prev => prev === 'pasos' ? 'none' : 'pasos')
+  }
+
+  const handleShowResultado = () => {
+    if (!resultado) {
+      handleSuma()
+    } else {
+      setActiveView(prev => prev === 'resultado' ? 'none' : 'resultado')
     }
   }
 
@@ -137,44 +152,34 @@ export default function Suma({ result1, result2, base1, base2 }) {
         </div>
       </div>
 
-      {/* Botón para calcular */}
-      <motion.button
-        className="btn-calcular"
-        onClick={handleSuma}
-        disabled={loading || !mismaBase}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        {loading ? (
-          <>
-            <span className="spinner"></span> Calculando...
-          </>
-        ) : (
-          '🔢 Calcular Suma'
-        )}
-      </motion.button>
-
-      {/* Botón papasos */}
-      {showPasos && (
-        <motion.div
-          className="pasos-suma-container"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
+      {/* Botones de acción */}
+      <div className="suma-actions">
+        <motion.button
+          className={`btn-calcular ${activeView === 'resultado' ? 'active' : ''}`}
+          onClick={handleShowResultado}
+          disabled={loading || !mismaBase}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
         >
-          {/* Los pasos se renderizarán aquí */}
-        </motion.div>
-      )}
+          {loading ? (
+            <>
+              <span className="spinner"></span> Calculando...
+            </>
+          ) : (
+            '🔢 Calcular Suma'
+          )}
+        </motion.button>
 
-      {/* Mostrar ra mostrar pasos */}
-      <motion.button
-        className="btn-pasos"
-        onClick={() => setShowPasos(!showPasos)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        📋 Pasos de la Suma Base Común
-      </motion.button>
+        <motion.button
+          className={`btn-pasos ${activeView === 'pasos' ? 'active' : ''}`}
+          onClick={handleShowPasos}
+          disabled={!mismaBase}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          📋 Pasos de la Suma
+        </motion.button>
+      </div>
 
       {/* Mostrar errores */}
       {error && (
@@ -187,56 +192,74 @@ export default function Suma({ result1, result2, base1, base2 }) {
         </motion.div>
       )}
 
-      {/* Mostrar resultado */}
-      {resultado && (
-        <motion.div
-          className="resultado-suma"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4 }}
-        >
-          <h4>📊 Resultado</h4>
-
-          <div className="resultado-row">
-            <div className="resultado-item">
-              <p className="label">En base {base}:</p>
-              <p className="valor resultado-fraccion">{roundOnDoubleZeros(resultado.resultado_completo)}</p>
-            </div>
-          </div>
-
-          {/* Información sobre si es periódico */}
+      {/* Contenido exclusivo: resultado O pasos */}
+      <AnimatePresence mode="wait">
+        {/* Mostrar resultado */}
+        {activeView === 'resultado' && resultado && (
           <motion.div
-            className={`periodicidad ${resultado.es_periodico ? 'es-periodico' : 'es-exacto'}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            key="resultado"
+            className="resultado-suma"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
           >
-            {resultado.es_periodico ? (
-              <>
-                <span className="icon">🔄</span>
-                <p>Este es un <strong>decimal periódico</strong> en base {base}</p>
-              </>
-            ) : (
-              <>
-                <span className="icon">✅</span>
-                <p>Este es un <strong>decimal exacto</strong> en base {base}</p>
-              </>
-            )}
-          </motion.div>
+            <h4>📊 Resultado</h4>
 
-          {/* Desglose del resultado */}
-          <div className="resultado-desglose">
-            <div className="desglose-item">
-              <p className="label">Parte Entera:</p>
-              <p className="valor">{resultado.resultado_entero}</p>
+            <div className="resultado-row">
+              <div className="resultado-item">
+                <p className="label">En base {base}:</p>
+                <p className="valor resultado-fraccion">{roundOnDoubleZeros(resultado.resultado_completo)}</p>
+              </div>
             </div>
-            <div className="desglose-item">
-              <p className="label">Parte Decimal:</p>
-              <p className="valor">{resultado.resultado_decimal ? roundOnDoubleZeros(resultado.resultado_decimal) : '(sin parte decimal)'}</p>
+
+            {/* Información sobre si es periódico */}
+            <motion.div
+              className={`periodicidad ${resultado.es_periodico ? 'es-periodico' : 'es-exacto'}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {resultado.es_periodico ? (
+                <>
+                  <span className="icon">🔄</span>
+                  <p>Este es un <strong>decimal periódico</strong> en base {base}</p>
+                </>
+              ) : (
+                <>
+                  <span className="icon">✅</span>
+                  <p>Este es un <strong>decimal exacto</strong> en base {base}</p>
+                </>
+              )}
+            </motion.div>
+
+            {/* Desglose del resultado */}
+            <div className="resultado-desglose">
+              <div className="desglose-item">
+                <p className="label">Parte Entera:</p>
+                <p className="valor">{resultado.resultado_entero}</p>
+              </div>
+              <div className="desglose-item">
+                <p className="label">Parte Decimal:</p>
+                <p className="valor">{resultado.resultado_decimal ? roundOnDoubleZeros(resultado.resultado_decimal) : '(sin parte decimal)'}</p>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+
+        {/* Mostrar pasos */}
+        {activeView === 'pasos' && (
+          <motion.div
+            key="pasos"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
+          >
+            <PasosSuma frac1={frac1} frac2={frac2} base={base} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }

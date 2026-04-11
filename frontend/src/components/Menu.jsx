@@ -18,12 +18,12 @@ const programs = [
     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
   },
   {
-    id: 'coming-soon',
-    title: 'Próximamente',
-    description: 'Más herramientas matemáticas',
+    id: 'base-converter',
+    title: 'Cambio de Base',
+    description: 'Convierte números n-mal entre diferentes bases',
     icon: Sparkles,
     gradient: 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
-    disabled: true
+    disabled: false
   }
 ]
 

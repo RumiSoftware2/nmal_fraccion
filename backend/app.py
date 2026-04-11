@@ -93,6 +93,23 @@ class DividirFraccionResponse(BaseModel):
     es_periodico: bool
     decimal_base10: float
 
+class ConvertirBaseInput(BaseModel):
+    """Modelo de entrada para convertir un número n-mal entre bases"""
+    entero: str
+    no_periodo: str
+    periodo: str
+    base_origen: int
+    base_destino: int
+
+class ConvertirBaseResponse(BaseModel):
+    """Respuesta de conversión entre bases"""
+    numero_original: str
+    numero_convertido: str
+    valor_base_10: float
+    base_origen: int
+    base_destino: int
+    detalles: str
+
 @app.get("/")
 def root():
     return {
@@ -380,6 +397,79 @@ def operar_fracciones_endpoint(input_data: DividirFraccionInput):
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al operar fracciones: {str(e)}")
+
+@app.post("/convertir-base", response_model=ConvertirBaseResponse)
+def convertir_base(input_data: ConvertirBaseInput):
+    """
+    Convierte un número n-mal de una base a otra.
+    
+    Ejemplo:
+    {
+        "entero": "3",
+        "no_periodo": "25",
+        "periodo": "3",
+        "base_origen": 10,
+        "base_destino": 2
+    }
+    """
+    try:
+        # Validar bases
+        if input_data.base_origen < 2 or input_data.base_origen > 36:
+            raise HTTPException(status_code=400, detail="Base origen debe estar entre 2 y 36")
+        
+        if input_data.base_destino < 2 or input_data.base_destino > 36:
+            raise HTTPException(status_code=400, detail="Base destino debe estar entre 2 y 36")
+        
+        if input_data.base_origen == input_data.base_destino:
+            raise HTTPException(status_code=400, detail="Las bases origen y destino deben ser diferentes")
+        
+        # Convertir la fracción n-mal a una fracción en base 10
+        numero_input = PeriodicoInput(
+            entero=input_data.entero,
+            no_periodo=input_data.no_periodo,
+            periodo=input_data.periodo,
+            base=input_data.base_origen
+        )
+        
+        respuesta_base_10 = convertir_periodico(numero_input)
+        numerador_base_10 = respuesta_base_10.numerador
+        denominador_base_10 = respuesta_base_10.denominador
+        
+        # Calcular el valor decimal en base 10
+        valor_base_10 = numerador_base_10 / denominador_base_10
+        
+        # Convertir la fracción a la base destino
+        numerador_destino, denominador_destino = convertir_fraccion_base(
+            numerador_base_10, 
+            denominador_base_10, 
+            input_data.base_destino
+        )
+        
+        # Construir el número original y convertido como strings
+        if input_data.periodo and input_data.periodo != "":
+            numero_original = f"{input_data.entero}.{input_data.no_periodo}({input_data.periodo})"
+        else:
+            numero_original = f"{input_data.entero}.{input_data.no_periodo}"
+        
+        numero_convertido = f"{numerador_destino}/{denominador_destino}"
+        
+        detalles = f"Conversión de base {input_data.base_origen} a base {input_data.base_destino}. " \
+                   f"Numerador: {numerador_base_10} (base 10) = {numerador_destino} (base {input_data.base_destino}). " \
+                   f"Denominador: {denominador_base_10} (base 10) = {denominador_destino} (base {input_data.base_destino})."
+        
+        return ConvertirBaseResponse(
+            numero_original=numero_original,
+            numero_convertido=numero_convertido,
+            valor_base_10=valor_base_10,
+            base_origen=input_data.base_origen,
+            base_destino=input_data.base_destino,
+            detalles=detalles
+        )
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al convertir entre bases: {str(e)}")
 
 if __name__ == "__main__":
 

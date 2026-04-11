@@ -7,6 +7,7 @@ import ResultPanel from './components/ResultPanel'
 import NumberDisplay from './components/NumberDisplay'
 import Menu from './components/Menu'
 import PeriodicDecimalApp from './componentes2/PeriodicDecimalApp'
+import ConversorBase from './componentes3/ConversorBase'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png' // reemplaza con tu imagen de escudo subida a assets
 import './components/App.css'
@@ -27,6 +28,8 @@ export default function App() {
       setCurrentView('app')
     } else if (programId === 'periodic-decimal') {
       setCurrentView('periodic-app')
+    } else if (programId === 'base-converter') {
+      setCurrentView('base-converter')
     }
   }
 
@@ -76,6 +79,53 @@ export default function App() {
 
         <main className="math-main">
           <PeriodicDecimalApp />
+        </main>
+      </div>
+    )
+  }
+
+  if (currentView === 'base-converter') {
+    return (
+      <div className="math-tutor-app">
+        <motion.header 
+          className="math-header"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="header-content">
+            <motion.div 
+              className="logo-section"
+              whileHover={{ scale: 1.05 }}
+            >
+              <img
+                src={escudo}
+                alt="Escudo Universidad Pedagógica"
+                className="univ-logo"
+                title="Escudo Universidad Pedagógica"
+              />
+              <div>
+                <h1>🔄 Conversor de Bases</h1>
+                <p>Convierte números n-mal entre diferentes bases numéricas</p>
+              </div>
+            </motion.div>
+
+            <motion.button
+              className="return-menu-btn"
+              onClick={() => setCurrentView('menu')}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            >
+              🏠 Menú Principal
+            </motion.button>
+          </div>
+        </motion.header>
+
+        <main className="math-main">
+          <ConversorBase />
         </main>
       </div>
     )

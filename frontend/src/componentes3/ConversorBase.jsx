@@ -1,32 +1,87 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, AlertCircle, CheckCircle } from 'lucide-react'
+import { ArrowRight, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react'
 import './ConversorBase.css'
 
 const CONFIG_API = {
   VITE_API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000'
 }
 
-export default function ConversorBase() {
-  const [formData, setFormData] = useState({
-    entero: '0',
-    no_periodo: '0',
-    periodo: '0',
-    base_origen: '10',
-    base_destino: '2'
-  })
+/**
+ * Parsea un número n-mal en formato: 1.3(4)
+ * Retorna: { entero, no_periodo, periodo }
+ * 
+ * Ejemplos:
+ * "1.3(4)" → { entero: "1", no_periodo: "3", periodo: "4" }
+ * "2.5" → { entero: "2", no_periodo: "5", periodo: "" }
+ * "0.(3)" → { entero: "0", no_periodo: "", periodo: "3" }
+ * "3" → { entero: "3", no_periodo: "", periodo: "" }
+ */
+function parseNumeroNmal(numero) {
+  if (!numero || numero.trim() === '') {
+    throw new Error('El número no puede estar vacío')
+  }
 
+  numero = numero.trim()
+  let entero = '0'
+  let no_periodo = ''
+  let periodo = ''
+
+  // Separar por el punto decimal
+  const partes = numero.split('.')
+  
+  if (partes.length > 2) {
+    throw new Error('Formato inválido: solo puede haber un punto decimal')
+  }
+
+  // Parte entera
+  if (partes[0]) {
+    entero = partes[0]
+  }
+
+  // Si no hay parte decimal, listo
+  if (partes.length === 1) {
+    return { entero, no_periodo, periodo }
+  }
+
+  // Procesar parte decimal
+  const parteDecimal = partes[1]
+
+  // Buscar paréntesis para la parte periódica
+  const indiceParentesis = parteDecimal.indexOf('(')
+
+  if (indiceParentesis === -1) {
+    // No hay período, todo es no periódico
+    no_periodo = parteDecimal
+  } else {
+    // Hay período
+    no_periodo = parteDecimal.substring(0, indiceParentesis)
+    
+    // Extraer lo que está dentro del paréntesis
+    const indiceCierre = parteDecimal.indexOf(')')
+    
+    if (indiceCierre === -1) {
+      throw new Error('Formato inválido: paréntesis sin cerrar en la parte periódica')
+    }
+    
+    periodo = parteDecimal.substring(indiceParentesis + 1, indiceCierre)
+    
+    if (!periodo) {
+      throw new Error('Formato inválido: el período no puede estar vacío (use .5 para números sin período)')
+    }
+  }
+
+  return { entero, no_periodo, periodo }
+}
+
+export default function ConversorBase() {
+  const [numeroInput, setNumeroInput] = useState('1.3(4)')
+  const [baseOrigen, setBaseOrigen] = useState('10')
+  const [baseDestino, setBaseDestino] = useState('2')
   const [resultado, setResultado] = useState(null)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
+  const [showHelp, setShowHelp] = useState(false)
 
   const handleConvert = async () => {
     setError(null)
@@ -35,21 +90,23 @@ export default function ConversorBase() {
 
     try {
       // Validar que base_origen y base_destino sean diferentes
-      if (formData.base_origen === formData.base_destino) {
+      const baseOrigenNum = parseInt(baseOrigen)
+      const baseDestinoNum = parseInt(baseDestino)
+
+      if (baseOrigenNum === baseDestinoNum) {
         throw new Error('La base origen y destino deben ser diferentes')
       }
 
-      // Validar rangos de bases
-      const baseOrigen = parseInt(formData.base_origen)
-      const baseDestino = parseInt(formData.base_destino)
-
-      if (baseOrigen < 2 || baseOrigen > 36) {
+      if (baseOrigenNum < 2 || baseOrigenNum > 36) {
         throw new Error('La base origen debe estar entre 2 y 36')
       }
 
-      if (baseDestino < 2 || baseDestino > 36) {
+      if (baseDestinoNum < 2 || baseDestinoNum > 36) {
         throw new Error('La base destino debe estar entre 2 y 36')
       }
+
+      // Parsear el número n-mal
+      const { entero, no_periodo, periodo } = parseNumeroNmal(numeroInput)
 
       const response = await fetch(`${CONFIG_API.VITE_API_URL}/convertir-base`, {
         method: 'POST',
@@ -57,11 +114,11 @@ export default function ConversorBase() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          entero: formData.entero,
-          no_periodo: formData.no_periodo,
-          periodo: formData.periodo,
-          base_origen: baseOrigen,
-          base_destino: baseDestino
+          entero,
+          no_periodo,
+          periodo,
+          base_origen: baseOrigenNum,
+          base_destino: baseDestinoNum
         })
       })
 
@@ -99,51 +156,63 @@ export default function ConversorBase() {
         transition={{ delay: 0.2, duration: 0.6 }}
       >
         <div className="form-section">
-          <h3>📝 Ingresa los Datos</h3>
-
-          <div className="input-group">
-            <label>Parte Entera</label>
-            <input
-              type="text"
-              name="entero"
-              value={formData.entero}
-              onChange={handleInputChange}
-              placeholder="Ej: 3"
-              disabled={loading}
-            />
+          <div className="section-header-with-help">
+            <h3>📝 Ingresa el Número N-mal</h3>
+            <motion.button
+              className="help-btn"
+              onClick={() => setShowHelp(!showHelp)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              title="Ver ayuda de formato"
+            >
+              <HelpCircle size={20} />
+            </motion.button>
           </div>
 
-          <div className="input-group">
-            <label>Parte Antes del Período (No Periódica)</label>
-            <input
-              type="text"
-              name="no_periodo"
-              value={formData.no_periodo}
-              onChange={handleInputChange}
-              placeholder="Ej: 25"
-              disabled={loading}
-            />
-          </div>
+          <AnimatePresence>
+            {showHelp && (
+              <motion.div
+                className="help-box"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <div className="help-content">
+                  <p><strong>Formato:</strong> [entero].[no_período](período)</p>
+                  <p><strong>Ejemplos:</strong></p>
+                  <ul>
+                    <li><code>1.3(4)</code> = 1.3444... (período = 4)</li>
+                    <li><code>2.5</code> = 2.5 (sin período)</li>
+                    <li><code>0.(3)</code> = 0.333... (período = 3)</li>
+                    <li><code>3</code> = 3 (número entero)</li>
+                    <li><code>0.1(6)</code> = 0.1666... (no_período=1, período=6)</li>
+                  </ul>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="input-group">
-            <label>Parte Periódica</label>
+            <label>Número (formato: 1.3(4))</label>
             <input
               type="text"
-              name="periodo"
-              value={formData.periodo}
-              onChange={handleInputChange}
-              placeholder="Ej: 3 (para 3,253333...)"
+              value={numeroInput}
+              onChange={(e) => setNumeroInput(e.target.value)}
+              placeholder="Ej: 1.3(4) ó 2.5 ó 3"
               disabled={loading}
+              className="numero-input"
             />
+            <span className="input-hint">
+              El paréntesis indica qué dígitos se repiten infinitamente
+            </span>
           </div>
 
           <div className="bases-row">
             <div className="input-group">
               <label>Base Origen</label>
               <select
-                name="base_origen"
-                value={formData.base_origen}
-                onChange={handleInputChange}
+                value={baseOrigen}
+                onChange={(e) => setBaseOrigen(e.target.value)}
                 disabled={loading}
               >
                 {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (
@@ -161,9 +230,8 @@ export default function ConversorBase() {
             <div className="input-group">
               <label>Base Destino</label>
               <select
-                name="base_destino"
-                value={formData.base_destino}
-                onChange={handleInputChange}
+                value={baseDestino}
+                onChange={(e) => setBaseDestino(e.target.value)}
                 disabled={loading}
               >
                 {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (

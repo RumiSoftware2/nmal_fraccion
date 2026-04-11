@@ -3,6 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import '../componentes2Styles/SimplePeriodicResultPanel.css'
 import CommonBaseFractionPanel from './CommonBaseFractionPanel'
 import Suma from './Suma'
+import Resta from './Resta'
+import Multiplicacion from './Multiplicacion'
+import Division from './Division'
 import { convertirAFraccionBaseComun } from '../services/api'
 
 function calculatePrimeProduct(factorsString) {
@@ -242,16 +245,31 @@ export default function SimplePeriodicResultPanel({ result1, result2, base1, bas
                     />
                   )}
                   
-                  {selectedOperation === 'resta' && (
-                    <p style={{ color: '#666', textAlign: 'center' }}>Componente para resta - A crear</p>
+                  {selectedOperation === 'resta' && commonBaseResult && (
+                    <Resta 
+                      result1={{ fraccion_base_original: commonBaseResult.fraccion1_base_cambio }} 
+                      result2={{ fraccion_base_original: commonBaseResult.fraccion2_base_cambio }} 
+                      base1={commonBaseResult.base_cambio} 
+                      base2={commonBaseResult.base_cambio}
+                    />
                   )}
                   
-                  {selectedOperation === 'multiplicacion' && (
-                    <p style={{ color: '#666', textAlign: 'center' }}>Componente para multiplicación - A crear</p>
+                  {selectedOperation === 'multiplicacion' && commonBaseResult && (
+                    <Multiplicacion 
+                      result1={{ fraccion_base_original: commonBaseResult.fraccion1_base_cambio }} 
+                      result2={{ fraccion_base_original: commonBaseResult.fraccion2_base_cambio }} 
+                      base1={commonBaseResult.base_cambio} 
+                      base2={commonBaseResult.base_cambio}
+                    />
                   )}
                   
-                  {selectedOperation === 'division' && (
-                    <p style={{ color: '#666', textAlign: 'center' }}>Componente para división - A crear</p>
+                  {selectedOperation === 'division' && commonBaseResult && (
+                    <Division 
+                      result1={{ fraccion_base_original: commonBaseResult.fraccion1_base_cambio }} 
+                      result2={{ fraccion_base_original: commonBaseResult.fraccion2_base_cambio }} 
+                      base1={commonBaseResult.base_cambio} 
+                      base2={commonBaseResult.base_cambio}
+                    />
                   )}
                 </div>
               )}

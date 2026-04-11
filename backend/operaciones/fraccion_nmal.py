@@ -8,7 +8,7 @@ def dividir_fraccion_en_base(numerador_str: str, denominador_str: str, base: int
     Divide una fracción en cualquier base y devuelve el resultado en la misma base.
     
     Args:
-        numerador_str: numerador de la fracción en la base especificada (ej: "A" en base 16)
+        numerador_str: numerador de la fracción en la base especificada (ej: "A" en base 16, o "-5")
         denominador_str: denominador de la fracción en la base especificada
         base: base numérica (2-36)
     
@@ -26,12 +26,33 @@ def dividir_fraccion_en_base(numerador_str: str, denominador_str: str, base: int
         raise ValueError(f"La base debe estar entre 2 y 36, recibida: {base}")
     
     try:
+        # Detectar signos
+        es_negativo_num = numerador_str.startswith('-')
+        es_negativo_den = denominador_str.startswith('-')
+        
+        # Limpiar signos para conversión
+        numerador_limpio = numerador_str.lstrip('-')
+        denominador_limpio = denominador_str.lstrip('-')
+        
         # Convertir de la base especificada a base 10
-        numerador_base10 = int(numerador_str, base)
-        denominador_base10 = int(denominador_str, base)
+        numerador_base10 = int(numerador_limpio, base)
+        denominador_base10 = int(denominador_limpio, base)
         
         if denominador_base10 == 0:
             raise ValueError("El denominador no puede ser cero")
+        
+        # Aplicar signos
+        if es_negativo_num:
+            numerador_base10 = -numerador_base10
+        if es_negativo_den:
+            denominador_base10 = -denominador_base10
+        
+        # Determinar si el resultado será negativo
+        resultado_es_negativo = (numerador_base10 < 0) != (denominador_base10 < 0)
+        
+        # Trabajar con valores absolutos
+        numerador_base10 = abs(numerador_base10)
+        denominador_base10 = abs(denominador_base10)
         
         # Hacer la división en base 10
         resultado_base10 = numerador_base10 / denominador_base10
@@ -46,6 +67,10 @@ def dividir_fraccion_en_base(numerador_str: str, denominador_str: str, base: int
         else:
             entero_en_base = np.base_repr(parte_entera, base).upper()
         
+        # Aplicar signo a la parte entera si es necesario
+        if resultado_es_negativo and parte_entera > 0:
+            entero_en_base = "-" + entero_en_base
+        
         # Calcular la parte decimal en la base original
         decimal_en_base = calcular_decimal_en_base(parte_fraccionaria, base, max_digitos=20)
         
@@ -58,6 +83,9 @@ def dividir_fraccion_en_base(numerador_str: str, denominador_str: str, base: int
         # Detectar si es periódico analizando la fracción
         es_periodico = detectar_periodico(numerador_base10, denominador_base10)
         
+        # Ajustar el resultado en base 10 con el signo
+        resultado_base10_final = resultado_base10 if not resultado_es_negativo else -resultado_base10
+        
         return {
             'numerador': numerador_str,
             'denominador': denominador_str,
@@ -65,7 +93,7 @@ def dividir_fraccion_en_base(numerador_str: str, denominador_str: str, base: int
             'resultado_entero': entero_en_base,
             'resultado_decimal': decimal_en_base,
             'resultado_completo': resultado_completo,
-            'decimal_base10': round(resultado_base10, 10),
+            'decimal_base10': round(resultado_base10_final, 10),
             'es_periodico': es_periodico,
             'numerador_base10': numerador_base10,
             'denominador_base10': denominador_base10

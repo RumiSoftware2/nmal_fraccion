@@ -12,6 +12,7 @@ from utils.convertir_fraccion_base import convertir_fraccion_base
 from utils.prime_factors import get_common_prime_factors
 from utils.convertir_fraccion_base_comun import convertir_fracciones_a_base_comun
 from operaciones.fraccion_nmal import dividir_fraccion_en_base
+from operaciones.operaciones_fracciones import operar_fracciones_en_base, convertir_a_base_con_signo
 
 app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
 
@@ -74,12 +75,13 @@ class CommonBaseConversionResponse(BaseModel):
     base_cambio: int
 
 class DividirFraccionInput(BaseModel):
-    """Modelo para dividir fracciones en cualquier base"""
+    """Modelo para operar con fracciones en cualquier base"""
     numerador1: str
     denominador1: str
     numerador2: str
     denominador2: str
     base: int
+    operacion: str = "suma"  # suma, resta, multiplicacion, division
 
 class DividirFraccionResponse(BaseModel):
     """Respuesta de la división de fracciones"""
@@ -320,12 +322,15 @@ def convertir_base_comun(input_data: CommonBaseConversionInput):
         raise HTTPException(status_code=500, detail=f"Error al convertir a base común: {str(e)}")
 
 @app.post("/dividir-fracciones", response_model=DividirFraccionResponse)
-def dividir_fracciones_endpoint(input_data: DividirFraccionInput):
+def operar_fracciones_endpoint(input_data: DividirFraccionInput):
     """
-    Suma o divide dos fracciones en cualquier base y retorna el resultado en esa base.
+    Suma, resta, multiplica o divide dos fracciones en cualquier base y retorna el resultado en esa base.
     
-    La fórmula de suma: (a/b) + (c/d) = (a*d + c*b) / (b*d)
-    La fórmula de división: (a/b) / (c/d) = (a*d) / (b*c)
+    Operaciones soportadas:
+    - suma: (a/b) + (c/d) = (a*d + c*b) / (b*d)
+    - resta: (a/b) - (c/d) = (a*d - c*b) / (b*d)
+    - multiplicacion: (a/b) * (c/d) = (a*c) / (b*d)
+    - division: (a/b) / (c/d) = (a*d) / (b*c)
     
     Ejemplo:
     {
@@ -333,28 +338,28 @@ def dividir_fracciones_endpoint(input_data: DividirFraccionInput):
         "denominador1": "2",
         "numerador2": "1",
         "denominador2": "2",
-        "base": 10
+        "base": 10,
+        "operacion": "suma"
     }
     """
     try:
-        # Convertir todas las partes de las fracciones a base 10
-        num1_base10 = int(input_data.numerador1, input_data.base)
-        den1_base10 = int(input_data.denominador1, input_data.base)
-        num2_base10 = int(input_data.numerador2, input_data.base)
-        den2_base10 = int(input_data.denominador2, input_data.base)
+        operacion = input_data.operacion.lower().strip()
         
-        if den1_base10 == 0 or den2_base10 == 0:
-            raise ValueError("Los denominadores no pueden ser cero")
+        # Usar la función mejorada para realizar la operación
+        numerador_resultado, denominador_resultado, es_negativo = operar_fracciones_en_base(
+            input_data.numerador1,
+            input_data.denominador1,
+            input_data.numerador2,
+            input_data.denominador2,
+            input_data.base,
+            operacion
+        )
         
-        # Calcular suma de fracciones: (a/b) + (c/d) = (a*d + c*b) / (b*d)
-        numerador_resultado = (num1_base10 * den2_base10) + (num2_base10 * den1_base10)
-        denominador_resultado = den1_base10 * den2_base10
+        # Convertir resultado a la base especificada, manejando signo correctamente
+        numerador_resultado_str = convertir_a_base_con_signo(numerador_resultado, input_data.base, es_negativo)
+        denominador_resultado_str = convertir_a_base_con_signo(denominador_resultado, input_data.base, False)
         
-        # Convertir resultado a la base original para pasar a dividir_fraccion_en_base
-        numerador_resultado_str = np.base_repr(numerador_resultado, input_data.base).upper()
-        denominador_resultado_str = np.base_repr(denominador_resultado, input_data.base).upper()
-        
-        # Usar la función fraccion_nmal para dividir y obtener el resultado en la base original
+        # Usar la función fraccion_nmal para obtener el resultado decimal en la base original
         resultado = dividir_fraccion_en_base(
             numerador_resultado_str,
             denominador_resultado_str,
@@ -362,7 +367,7 @@ def dividir_fracciones_endpoint(input_data: DividirFraccionInput):
         )
         
         return DividirFraccionResponse(
-            operacion="suma",
+            operacion=operacion,
             base=input_data.base,
             resultado_entero=resultado['resultado_entero'],
             resultado_decimal=resultado['resultado_decimal'],
@@ -374,7 +379,7 @@ def dividir_fracciones_endpoint(input_data: DividirFraccionInput):
     except ValueError as ve:
         raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error al dividir fracciones: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error al operar fracciones: {str(e)}")
 
 if __name__ == "__main__":
 

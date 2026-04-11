@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { dividirFracciones } from '../services/api'
-import PasosSuma from './PasosSuma'
-import '../componentes2Styles/Suma.css'
+import PasosDivision from './PasosDivision'
+import '../componentes2Styles/Division.css'
 
 // Trunca la parte decimal de un string numérico a maxDecimals dígitos
 function truncateDecimal(value, maxDecimals = 4) {
@@ -30,7 +30,7 @@ function roundOnDoubleZeros(value) {
   return beforeZeros
 }
 
-export default function Suma({ result1, result2, base1, base2 }) {
+export default function Division({ result1, result2, base1, base2 }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resultado, setResultado] = useState(null)
@@ -53,9 +53,9 @@ export default function Suma({ result1, result2, base1, base2 }) {
   const mismaBase = base1 === base2
   const base = base1
 
-  const handleSuma = async () => {
+  const handleDivision = async () => {
     if (!mismaBase) {
-      setError('❌ Las fracciones deben estar en la misma base para sumarlas')
+      setError('❌ Las fracciones deben estar en la misma base para dividirlas')
       return
     }
 
@@ -70,15 +70,15 @@ export default function Suma({ result1, result2, base1, base2 }) {
         numerador2: frac2.numerador,
         denominador2: frac2.denominador,
         base: base,
-        operacion: 'suma'
+        operacion: 'division'
       }
 
       const respuesta = await dividirFracciones(datos)
       setResultado(respuesta)
       setActiveView('resultado')
     } catch (err) {
-      console.error('Error en suma:', err)
-      setError(err.message || 'Error al realizar la suma')
+      console.error('Error en división:', err)
+      setError(err.message || 'Error al realizar la división')
     } finally {
       setLoading(false)
     }
@@ -90,7 +90,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
 
   const handleShowResultado = () => {
     if (!resultado) {
-      handleSuma()
+      handleDivision()
     } else {
       setActiveView(prev => prev === 'resultado' ? 'none' : 'resultado')
     }
@@ -98,13 +98,13 @@ export default function Suma({ result1, result2, base1, base2 }) {
 
   return (
     <motion.div
-      className="suma-container"
+      className="division-container"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="suma-header">
-        <h3>➕ Suma de Fracciones</h3>
+      <div className="division-header">
+        <h3>÷ División de Fracciones</h3>
         <p className="base-info">Base: {base}</p>
       </div>
 
@@ -117,12 +117,12 @@ export default function Suma({ result1, result2, base1, base2 }) {
         >
           <p>⚠️ Las fracciones están en bases diferentes:</p>
           <p>Fracción 1: Base {base1} | Fracción 2: Base {base2}</p>
-          <p>Para sumar, deben estar en la misma base.</p>
+          <p>Para dividir, deben estar en la misma base.</p>
         </motion.div>
       )}
 
       {/* Card de operación */}
-      <div className="suma-operation">
+      <div className="division-operation">
         {/* Fracción 1 */}
         <div className="fraccion-card">
           <div className="fraccion-content">
@@ -137,7 +137,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
 
         {/* Operador */}
         <div className="operador">
-          <span className="icon">➕</span>
+          <span className="icon">÷</span>
         </div>
 
         {/* Fracción 2 */}
@@ -154,7 +154,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
       </div>
 
       {/* Botones de acción */}
-      <div className="suma-actions">
+      <div className="division-actions">
         <motion.button
           className={`btn-calcular ${activeView === 'resultado' ? 'active' : ''}`}
           onClick={handleShowResultado}
@@ -167,7 +167,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
               <span className="spinner"></span> Calculando...
             </>
           ) : (
-            '🔢 Calcular Suma'
+            '🔢 Calcular División'
           )}
         </motion.button>
 
@@ -178,7 +178,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          📋 Pasos de la Suma
+          📋 Pasos de la División
         </motion.button>
       </div>
 
@@ -199,7 +199,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
         {activeView === 'resultado' && resultado && (
           <motion.div
             key="resultado"
-            className="resultado-suma"
+            className="resultado-division"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
@@ -257,7 +257,7 @@ export default function Suma({ result1, result2, base1, base2 }) {
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.3 }}
           >
-            <PasosSuma frac1={frac1} frac2={frac2} base={base} />
+            <PasosDivision frac1={frac1} frac2={frac2} base={base} />
           </motion.div>
         )}
       </AnimatePresence>

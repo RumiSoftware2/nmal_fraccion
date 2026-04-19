@@ -215,36 +215,10 @@ export default function Suma({ result1, result2, base1, base2 }) {
             </div>
 
             {/* Información sobre si es periódico */}
-            <motion.div
-              className={`periodicidad ${resultado.es_periodico ? 'es-periodico' : 'es-exacto'}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              {resultado.es_periodico ? (
-                <>
-                  <span className="icon">🔄</span>
-                  <p>Este es un <strong>decimal periódico</strong> en base {base}</p>
-                </>
-              ) : (
-                <>
-                  <span className="icon">✅</span>
-                  <p>Este es un <strong>decimal exacto</strong> en base {base}</p>
-                </>
-              )}
-            </motion.div>
+            
 
             {/* Desglose del resultado */}
-            <div className="resultado-desglose">
-              <div className="desglose-item">
-                <p className="label">Parte Entera:</p>
-                <p className="valor">{resultado.resultado_entero}</p>
-              </div>
-              <div className="desglose-item">
-                <p className="label">Parte Decimal:</p>
-                <p className="valor">{resultado.resultado_decimal ? roundOnDoubleZeros(resultado.resultado_decimal) : '(sin parte decimal)'}</p>
-              </div>
-            </div>
+            
           </motion.div>
         )}
 

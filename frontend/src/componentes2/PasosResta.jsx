@@ -108,25 +108,36 @@ function generarRestaColumnaLatex(aStr, bStr, base) {
   const maxDec = Math.max(aDec.length, bDec.length)
 
   // Rellenar con ceros a la derecha para igualar decimales
-  const aDecPad = aDec.padEnd(maxDec, '0')
-  const bDecPad = bDec.padEnd(maxDec, '0')
+  let aDecPad = aDec.padEnd(maxDec, '0')
+  let bDecPad = bDec.padEnd(maxDec, '0')
 
   // Longitud máxima de parte entera para alinear a la izquierda
   const maxInt = Math.max(aInt.length, bInt.length)
-  const aIntPad = aInt.padStart(maxInt, '0')
-  const bIntPad = bInt.padStart(maxInt, '0')
+  let aIntPad = aInt.padStart(maxInt, '0')
+  let bIntPad = bInt.padStart(maxInt, '0')
 
   // Calcular la resta en base dada (digit a digit con préstamo)
-  const aFull = aIntPad + aDecPad   // string de dígitos sin punto
-  const bFull = bIntPad + bDecPad
+  let aFull = aIntPad + aDecPad   // string de dígitos sin punto
+  let bFull = bIntPad + bDecPad
 
-  const totalLen = aFull.length
+  let isNegative = false;
+  let calcAFull = aFull;
+  let calcBFull = bFull;
+
+  if (calcAFull < calcBFull) {
+    isNegative = true;
+    let tempStr = calcAFull;
+    calcAFull = calcBFull;
+    calcBFull = tempStr;
+  }
+
+  const totalLen = calcAFull.length
   const borrows = new Array(totalLen + 1).fill(0)
   const resultDigits = new Array(totalLen).fill(0)
 
   for (let i = totalLen - 1; i >= 0; i--) {
-    const da = parseInt(aFull[i], base)
-    const db = parseInt(bFull[i], base)
+    const da = parseInt(calcAFull[i], base)
+    const db = parseInt(calcBFull[i], base)
     let diff = da - db - borrows[i + 1]
     
     if (diff < 0) {
@@ -139,20 +150,19 @@ function generarRestaColumnaLatex(aStr, bStr, base) {
   // Convertir dígitos resultado a strings en la base
   const toB = (d) => (d < 10 ? String(d) : String.fromCharCode(55 + d)).toUpperCase()
 
-  // Remover ceros a la izquierda
+  // Remover ceros a la izquierda para el string resultado
   let resIntDigits = ''
   let startIdx = 0
   for (let i = 0; i < maxInt; i++) {
-    if (resultDigits[i] !== 0 || startIdx > 0) {
+    if (resultDigits[i] !== 0 || startIdx > 0 || i === maxInt - 1) { // Mantener al menos un '0'
       resIntDigits += toB(resultDigits[i])
       startIdx = 1
     }
   }
-  if (!resIntDigits) resIntDigits = '0'
 
   const resDecDigits = maxDec > 0 ? resultDigits.slice(maxInt).map(toB).join('') : ''
 
-  const resultStr = resIntDigits + (resDecDigits ? '.' + resDecDigits : '')
+  const resultStr = (isNegative ? '-' : '') + resIntDigits + (resDecDigits ? '.' + resDecDigits : '')
 
   // Total de columnas necesarias
   const totalCols = maxInt + (maxDec > 0 ? 1 : 0) + maxDec
@@ -171,34 +181,40 @@ function generarRestaColumnaLatex(aStr, bStr, base) {
   const aRow = aCells.join(' & ')
 
   const bCells = []
-  bCells.push('-')
-  for (let i = 0; i < maxInt - 1; i++) {
+  for (let i = 0; i < maxInt; i++) {
     bCells.push(bIntPad[i].toUpperCase())
   }
-  bCells[bCells.length - 1] = bCells[bCells.length - 1] || bIntPad[maxInt - 1].toUpperCase()
   if (maxDec > 0) {
     bCells.push('.')
     for (const ch of bDecPad) {
       bCells.push(ch.toUpperCase())
     }
   }
-  
-  const bRow = bCells.slice(0, aCells.length).join(' & ')
+  const bRow = bCells.join(' & ')
 
   const resCells = []
-  for (const d of resIntDigits) {
-    resCells.push(d)
+  let resStarted = false
+  for (let i = 0; i < maxInt; i++) {
+    if (resultDigits[i] !== 0 || resStarted || i === maxInt - 1) {
+      let val = toB(resultDigits[i])
+      if (!resStarted && isNegative) {
+        val = `{-}${val}`
+      }
+      resCells.push(val)
+      resStarted = true
+    } else {
+      resCells.push('')
+    }
   }
   if (maxDec > 0) {
     resCells.push('.')
-    for (const ch of resDecDigits) {
-      resCells.push(ch)
+    for (let i = maxInt; i < totalLen; i++) {
+      resCells.push(toB(resultDigits[i]))
     }
   }
-  
-  const resRow = resCells.slice(0, aCells.length).join(' & ')
+  const resRow = resCells.join(' & ')
 
-  const latex = `\\begin{array}{${colSpec}}
+  let latex = `\\begin{array}{${colSpec}}
 ${aRow} \\\\
 {-}\\;${bRow} \\\\
 \\hline

@@ -116,8 +116,8 @@ function generarMultiplicacionColumnaLatex(aStr, bStr, base) {
   const numB = bInt + bDec
 
   // Convertir números a base decimal para cálculos
-  const intA = parseInt(aInt, baseNum)
-  const intB = parseInt(bInt, baseNum)
+  const intA = parseInt(numA, baseNum)
+  const intB = parseInt(numB, baseNum)
 
   // Multiplicar
   const result = intA * intB
@@ -138,13 +138,36 @@ function generarMultiplicacionColumnaLatex(aStr, bStr, base) {
     finalResult = resultStr.slice(0, dotPos) + '.' + resultStr.slice(dotPos)
   }
 
+  // Generar productos parciales
+  const cleanNumB = numB.replace(/^0+/, '')
+  const partialProducts = []
+  if (cleanNumB.length > 1 && intA !== 0 && intB !== 0) {
+    for (let i = cleanNumB.length - 1; i >= 0; i--) {
+      const digitValue = parseInt(cleanNumB[i], baseNum)
+      const partialProd = intA * digitValue
+      const pStr = toBase(partialProd, baseNum).toUpperCase()
+      const shift = cleanNumB.length - 1 - i
+      
+      const phantoms = '\\phantom{0}'.repeat(shift)
+      partialProducts.push(pStr + phantoms)
+    }
+  }
+
   // Construir formato de tabla simple
-  const latex = `\\begin{array}{r}
-${aInt}${aDec ? '.' + aDec : ''}_{(${base})} \\\\
-\\times \\; ${bInt}${bDec ? '.' + bDec : ''}_{(${base})} \\\\
-\\hline
-${finalResult}_{(${base})}
-\\end{array}`
+  let latex = `\\begin{array}{r}\n`
+  latex += `${aInt}${aDec ? '.' + aDec : ''}_{(${base})} \\\\\n`
+  latex += `\\times \\; ${bInt}${bDec ? '.' + bDec : ''}_{(${base})} \\\\\n`
+  latex += `\\hline\n`
+  
+  if (partialProducts.length > 0) {
+    partialProducts.forEach((pp) => {
+      latex += `${pp} \\\\\n`
+    })
+    latex += `\\hline\n`
+  }
+  
+  latex += `${finalResult}_{(${base})}\n`
+  latex += `\\end{array}`
 
   return { latex, resultStr: finalResult }
 }

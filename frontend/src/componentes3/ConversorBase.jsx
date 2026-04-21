@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, AlertCircle, CheckCircle, HelpCircle } from 'lucide-react'
 import './ConversorBase.css'
+import PasoDelConversor from './PasoDelConversor'
 
 const CONFIG_API = {
   VITE_API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000'
@@ -317,12 +318,10 @@ export default function ConversorBase() {
                   </div>
                 </div>
 
-                {resultado.detalles && (
-                  <div className="detalles-section">
-                    <h4>📊 Detalles de la Conversión</h4>
-                    <p>{resultado.detalles}</p>
-                  </div>
-                )}
+                <div className="detalles-section">
+                  <h4>📊 Pasos de la conversión</h4>
+                  <PasoDelConversor resultado={resultado} />
+                </div>
               </div>
             </motion.div>
           )}

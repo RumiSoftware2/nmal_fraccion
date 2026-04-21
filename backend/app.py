@@ -109,6 +109,10 @@ class ConvertirBaseResponse(BaseModel):
     valor_base_10: float
     base_origen: int
     base_destino: int
+    numerador_base_10: int
+    denominador_base_10: int
+    numerador_destino: str
+    denominador_destino: str
     detalles: str
 
 class ConvertirFraccionANmalInput(BaseModel):
@@ -464,6 +468,8 @@ def convertir_base(input_data: ConvertirBaseInput):
             denominador_base_10, 
             input_data.base_destino
         )
+        numerador_destino = str(numerador_destino).upper()
+        denominador_destino = str(denominador_destino).upper()
         
         # Construir el número original y convertido como strings
         if input_data.periodo and input_data.periodo != "":
@@ -492,6 +498,10 @@ def convertir_base(input_data: ConvertirBaseInput):
             valor_base_10=valor_base_10,
             base_origen=input_data.base_origen,
             base_destino=input_data.base_destino,
+            numerador_base_10=numerador_base_10,
+            denominador_base_10=denominador_base_10,
+            numerador_destino=numerador_destino,
+            denominador_destino=denominador_destino,
             detalles=detalles
         )
     

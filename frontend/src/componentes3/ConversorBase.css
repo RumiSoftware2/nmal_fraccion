@@ -373,6 +373,156 @@
   font-size: 0.95rem;
 }
 
+/* PasoDelConversor — layout + KaTeX (alineado con PasosDivision) */
+.paso-conversor-root {
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.paso-conversor-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.paso-conversor-nav-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background 150ms ease;
+}
+
+.paso-conversor-nav-btn:hover {
+  border-color: rgba(79, 70, 229, 0.35);
+  box-shadow: 0 8px 18px rgba(2, 6, 23, 0.08);
+}
+
+.paso-conversor-nav-btn.is-active {
+  border-color: rgba(79, 70, 229, 0.55);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(124, 58, 237, 0.08));
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+}
+
+.paso-conversor-nav-num {
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  color: #fff;
+}
+
+.paso-conversor-nav-btn.is-active .paso-conversor-nav-num {
+  filter: saturate(1.1);
+}
+
+.paso-conversor-nav-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: rgba(15, 23, 42, 0.82);
+}
+
+.paso-conversor-panel {
+  min-width: 0;
+}
+
+.paso-conversor-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  border-radius: 16px;
+  padding: 1.1rem 1.15rem 1.25rem;
+  box-shadow: 0 10px 22px rgba(2, 6, 23, 0.06);
+}
+
+.paso-conversor-card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px dashed rgba(79, 70, 229, 0.22);
+}
+
+.paso-conversor-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  flex-shrink: 0;
+}
+
+.paso-conversor-card h5 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+.paso-conversor-texto {
+  margin: 0 0 0.75rem 0;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.paso-conversor-texto.muted {
+  color: var(--muted-2);
+}
+
+.paso-conversor-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  padding: 0.12rem 0.4rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  color: rgba(79, 70, 229, 0.95);
+}
+
+.paso-conversor-root .katex-block {
+  overflow-x: auto;
+  padding: 0.35rem 0 0.5rem;
+}
+
+.paso-conversor-root .katex-block .katex {
+  font-size: 1.02rem;
+}
+
+.paso-conversor-division-wrap {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.paso-conversor-resultado {
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
 @media (max-width: 768px) {
   .conversor-base-container {
     padding: 1rem;
@@ -397,6 +547,19 @@
 
   .conversion-item {
     grid-template-columns: 1fr;
+  }
+
+  .paso-conversor-root {
+    grid-template-columns: 1fr;
+  }
+
+  .paso-conversor-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .paso-conversor-nav-btn {
+    flex: 1 1 100%;
   }
 }
 

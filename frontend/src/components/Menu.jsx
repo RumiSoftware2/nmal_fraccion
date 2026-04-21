@@ -6,14 +6,14 @@ const programs = [
   {
     id: 'math-tutor',
     title: 'n-mal como división de dos naturales',
-    description: 'Convierte números periódicos a fracciones',
+    description: 'Convierte números periódicos a división de dos naturales',
     icon: Calculator,
     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
   },
   {
     id: 'periodic-decimal',
     title: 'Operaciones de n-males',
-    description: 'Convierte decimales periódicos y normales a fracciones',
+    description: 'Opera (sumas, restas, multiplicación y división) un n.mal con otro n.mal en la misma base',
     icon: Brain,
     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
   },

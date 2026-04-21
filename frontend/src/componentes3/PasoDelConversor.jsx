@@ -25,6 +25,107 @@ function toBase(num, base) {
   return (num < 0 ? '-' : '') + result
 }
 
+/** Entero (BigInt) → numeral en `base` (2–36). */
+function bigintToBaseString(n, base) {
+  const B = BigInt(Math.floor(Number(base)))
+  if (n === 0n) return '0'
+  const neg = n < 0n
+  let x = neg ? -n : n
+  let result = ''
+  while (x > 0n) {
+    const digit = Number(x % B)
+    const ch = digit < 10 ? String(digit) : String.fromCharCode(55 + digit)
+    result = ch + result
+    x /= B
+  }
+  return (neg ? '-' : '') + result.toUpperCase()
+}
+
+/** API / JSON → BigInt cuando sea posible. */
+function toBigInt(v) {
+  if (v === undefined || v === null) return null
+  try {
+    if (typeof v === 'bigint') return v
+    if (typeof v === 'number') {
+      if (!Number.isFinite(v)) return null
+      if (Number.isSafeInteger(v)) return BigInt(v)
+      return BigInt(Math.trunc(v))
+    }
+    const s = String(v).trim()
+    if (s === '') return null
+    return BigInt(s)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Un paso de división entera “de papel” en `baseDivision`:
+ * dividendo ÷ divisor (ambos numerales en esa base), cociente y resto visibles.
+ * Misma plantilla que la primera fila de `generarPasosDivisionLatex`.
+ */
+function latexDivisionEnteraPaso(dividendoStr, divisorStr, baseDivision, cocienteStr, productoStr, restoStr) {
+  return `\\begin{array}{r|l}
+  ${dividendoStr} & \\overline{)\\,${divisorStr}_{(${baseDivision})}} \\\\[4pt]
+  {-}\\;${productoStr} & ${cocienteStr}_{(${baseDivision})} \\\\[2pt]
+  \\hline
+  ${restoStr} & \\\\[2pt]
+\\end{array}`
+}
+
+/**
+ * Método tradicional de pasar un entero positivo a la base de llegada:
+ * divisiones enteras repetidas, aritmética escrita en `baseOrigen`.
+ * El divisor en cada paso es el valor `baseDestino`, escrito con dígitos válidos en `baseOrigen`.
+ */
+function construirCadenaConversionRadixLatex(valor, baseOrigen, baseDestino, maxPasos = 72) {
+  const B = BigInt(Math.floor(Number(baseDestino)))
+  if (valor === null || valor === undefined) {
+    return { pasos: [], resultadoDestino: '', divisorNumeral: '', truncado: false }
+  }
+  let n = valor
+  if (n < 0n) {
+    return { pasos: [], resultadoDestino: '', divisorNumeral: '', truncado: false }
+  }
+  const divisorNumeral = bigintToBaseString(B, baseOrigen).toUpperCase()
+  const pasos = []
+  const digitosMenosSignificativos = []
+
+  if (n === 0n) {
+    return { pasos: [], resultadoDestino: '0', divisorNumeral, truncado: false }
+  }
+
+  let iter = 0
+  let truncado = false
+  while (n > 0n && iter < maxPasos) {
+    const dividendoStr = bigintToBaseString(n, baseOrigen).toUpperCase()
+    const q = n / B
+    const r = n % B
+    const producto = q * B
+    const productoStr = bigintToBaseString(producto, baseOrigen).toUpperCase()
+    const qStr = bigintToBaseString(q, baseOrigen).toUpperCase()
+    const restoStrOrigen = bigintToBaseString(r, baseOrigen).toUpperCase()
+    const digitoDestino = bigintToBaseString(r, baseDestino).toUpperCase()
+    digitosMenosSignificativos.push(digitoDestino)
+
+    pasos.push({
+      latex: latexDivisionEnteraPaso(dividendoStr, divisorNumeral, baseOrigen, qStr, productoStr, restoStrOrigen),
+      digitoEnBaseDestino: digitoDestino,
+      cocienteSiguiente: qStr
+    })
+    n = q
+    iter++
+  }
+
+  if (n > 0n) {
+    truncado = true
+  }
+
+  const resultadoDestino = digitosMenosSignificativos.reverse().join('')
+  return { pasos, resultadoDestino, divisorNumeral, truncado }
+}
+
+
 function generarPasosDivisionLatex(numeradorStr, denominadorStr, base, maxPasos = 15) {
   const num = parseInt(numeradorStr, base)
   const den = parseInt(denominadorStr, base)
@@ -125,6 +226,7 @@ function latexEscapeText(s) {
     .replace(/_/g, '\\_')
 }
 
+
 function parseNumeroConvertido(numeroConvertido) {
   if (!numeroConvertido || !String(numeroConvertido).includes('/')) {
     return { numerador: '0', denominador: '1' }
@@ -134,8 +236,8 @@ function parseNumeroConvertido(numeroConvertido) {
 }
 
 const PASOS = [
-  { id: 0, titulo: 'Fracción en base 10' },
-  { id: 1, titulo: 'Numerador y denominador en base destino' },
+  { id: 0, titulo: 'Divisiones (→ b destino)' },
+  { id: 1, titulo: 'Misma fracción en ambas bases' },
   { id: 2, titulo: 'División en la base de llegada' }
 ]
 
@@ -145,15 +247,6 @@ export default function PasoDelConversor({ resultado }) {
   const baseOrigen = resultado.base_origen
   const baseDestino = resultado.base_destino
   const parsed = parseNumeroConvertido(resultado.numero_convertido)
-
-  const n10 =
-    resultado.numerador_base_10 !== undefined && resultado.numerador_base_10 !== null
-      ? String(resultado.numerador_base_10)
-      : null
-  const d10 =
-    resultado.denominador_base_10 !== undefined && resultado.denominador_base_10 !== null
-      ? String(resultado.denominador_base_10)
-      : null
 
   const numDest = (resultado.numerador_destino || parsed.numerador).toUpperCase()
   const denDest = (resultado.denominador_destino || parsed.denominador).toUpperCase()
@@ -166,6 +259,34 @@ export default function PasoDelConversor({ resultado }) {
   const cocienteTeorico = `${divisionDestino.parteEntera}${
     divisionDestino.decimales ? '.' + divisionDestino.decimales : ''
   }`
+
+  const biNum = useMemo(() => toBigInt(resultado.numerador_base_10), [resultado.numerador_base_10])
+  const biDen = useMemo(() => toBigInt(resultado.denominador_base_10), [resultado.denominador_base_10])
+
+  const numOrigen = useMemo(() => {
+    if (biNum === null) return null
+    return bigintToBaseString(biNum, baseOrigen).toUpperCase()
+  }, [biNum, baseOrigen])
+
+  const denOrigen = useMemo(() => {
+    if (biDen === null) return null
+    return bigintToBaseString(biDen, baseOrigen).toUpperCase()
+  }, [biDen, baseOrigen])
+
+  const radixNumerador = useMemo(() => {
+    if (biNum === null) return { pasos: [], resultadoDestino: '', divisorNumeral: '', truncado: false }
+    return construirCadenaConversionRadixLatex(biNum, baseOrigen, baseDestino)
+  }, [biNum, baseOrigen, baseDestino])
+
+  const radixDenominador = useMemo(() => {
+    if (biDen === null) return { pasos: [], resultadoDestino: '', divisorNumeral: '', truncado: false }
+    return construirCadenaConversionRadixLatex(biDen, baseOrigen, baseDestino)
+  }, [biDen, baseOrigen, baseDestino])
+
+  const divisorEnOrigen =
+    radixNumerador.divisorNumeral ||
+    radixDenominador.divisorNumeral ||
+    bigintToBaseString(BigInt(Math.floor(Number(baseDestino))), baseOrigen).toUpperCase()
 
   return (
     <div className="paso-conversor-root">
@@ -193,24 +314,57 @@ export default function PasoDelConversor({ resultado }) {
           >
             <div className="paso-conversor-card-head">
               <span className="paso-conversor-badge">1</span>
-              <h5>Paso 1 — Fracción exacta en base decimal</h5>
+              <h5>
+                Paso 1 — Fracción en base {baseOrigen} y divisiones → base {baseDestino}
+              </h5>
             </div>
-            <p className="paso-conversor-texto">
-              El número <code className="paso-conversor-code">{resultado.numero_original}</code> en base{' '}
-              <strong>{baseOrigen}</strong> se expresa primero como cociente de dos enteros en base 10 (numerador y
-              denominador exactos).
-            </p>
-            {n10 && d10 ? (
-              <BlockMath math={`\\frac{${n10}}{${d10}}`} />
-            ) : (
-              <p className="paso-conversor-texto muted">
-                Los valores en base 10 no están disponibles en la respuesta del servidor.
-              </p>
-            )}
-            <p className="paso-conversor-texto">
-              Valor decimal aproximado:{' '}
-              <InlineMath math={`\\approx ${String(resultado.valor_base_10)}`} />
-            </p>
+
+            {numOrigen !== null && denOrigen !== null ? (
+              <div className="paso-conversor-subseccion">
+                <h6 className="paso-conversor-subtitulo">Fracción en base {baseOrigen}</h6>
+                <BlockMath
+                  math={`\\frac{\\text{${latexEscapeText(numOrigen)}}_{(${baseOrigen})}}{\\text{${latexEscapeText(
+                    denOrigen
+                  )}}_{(${baseOrigen})}}`}
+                />
+              </div>
+            ) : null}
+
+            {biNum !== null && biDen !== null ? (
+              <>
+                <div className="paso-conversor-subseccion">
+                  <h6 className="paso-conversor-subtitulo">
+                    Numerador ÷ base {baseDestino} (divisiones en base {baseOrigen})
+                  </h6>
+                  <div className="paso-conversor-radix-stack">
+                    {radixNumerador.pasos.map((p, i) => (
+                      <BlockMath key={`n-${i}`} math={p.latex} />
+                    ))}
+                  </div>
+                  <BlockMath
+                    math={`\\text{${latexEscapeText(
+                      `Numerador en base ${baseDestino}: ${radixNumerador.resultadoDestino}`
+                    )}}`}
+                  />
+                </div>
+
+                <div className="paso-conversor-subseccion">
+                  <h6 className="paso-conversor-subtitulo">
+                    Denominador ÷ base {baseDestino} (divisiones en base {baseOrigen})
+                  </h6>
+                  <div className="paso-conversor-radix-stack">
+                    {radixDenominador.pasos.map((p, i) => (
+                      <BlockMath key={`d-${i}`} math={p.latex} />
+                    ))}
+                  </div>
+                  <BlockMath
+                    math={`\\text{${latexEscapeText(
+                      `Denominador en base ${baseDestino}: ${radixDenominador.resultadoDestino}`
+                    )}}`}
+                  />
+                </div>
+              </>
+            ) : null}
           </motion.div>
         )}
 
@@ -223,18 +377,27 @@ export default function PasoDelConversor({ resultado }) {
           >
             <div className="paso-conversor-card-head">
               <span className="paso-conversor-badge">2</span>
-              <h5>Paso 2 — Mismo cociente, numerador y denominador en base {baseDestino}</h5>
+              <h5>Paso 2 — Mismo cociente, numerales en base {baseOrigen} y en base {baseDestino}</h5>
             </div>
             <p className="paso-conversor-texto">
-              Se reescriben el numerador y el denominador (enteros en base 10) usando solo dígitos válidos en la base de
-              llegada <strong>{baseDestino}</strong>.
+              La fracción no cambia de valor: solo cambiamos la forma de escribir numerador y denominador usando
+              dígitos permitidos en cada base.
             </p>
-            {n10 && d10 && (
+            {numOrigen !== null && denOrigen !== null ? (
               <BlockMath
-                math={`\\frac{${n10}}{${d10}} \\;=\\; \\frac{${numDest}}{${denDest}}_{(${baseDestino})}`}
+                math={`\\frac{\\text{${latexEscapeText(numOrigen)}}_{(${baseOrigen})}}{\\text{${latexEscapeText(
+                  denOrigen
+                )}}_{(${baseOrigen})}} \\;=\\; \\left(\\frac{\\text{${latexEscapeText(numDest)}}}{\\text{${latexEscapeText(
+                  denDest
+                )}}}\\right)_{(${baseDestino})}`}
+              />
+            ) : (
+              <BlockMath
+                math={`\\left(\\frac{\\text{${latexEscapeText(numDest)}}}{\\text{${latexEscapeText(
+                  denDest
+                )}}}\\right)_{(${baseDestino})}`}
               />
             )}
-            {!n10 && <BlockMath math={`\\frac{${numDest}}{${denDest}}_{(${baseDestino})}`} />}
           </motion.div>
         )}
 

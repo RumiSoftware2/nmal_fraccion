@@ -26,7 +26,7 @@ function toBase(num, base) {
   return (num < 0 ? '-' : '') + result
 }
 
-function generarPasosDivisionLatex(numeradorStr, denominadorStr, base, maxPasos = 8) {
+function generarPasosDivisionLatex(numeradorStr, denominadorStr, base, maxPasos = 15) {
   const num = parseInt(numeradorStr, base)
   const den = parseInt(denominadorStr, base)
 
@@ -50,12 +50,18 @@ function generarPasosDivisionLatex(numeradorStr, denominadorStr, base, maxPasos 
   leftCol.push({ dividendo: toB(residuo), sustraendo: toB(producto0), resto: toB(resto0) })
 
   residuo = resto0
-  const residuosVistos = new Set()
+  const residuosVistos = new Map()
   let pasoDiv = 0
+  let esPeriodico = false
+  let inicioPeriodo = -1
 
   while (residuo !== 0 && pasoDiv < maxPasos) {
-    if (residuosVistos.has(residuo)) break
-    residuosVistos.add(residuo)
+    if (residuosVistos.has(residuo)) {
+      esPeriodico = true
+      inicioPeriodo = residuosVistos.get(residuo)
+      break
+    }
+    residuosVistos.set(residuo, pasoDiv)
     tieneDecimales = true
 
     const dividendoAmpliado = residuo * base
@@ -75,8 +81,18 @@ function generarPasosDivisionLatex(numeradorStr, denominadorStr, base, maxPasos 
   }
 
   const parteEntera = cocienteDigitos[0]
-  const decimales = tieneDecimales ? cocienteDigitos.slice(1).join('') : ''
-  const cocienteStr = parteEntera + (tieneDecimales ? '.' + decimales : '')
+  let decimales = ''
+  if (tieneDecimales) {
+    const decList = cocienteDigitos.slice(1)
+    if (esPeriodico) {
+      const p1 = decList.slice(0, inicioPeriodo).join('')
+      const p2 = decList.slice(inicioPeriodo).join('')
+      decimales = `${p1}(${p2})`
+    } else {
+      decimales = decList.join('')
+    }
+  }
+  const cocienteStr = parteEntera + (decimales ? '.' + decimales : '')
 
   let latex = `\\begin{array}{r|l}\n`
   leftCol.forEach((step, i) => {
@@ -114,10 +130,25 @@ export default function PasosDivision({ frac1, frac2, base }) {
   const numDecFrac1 = `${div1.parteEntera}${div1.decimales ? '.' + div1.decimales : ''}`
   const numDecFrac2 = `${div2.parteEntera}${div2.decimales ? '.' + div2.decimales : ''}`
 
-  const divisionFinal = useMemo(
-    () => generarPasosDivisionLatex(numDecFrac1.replace('.', ''), numDecFrac2.replace('.', ''), baseNum),
-    [numDecFrac1, numDecFrac2, baseNum]
-  )
+  const divisionFinal = useMemo(() => {
+    // Calculo cruzado para dividir fracciones: (n1*d2) / (d1*n2)
+    const n1 = parseInt(frac1.numerador, baseNum)
+    const d1 = parseInt(frac1.denominador, baseNum)
+    const n2 = parseInt(frac2.numerador, baseNum)
+    const d2 = parseInt(frac2.denominador, baseNum)
+
+    const numCruzado = n1 * d2
+    const denCruzado = d1 * n2
+
+    if (denCruzado === 0) {
+      return { latex: '\\text{Indefinido}', parteEntera: '0', decimales: '' }
+    }
+
+    const numStr = toBase(numCruzado, baseNum).toUpperCase()
+    const denStr = toBase(denCruzado, baseNum).toUpperCase()
+
+    return generarPasosDivisionLatex(numStr, denStr, baseNum, 15) // 15 pasos para periodos más largos
+  }, [frac1, frac2, baseNum])
 
   const resultadoDivision = `${divisionFinal.parteEntera}${divisionFinal.decimales ? '.' + divisionFinal.decimales : ''}`
 

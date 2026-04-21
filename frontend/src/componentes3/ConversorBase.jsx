@@ -149,7 +149,7 @@ export default function ConversorBase() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h2>🔄 Conversor de Bases</h2>
+        <h2>Conversor de Bases</h2>
         <p>Convierte números n-mal entre diferentes bases numéricas</p>
       </motion.div>
 
@@ -162,13 +162,15 @@ export default function ConversorBase() {
         {(
           <div className="form-section">
             <div className="section-header-with-help">
-              <h3>📝 Ingresa el Número N-mal</h3>
+              <h3>Ingresa el Número N-mal</h3>
               <motion.button
                 className="help-btn"
                 onClick={() => setShowHelp(!showHelp)}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 title="Ver ayuda de formato"
+                aria-expanded={showHelp}
+                aria-controls="conversor-help"
               >
                 <HelpCircle size={20} />
               </motion.button>
@@ -178,6 +180,7 @@ export default function ConversorBase() {
               {showHelp && (
                 <motion.div
                   className="help-box"
+                  id="conversor-help"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
@@ -206,6 +209,8 @@ export default function ConversorBase() {
                 placeholder="Ej: 1.3(4) ó 2.5 ó 3"
                 disabled={loading}
                 className="numero-input"
+                inputMode="text"
+                autoComplete="off"
               />
               <span className="input-hint">
                 El paréntesis indica qué dígitos se repiten infinitamente
@@ -300,7 +305,7 @@ export default function ConversorBase() {
                   </div>
 
                   {resultado.resultado_nmal && (
-                    <div className="conversion-item highlight" style={{ backgroundColor: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                    <div className="conversion-item highlight">
                       <span className="label">Valor Decimal (Base {resultado.base_destino}):</span>
                       <span className="value">{resultado.resultado_nmal}</span>
                     </div>

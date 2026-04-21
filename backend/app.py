@@ -105,10 +105,30 @@ class ConvertirBaseResponse(BaseModel):
     """Respuesta de conversión entre bases"""
     numero_original: str
     numero_convertido: str
+    resultado_nmal: Optional[str] = None
     valor_base_10: float
     base_origen: int
     base_destino: int
     detalles: str
+
+class ConvertirFraccionANmalInput(BaseModel):
+    """Modelo de entrada para convertir fracción a n-mal"""
+    numerador: str
+    denominador: str
+    base: int
+
+class ConvertirFraccionANmalResponse(BaseModel):
+    """Respuesta de conversión de fracción a n-mal"""
+    numerador: str
+    denominador: str
+    base: int
+    resultado_entero: str
+    resultado_decimal: str
+    resultado_completo: str
+    es_periodico: bool
+    decimal_base10: float
+    numerador_base10: int
+    denominador_base10: int
 
 @app.get("/")
 def root():
@@ -453,6 +473,14 @@ def convertir_base(input_data: ConvertirBaseInput):
         
         numero_convertido = f"{numerador_destino}/{denominador_destino}"
         
+        # Calcular el resultado n-mal en la base destino
+        resultado_div = dividir_fraccion_en_base(
+            numerador_destino, 
+            denominador_destino, 
+            input_data.base_destino
+        )
+        resultado_nmal = resultado_div['resultado_completo']
+        
         detalles = f"Conversión de base {input_data.base_origen} a base {input_data.base_destino}. " \
                    f"Numerador: {numerador_base_10} (base 10) = {numerador_destino} (base {input_data.base_destino}). " \
                    f"Denominador: {denominador_base_10} (base 10) = {denominador_destino} (base {input_data.base_destino})."
@@ -460,6 +488,7 @@ def convertir_base(input_data: ConvertirBaseInput):
         return ConvertirBaseResponse(
             numero_original=numero_original,
             numero_convertido=numero_convertido,
+            resultado_nmal=resultado_nmal,
             valor_base_10=valor_base_10,
             base_origen=input_data.base_origen,
             base_destino=input_data.base_destino,
@@ -470,6 +499,24 @@ def convertir_base(input_data: ConvertirBaseInput):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error al convertir entre bases: {str(e)}")
+
+@app.post("/fraccion-a-nmal", response_model=ConvertirFraccionANmalResponse)
+def fraccion_a_nmal(input_data: ConvertirFraccionANmalInput):
+    """
+    Toma una fracción (numerador y denominador) en una base específica y devuelve 
+    su equivalente como número de coma flotante (n-mal), incluyendo notación periódica.
+    """
+    try:
+        resultado = dividir_fraccion_en_base(
+            input_data.numerador,
+            input_data.denominador,
+            input_data.base
+        )
+        return ConvertirFraccionANmalResponse(**resultado)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al convertir fracción a n-mal: {str(e)}")
 
 if __name__ == "__main__":
 

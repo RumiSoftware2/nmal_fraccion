@@ -75,10 +75,20 @@ function parseNumeroNmal(numero) {
 }
 
 export default function ConversorBase() {
+  const [conversionMode, setConversionMode] = useState('nmal_to_nmal')
+  
+  // Estado para N-mal a N-mal
   const [numeroInput, setNumeroInput] = useState('1.3(4)')
   const [baseOrigen, setBaseOrigen] = useState('10')
   const [baseDestino, setBaseDestino] = useState('2')
   const [resultado, setResultado] = useState(null)
+  
+  // Estado para Fracción a N-mal
+  const [numeradorInput, setNumeradorInput] = useState('1')
+  const [denominadorInput, setDenominadorInput] = useState('3')
+  const [baseFraccion, setBaseFraccion] = useState('10')
+  const [resultadoFraccion, setResultadoFraccion] = useState(null)
+
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
@@ -137,6 +147,43 @@ export default function ConversorBase() {
     }
   }
 
+  const handleConvertFraccion = async () => {
+    setError(null)
+    setResultadoFraccion(null)
+    setLoading(true)
+
+    try {
+      if (!numeradorInput.trim() || !denominadorInput.trim()) {
+        throw new Error('Debe ingresar un numerador y un denominador')
+      }
+
+      const response = await fetch(`${CONFIG_API.VITE_API_URL}/fraccion-a-nmal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          numerador: numeradorInput.trim(),
+          denominador: denominadorInput.trim(),
+          base: parseInt(baseFraccion)
+        })
+      })
+
+      if (!response.ok) {
+        const err = await response.json()
+        throw new Error(err.detail || 'Error en la conversión de fracción')
+      }
+
+      const data = await response.json()
+      setResultadoFraccion(data)
+    } catch (err) {
+      setError(err.message || 'Error al convertir la fracción')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="conversor-base-container">
       <motion.div
@@ -155,104 +202,176 @@ export default function ConversorBase() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
       >
-        <div className="form-section">
-          <div className="section-header-with-help">
-            <h3>📝 Ingresa el Número N-mal</h3>
+        <div className="tabs-container">
+          <button 
+            className={`tab-btn ${conversionMode === 'nmal_to_nmal' ? 'active' : ''}`}
+            onClick={() => { setConversionMode('nmal_to_nmal'); setError(null); setResultado(null); setResultadoFraccion(null); }}
+          >
+            N-mal a N-mal
+          </button>
+          <button 
+            className={`tab-btn ${conversionMode === 'frac_to_nmal' ? 'active' : ''}`}
+            onClick={() => { setConversionMode('frac_to_nmal'); setError(null); setResultado(null); setResultadoFraccion(null); }}
+          >
+            Fracción a N-mal
+          </button>
+        </div>
+
+        {conversionMode === 'nmal_to_nmal' ? (
+          <div className="form-section">
+            <div className="section-header-with-help">
+              <h3>📝 Ingresa el Número N-mal</h3>
+              <motion.button
+                className="help-btn"
+                onClick={() => setShowHelp(!showHelp)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                title="Ver ayuda de formato"
+              >
+                <HelpCircle size={20} />
+              </motion.button>
+            </div>
+
+            <AnimatePresence>
+              {showHelp && (
+                <motion.div
+                  className="help-box"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                >
+                  <div className="help-content">
+                    <p><strong>Formato:</strong> [entero].[no_período](período)</p>
+                    <p><strong>Ejemplos:</strong></p>
+                    <ul>
+                      <li><code>1.3(4)</code> = 1.3444... (período = 4)</li>
+                      <li><code>2.5</code> = 2.5 (sin período)</li>
+                      <li><code>0.(3)</code> = 0.333... (período = 3)</li>
+                      <li><code>3</code> = 3 (número entero)</li>
+                      <li><code>0.1(6)</code> = 0.1666... (no_período=1, período=6)</li>
+                    </ul>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="input-group">
+              <label>Número (formato: 1.3(4))</label>
+              <input
+                type="text"
+                value={numeroInput}
+                onChange={(e) => setNumeroInput(e.target.value)}
+                placeholder="Ej: 1.3(4) ó 2.5 ó 3"
+                disabled={loading}
+                className="numero-input"
+              />
+              <span className="input-hint">
+                El paréntesis indica qué dígitos se repiten infinitamente
+              </span>
+            </div>
+
+            <div className="bases-row">
+              <div className="input-group">
+                <label>Base Origen</label>
+                <select
+                  value={baseOrigen}
+                  onChange={(e) => setBaseOrigen(e.target.value)}
+                  disabled={loading}
+                >
+                  {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (
+                    <option key={base} value={base}>
+                      Base {base}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="arrow-icon">
+                <ArrowRight size={24} />
+              </div>
+
+              <div className="input-group">
+                <label>Base Destino</label>
+                <select
+                  value={baseDestino}
+                  onChange={(e) => setBaseDestino(e.target.value)}
+                  disabled={loading}
+                >
+                  {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (
+                    <option key={base} value={base}>
+                      Base {base}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             <motion.button
-              className="help-btn"
-              onClick={() => setShowHelp(!showHelp)}
-              whileHover={{ scale: 1.1 }}
+              className="convert-btn"
+              onClick={handleConvert}
+              disabled={loading}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              title="Ver ayuda de formato"
             >
-              <HelpCircle size={20} />
+              {loading ? 'Convirtiendo...' : '🔄 Convertir'}
             </motion.button>
           </div>
+        ) : (
+          <div className="form-section">
+            <div className="section-header-with-help">
+              <h3>➗ Ingresa la Fracción</h3>
+            </div>
 
-          <AnimatePresence>
-            {showHelp && (
-              <motion.div
-                className="help-box"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
+            <div className="input-group">
+              <label>Numerador (en la base indicada)</label>
+              <input
+                type="text"
+                value={numeradorInput}
+                onChange={(e) => setNumeradorInput(e.target.value)}
+                placeholder="Ej: 1"
+                disabled={loading}
+                className="numero-input"
+              />
+            </div>
+            
+            <div className="input-group">
+              <label>Denominador (en la base indicada)</label>
+              <input
+                type="text"
+                value={denominadorInput}
+                onChange={(e) => setDenominadorInput(e.target.value)}
+                placeholder="Ej: 3"
+                disabled={loading}
+                className="numero-input"
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Base</label>
+              <select
+                value={baseFraccion}
+                onChange={(e) => setBaseFraccion(e.target.value)}
+                disabled={loading}
               >
-                <div className="help-content">
-                  <p><strong>Formato:</strong> [entero].[no_período](período)</p>
-                  <p><strong>Ejemplos:</strong></p>
-                  <ul>
-                    <li><code>1.3(4)</code> = 1.3444... (período = 4)</li>
-                    <li><code>2.5</code> = 2.5 (sin período)</li>
-                    <li><code>0.(3)</code> = 0.333... (período = 3)</li>
-                    <li><code>3</code> = 3 (número entero)</li>
-                    <li><code>0.1(6)</code> = 0.1666... (no_período=1, período=6)</li>
-                  </ul>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (
+                  <option key={base} value={base}>
+                    Base {base}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <div className="input-group">
-            <label>Número (formato: 1.3(4))</label>
-            <input
-              type="text"
-              value={numeroInput}
-              onChange={(e) => setNumeroInput(e.target.value)}
-              placeholder="Ej: 1.3(4) ó 2.5 ó 3"
+            <motion.button
+              className="convert-btn"
+              onClick={handleConvertFraccion}
               disabled={loading}
-              className="numero-input"
-            />
-            <span className="input-hint">
-              El paréntesis indica qué dígitos se repiten infinitamente
-            </span>
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {loading ? 'Convirtiendo...' : '🔄 Convertir Fracción'}
+            </motion.button>
           </div>
-
-          <div className="bases-row">
-            <div className="input-group">
-              <label>Base Origen</label>
-              <select
-                value={baseOrigen}
-                onChange={(e) => setBaseOrigen(e.target.value)}
-                disabled={loading}
-              >
-                {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (
-                  <option key={base} value={base}>
-                    Base {base}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="arrow-icon">
-              <ArrowRight size={24} />
-            </div>
-
-            <div className="input-group">
-              <label>Base Destino</label>
-              <select
-                value={baseDestino}
-                onChange={(e) => setBaseDestino(e.target.value)}
-                disabled={loading}
-              >
-                {Array.from({ length: 35 }, (_, i) => i + 2).map(base => (
-                  <option key={base} value={base}>
-                    Base {base}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <motion.button
-            className="convert-btn"
-            onClick={handleConvert}
-            disabled={loading}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {loading ? 'Convirtiendo...' : '🔄 Convertir'}
-          </motion.button>
-        </div>
+        )}
 
         <AnimatePresence>
           {error && (
@@ -269,7 +388,7 @@ export default function ConversorBase() {
         </AnimatePresence>
 
         <AnimatePresence>
-          {resultado && (
+          {resultado && conversionMode === 'nmal_to_nmal' && (
             <motion.div
               className="resultado-card"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -289,9 +408,16 @@ export default function ConversorBase() {
                   </div>
 
                   <div className="conversion-item">
-                    <span className="label">Número Convertido (Base {resultado.base_destino}):</span>
+                    <span className="label">Fracción Convertida (Base {resultado.base_destino}):</span>
                     <span className="value">{resultado.numero_convertido}</span>
                   </div>
+
+                  {resultado.resultado_nmal && (
+                    <div className="conversion-item highlight" style={{ backgroundColor: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                      <span className="label">Valor Decimal (Base {resultado.base_destino}):</span>
+                      <span className="value">{resultado.resultado_nmal}</span>
+                    </div>
+                  )}
 
                   <div className="conversion-item">
                     <span className="label">Valor en Base 10:</span>
@@ -305,6 +431,44 @@ export default function ConversorBase() {
                     <p>{resultado.detalles}</p>
                   </div>
                 )}
+              </div>
+            </motion.div>
+          )}
+          
+          {resultadoFraccion && conversionMode === 'frac_to_nmal' && (
+            <motion.div
+              className="resultado-card"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+            >
+              <div className="resultado-header">
+                <CheckCircle size={24} className="success-icon" />
+                <h3>✨ Resultado de N-mal de Fracción</h3>
+              </div>
+
+              <div className="resultado-content">
+                <div className="conversiones-display">
+                  <div className="conversion-item">
+                    <span className="label">Fracción Original:</span>
+                    <span className="value">{resultadoFraccion.numerador} / {resultadoFraccion.denominador} (Base {resultadoFraccion.base})</span>
+                  </div>
+
+                  <div className="conversion-item highlight" style={{ backgroundColor: 'rgba(56, 189, 248, 0.1)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+                    <span className="label">Resultado N-mal:</span>
+                    <span className="value">{resultadoFraccion.resultado_completo}</span>
+                  </div>
+                  
+                  <div className="conversion-item">
+                    <span className="label">¿Es Periódico?:</span>
+                    <span className="value">{resultadoFraccion.es_periodico ? 'Sí' : 'No'}</span>
+                  </div>
+
+                  <div className="conversion-item">
+                    <span className="label">Valor Decimal (Aprox Base 10):</span>
+                    <span className="value">{resultadoFraccion.decimal_base10}</span>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}

@@ -131,24 +131,33 @@ export default function PasosDivision({ frac1, frac2, base }) {
   const numDecFrac2 = `${div2.parteEntera}${div2.decimales ? '.' + div2.decimales : ''}`
 
   const divisionFinal = useMemo(() => {
-    // Calculo cruzado para dividir fracciones: (n1*d2) / (d1*n2)
-    const n1 = parseInt(frac1.numerador, baseNum)
-    const d1 = parseInt(frac1.denominador, baseNum)
-    const n2 = parseInt(frac2.numerador, baseNum)
-    const d2 = parseInt(frac2.denominador, baseNum)
+    // Limpiamos posibles paréntesis de periodo
+    const cleanNum1 = numDecFrac1.replace(/[\(\)]/g, '')
+    const cleanNum2 = numDecFrac2.replace(/[\(\)]/g, '')
 
-    const numCruzado = n1 * d2
-    const denCruzado = d1 * n2
+    const [aInt, aDec = ''] = cleanNum1.split('.')
+    const [bInt, bDec = ''] = cleanNum2.split('.')
 
-    if (denCruzado === 0) {
+    // Igualamos la cantidad de decimales rellenando con ceros
+    const maxDec = Math.max(aDec.length, bDec.length)
+    const aDecPad = aDec.padEnd(maxDec, '0')
+    const bDecPad = bDec.padEnd(maxDec, '0')
+
+    const aFull = aInt + aDecPad
+    const bFull = bInt + bDecPad
+
+    const aVal = parseInt(aFull, baseNum) || 0
+    const bVal = parseInt(bFull, baseNum) || 0
+
+    if (bVal === 0) {
       return { latex: '\\text{Indefinido}', parteEntera: '0', decimales: '' }
     }
 
-    const numStr = toBase(numCruzado, baseNum).toUpperCase()
-    const denStr = toBase(denCruzado, baseNum).toUpperCase()
+    const numStr = toBase(aVal, baseNum).toUpperCase()
+    const denStr = toBase(bVal, baseNum).toUpperCase()
 
-    return generarPasosDivisionLatex(numStr, denStr, baseNum, 15) // 15 pasos para periodos más largos
-  }, [frac1, frac2, baseNum])
+    return generarPasosDivisionLatex(numStr, denStr, baseNum, 15)
+  }, [numDecFrac1, numDecFrac2, baseNum])
 
   const resultadoDivision = `${divisionFinal.parteEntera}${divisionFinal.decimales ? '.' + divisionFinal.decimales : ''}`
 

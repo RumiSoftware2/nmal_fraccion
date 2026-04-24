@@ -285,7 +285,6 @@ export default function Suma({ result1, result2, base1, base2 }) {
             <ConversorResultadoSuma
               resultadoSuma={resultado}
               base={base}
-              baseDestino={10}
             />
           </motion.div>
         )}

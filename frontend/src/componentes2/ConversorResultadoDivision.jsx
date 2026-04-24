@@ -8,17 +8,11 @@ const CONFIG_API = {
   VITE_API_URL: import.meta.env.VITE_API_URL || 'http://localhost:8000'
 }
 
-/**
- * Parsea un string numérico con posible periodo en paréntesis.
- * Soporta formatos como "3.2(1)", "5", "2.5", "0.(3)"
- * También soporta el formato con "…" al final (truncado) → lo limpia.
- */
 function parseResultadoNmal(valor) {
   if (!valor || typeof valor !== 'string') {
     return { entero: '0', no_periodo: '', periodo: '' }
   }
 
-  // Limpiar el caracter de truncado si existe
   let v = valor.replace(/…/g, '').trim()
 
   let entero = '0'
@@ -46,9 +40,6 @@ function parseResultadoNmal(valor) {
   return { entero, no_periodo, periodo }
 }
 
-/**
- * Reconstruye el string n-mal desde sus partes (para mostrar en UI).
- */
 function reconstruirNmal({ entero, no_periodo, periodo }) {
   let s = entero
   if (no_periodo || periodo) {
@@ -59,36 +50,24 @@ function reconstruirNmal({ entero, no_periodo, periodo }) {
   return s
 }
 
-/**
- * ConversorResultadoSuma
- *
- * Props:
- *   - resultadoSuma: objeto devuelto por el backend al sumar
- *   - base: base origen (= base1, la base en que está el resultado de la suma)
- *
- * La base destino se selecciona internamente mediante un dropdown.
- */
-export default function ConversorResultadoSuma({ resultadoSuma, base }) {
-  // Base destino seleccionada por el usuario (interna, no viene de props)
-  const [baseDestino, setBaseDestino] = useState('10')
+export default function ConversorResultadoDivision({ resultadoDivision, base }) {
   const [resultado, setResultado] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Construir el número n-mal a partir del resultado de la suma
-  const numeroNmal = (() => {
-    if (!resultadoSuma) return null
+  const baseNum = parseInt(base)
 
-    // Preferir resultado_completo si existe y tiene formato con paréntesis
-    const completo = resultadoSuma.resultado_completo
+  const numeroNmal = (() => {
+    if (!resultadoDivision) return null
+
+    const completo = resultadoDivision.resultado_completo
     if (completo && typeof completo === 'string') {
       return completo.replace(/…/g, '').trim()
     }
 
-    // Fallback: combinar parte entera y decimal
-    const entero = String(resultadoSuma.resultado_entero || '0')
-    const decimal = resultadoSuma.resultado_decimal
-      ? String(resultadoSuma.resultado_decimal).replace(/…/g, '').trim()
+    const entero = String(resultadoDivision.resultado_entero || '0')
+    const decimal = resultadoDivision.resultado_decimal
+      ? String(resultadoDivision.resultado_decimal).replace(/…/g, '').trim()
       : ''
 
     if (!decimal) return entero
@@ -100,14 +79,6 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
 
   const handleConvertir = async () => {
     if (!parsed) return
-
-    const baseOrigenNum = parseInt(base)
-    const baseDestinoNum = parseInt(baseDestino)
-
-    if (baseOrigenNum === baseDestinoNum) {
-      setError('La base origen y la base destino deben ser diferentes')
-      return
-    }
 
     setLoading(true)
     setError(null)
@@ -121,8 +92,8 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
           entero: parsed.entero,
           no_periodo: parsed.no_periodo,
           periodo: parsed.periodo,
-          base_origen: baseOrigenNum,
-          base_destino: baseDestinoNum
+          base_origen: baseNum,
+          base_destino: baseNum
         })
       })
 
@@ -141,30 +112,28 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
     }
   }
 
-  if (!resultadoSuma) {
+  if (!resultadoDivision) {
     return (
       <div className="conversor-resultado-suma-empty">
-        <p>Primero calcula la suma para poder convertir el resultado.</p>
+        <p>Primero calcula la división para poder convertir el resultado.</p>
       </div>
     )
   }
 
   return (
     <div className="conversor-resultado-suma-wrap">
-      {/* Header */}
       <div className="crs-header">
         <span className="crs-icon">🔁</span>
         <div>
-          <h4 className="crs-title">Convertir Resultado a otra Base</h4>
+          <h4 className="crs-title">Conversión del Resultado — Base {base}</h4>
           <p className="crs-subtitle">
-            Resultado de la suma:{' '}
+            Resultado de la división:{' '}
             <code className="crs-code">{numeroDisplay}</code>{' '}
             en base {base}
           </p>
         </div>
       </div>
 
-      {/* Selector de base destino */}
       <div className="crs-selector-row">
         <div className="crs-base-display">
           <span className="crs-base-label">Base {base}</span>
@@ -173,29 +142,15 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
 
         <ArrowRight size={20} className="crs-arrow" />
 
-        <div className="input-group" style={{ margin: 0, flex: 1 }}>
-          <label style={{ fontSize: '0.85rem', marginBottom: '0.35rem' }}>Base Destino</label>
-          <select
-            value={baseDestino}
-            onChange={(e) => {
-              setBaseDestino(e.target.value)
-              setResultado(null)
-              setError(null)
-            }}
-            disabled={loading}
-          >
-            {Array.from({ length: 35 }, (_, i) => i + 2).map((b) => (
-              <option key={b} value={b} disabled={b === parseInt(base)}>
-                Base {b}{b === parseInt(base) ? ' (origen)' : ''}
-              </option>
-            ))}
-          </select>
+        <div className="crs-base-display">
+          <span className="crs-base-label">Base {base}</span>
+          <span className="crs-base-hint">(destino)</span>
         </div>
 
         <motion.button
           className="crs-convert-btn"
           onClick={handleConvertir}
-          disabled={loading || parseInt(baseDestino) === parseInt(base)}
+          disabled={loading}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
         >
@@ -205,7 +160,6 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
         </motion.button>
       </div>
 
-      {/* Error */}
       <AnimatePresence>
         {error && (
           <motion.div
@@ -221,9 +175,6 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
         )}
       </AnimatePresence>
 
-
-
-      {/* Resultado de conversión */}
       <AnimatePresence>
         {resultado && (
           <motion.div
@@ -234,7 +185,6 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Resumen de valores */}
             <div className="resultado-header">
               <CheckCircle size={22} className="success-icon" />
               <h3>✨ Conversión completada</h3>
@@ -265,7 +215,6 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
                 </div>
               </div>
 
-              {/* Pasos detallados usando PasoDelConversor */}
               <div className="detalles-section">
                 <h4>📊 Pasos de la conversión</h4>
                 <PasoDelConversor resultado={resultado} />
@@ -274,8 +223,6 @@ export default function ConversorResultadoSuma({ resultadoSuma, base }) {
           </motion.div>
         )}
       </AnimatePresence>
-
-
     </div>
   )
 }

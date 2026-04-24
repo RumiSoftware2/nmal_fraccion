@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { dividirFracciones } from '../services/api'
 import PasosMultiplicacion from './PasosMultiplicacion'
+import ConversorResultadoMultiplicacion from './ConversorResultadoMultiplicacion'
 import '../componentes2Styles/Multiplicacion.css'
 
 // Trunca la parte decimal de un string numérico a maxDecimals dígitos
@@ -34,7 +35,7 @@ export default function Multiplicacion({ result1, result2, base1, base2 }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [resultado, setResultado] = useState(null)
-  // 'none' | 'resultado' | 'pasos'
+  // 'none' | 'resultado' | 'pasos' | 'conversor'
   const [activeView, setActiveView] = useState('none')
 
   // Parsear la fracción (ej: "1/2" -> { num: "1", den: "2" })
@@ -180,6 +181,17 @@ export default function Multiplicacion({ result1, result2, base1, base2 }) {
         >
           📋 Pasos de la Multiplicación
         </motion.button>
+
+        <motion.button
+          className={`btn-convertir ${activeView === 'conversor' ? 'active' : ''}`}
+          onClick={() => setActiveView(prev => prev === 'conversor' ? 'none' : 'conversor')}
+          disabled={!resultado || !mismaBase}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          title={!resultado ? 'Primero calcula la multiplicación' : 'Convertir resultado'}
+        >
+          🔁 Convertir Resultado
+        </motion.button>
       </div>
 
       {/* Mostrar errores */}
@@ -258,6 +270,22 @@ export default function Multiplicacion({ result1, result2, base1, base2 }) {
             transition={{ duration: 0.3 }}
           >
             <PasosMultiplicacion frac1={frac1} frac2={frac2} base={base} />
+          </motion.div>
+        )}
+
+        {/* Mostrar conversor de resultado */}
+        {activeView === 'conversor' && (
+          <motion.div
+            key="conversor"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ConversorResultadoMultiplicacion
+              resultadoMultiplicacion={resultado}
+              base={base}
+            />
           </motion.div>
         )}
       </AnimatePresence>

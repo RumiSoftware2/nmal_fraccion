@@ -340,6 +340,97 @@
   color: #333;
 }
 
+/* Botón convertir resultado */
+.btn-convertir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-convertir:hover:not(:disabled) {
+  box-shadow: 0 8px 25px rgba(109, 40, 217, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-convertir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-convertir.active {
+  background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.25);
+}
+
+/* Wrapper del conversor de resultado */
+.conversor-resultado-suma-wrap {
+  margin-top: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #8b5cf608 0%, #6d28d908 100%);
+  border: 2px solid rgba(109, 40, 217, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.1);
+}
+
+.conversor-resultado-suma-empty {
+  margin-top: 16px;
+  padding: 14px;
+  background: #f3f4f6;
+  border-radius: 8px;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.crs-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(109, 40, 217, 0.15);
+}
+
+.crs-icon {
+  font-size: 24px;
+}
+
+.crs-title {
+  margin: 0 0 4px 0;
+  color: #4c1d95;
+  font-size: 1.1rem;
+}
+
+.crs-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.crs-code {
+  background: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #4c1d95;
+  font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .division-container {

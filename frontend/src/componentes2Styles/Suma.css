@@ -199,6 +199,133 @@
   transform: translateY(-2px);
 }
 
+/* Botón convertir resultado */
+.btn-convertir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px 0 20px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-convertir:hover:not(:disabled) {
+  box-shadow: 0 8px 25px rgba(109, 40, 217, 0.35);
+  transform: translateY(-2px);
+}
+
+.btn-convertir:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-convertir.active {
+  background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
+  box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.25);
+}
+
+/* Wrapper del conversor de resultado */
+.conversor-resultado-suma-wrap {
+  margin-top: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #8b5cf608 0%, #6d28d908 100%);
+  border: 2px solid rgba(109, 40, 217, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(109, 40, 217, 0.1);
+}
+
+.conversor-resultado-suma-empty {
+  margin-top: 16px;
+  padding: 14px;
+  background: rgba(109, 40, 217, 0.06);
+  border-radius: 8px;
+  color: #6d28d9;
+  font-size: 14px;
+  text-align: center;
+}
+
+.crs-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid rgba(109, 40, 217, 0.15);
+}
+
+.crs-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.crs-title {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #4c1d95;
+  letter-spacing: 0.3px;
+}
+
+.crs-subtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.crs-code {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  background: rgba(109, 40, 217, 0.1);
+  border: 1px solid rgba(109, 40, 217, 0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #6d28d9;
+  font-weight: 700;
+}
+
+.crs-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  font-size: 14px;
+  color: #6d28d9;
+  font-weight: 600;
+}
+
+.crs-retry-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  border: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.crs-retry-btn:hover:not(:disabled) {
+  box-shadow: 0 6px 18px rgba(109, 40, 217, 0.3);
+  transform: translateY(-1px);
+}
+
 .spinner {
   display: inline-block;
   width: 16px;

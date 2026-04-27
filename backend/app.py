@@ -111,6 +111,8 @@ class ConvertirBaseResponse(BaseModel):
     base_destino: int
     numerador_base_10: int
     denominador_base_10: int
+    numerador_origen: str
+    denominador_origen: str
     numerador_destino: str
     denominador_destino: str
     detalles: str
@@ -462,6 +464,15 @@ def convertir_base(input_data: ConvertirBaseInput):
         # Calcular el valor decimal en base 10
         valor_base_10 = numerador_base_10 / denominador_base_10
         
+        # Convertir la fracción a la base origen
+        numerador_origen, denominador_origen = convertir_fraccion_base(
+            numerador_base_10, 
+            denominador_base_10, 
+            input_data.base_origen
+        )
+        numerador_origen = str(numerador_origen).upper()
+        denominador_origen = str(denominador_origen).upper()
+        
         # Convertir la fracción a la base destino
         numerador_destino, denominador_destino = convertir_fraccion_base(
             numerador_base_10, 
@@ -488,8 +499,8 @@ def convertir_base(input_data: ConvertirBaseInput):
         resultado_nmal = resultado_div['resultado_completo']
         
         detalles = f"Conversión de base {input_data.base_origen} a base {input_data.base_destino}. " \
-                   f"Numerador: {numerador_base_10} (base 10) = {numerador_destino} (base {input_data.base_destino}). " \
-                   f"Denominador: {denominador_base_10} (base 10) = {denominador_destino} (base {input_data.base_destino})."
+                   f"Numerador: {numerador_base_10} (base 10) = {numerador_origen} (base {input_data.base_origen}) = {numerador_destino} (base {input_data.base_destino}). " \
+                   f"Denominador: {denominador_base_10} (base 10) = {denominador_origen} (base {input_data.base_origen}) = {denominador_destino} (base {input_data.base_destino})."
         
         return ConvertirBaseResponse(
             numero_original=numero_original,
@@ -500,6 +511,8 @@ def convertir_base(input_data: ConvertirBaseInput):
             base_destino=input_data.base_destino,
             numerador_base_10=numerador_base_10,
             denominador_base_10=denominador_base_10,
+            numerador_origen=numerador_origen,
+            denominador_origen=denominador_origen,
             numerador_destino=numerador_destino,
             denominador_destino=denominador_destino,
             detalles=detalles

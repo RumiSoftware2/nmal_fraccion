@@ -251,6 +251,10 @@ export default function PasoDelConversor({ resultado }) {
   const numDest = (resultado.numerador_destino || parsed.numerador).toUpperCase()
   const denDest = (resultado.denominador_destino || parsed.denominador).toUpperCase()
 
+  // Usar los valores de fracción en base origen directamente de la API
+  const numOrigen = (resultado.numerador_origen || '').toUpperCase()
+  const denOrigen = (resultado.denominador_origen || '').toUpperCase()
+
   const divisionDestino = useMemo(
     () => generarPasosDivisionLatex(numDest, denDest, baseDestino, 18),
     [numDest, denDest, baseDestino]
@@ -262,16 +266,6 @@ export default function PasoDelConversor({ resultado }) {
 
   const biNum = useMemo(() => toBigInt(resultado.numerador_base_10), [resultado.numerador_base_10])
   const biDen = useMemo(() => toBigInt(resultado.denominador_base_10), [resultado.denominador_base_10])
-
-  const numOrigen = useMemo(() => {
-    if (biNum === null) return null
-    return bigintToBaseString(biNum, baseOrigen).toUpperCase()
-  }, [biNum, baseOrigen])
-
-  const denOrigen = useMemo(() => {
-    if (biDen === null) return null
-    return bigintToBaseString(biDen, baseOrigen).toUpperCase()
-  }, [biDen, baseOrigen])
 
   const radixNumerador = useMemo(() => {
     if (biNum === null) return { pasos: [], resultadoDestino: '', divisorNumeral: '', truncado: false }

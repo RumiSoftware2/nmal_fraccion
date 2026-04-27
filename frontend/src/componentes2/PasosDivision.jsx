@@ -131,7 +131,14 @@ export default function PasosDivision({ frac1, frac2, base }) {
   const numDecFrac2 = `${div2.parteEntera}${div2.decimales ? '.' + div2.decimales : ''}`
 
   const divisionFinal = useMemo(() => {
-    // Limpiamos posibles paréntesis de periodo
+    // Para el paso 4, mostrar directamente la división usando los numeradores convertidos
+    // Sin perder la información de periódicos en los operandos
+    
+    // Extraer números y denominadores en base origen (de las fracciones convertidas)
+    // que resultaron de dividir numerador/denominador de las fracciones originales
+    
+    // Aquí simplemente calculamos la división de los RESULTADOS decimales ya obtenidos
+    // Limpiamos los paréntesis solo para extraer dígitos y calcular
     const cleanNum1 = numDecFrac1.replace(/[\(\)]/g, '')
     const cleanNum2 = numDecFrac2.replace(/[\(\)]/g, '')
 
@@ -150,13 +157,18 @@ export default function PasosDivision({ frac1, frac2, base }) {
     const bVal = parseInt(bFull, baseNum) || 0
 
     if (bVal === 0) {
-      return { latex: '\\text{Indefinido}', parteEntera: '0', decimales: '' }
+      return { latex: '\\text{Indefinido}', parteEntera: '0', decimales: '', esPeriodico: false }
     }
 
     const numStr = toBase(aVal, baseNum).toUpperCase()
     const denStr = toBase(bVal, baseNum).toUpperCase()
 
-    return generarPasosDivisionLatex(numStr, denStr, baseNum, 15)
+    const resultado = generarPasosDivisionLatex(numStr, denStr, baseNum, 15)
+    
+    // Verificar si el resultado tiene período
+    const esPeriodico = resultado.decimales.includes('(')
+    
+    return { ...resultado, esPeriodico }
   }, [numDecFrac1, numDecFrac2, baseNum])
 
   const resultadoDivision = `${divisionFinal.parteEntera}${divisionFinal.decimales ? '.' + divisionFinal.decimales : ''}`

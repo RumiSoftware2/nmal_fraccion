@@ -163,7 +163,7 @@ export default function PasosDivision({ frac1, frac2, base }) {
     const numStr = toBase(aVal, baseNum).toUpperCase()
     const denStr = toBase(bVal, baseNum).toUpperCase()
 
-    const resultado = generarPasosDivisionLatex(numStr, denStr, baseNum, 15)
+    const resultado = generarPasosDivisionLatex(numStr, denStr, baseNum, 72)
     
     // Verificar si el resultado tiene período
     const esPeriodico = resultado.decimales.includes('(')

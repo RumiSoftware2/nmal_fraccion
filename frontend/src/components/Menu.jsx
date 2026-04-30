@@ -1,28 +1,28 @@
 import { motion } from 'framer-motion'
-import { Calculator, Brain, Trophy, Sparkles, BookOpen, Code } from 'lucide-react'
+import { Calculator, Brain, Sparkles } from 'lucide-react'
 import './Menu.css'
 
 const programs = [
   {
     id: 'math-tutor',
     title: 'n-mal como división de dos naturales',
-    description: 'Convierte números periódicos a división de dos naturales',
+    description: 'Convierte n-males a división de dos naturales',
     icon: Calculator,
-    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+    iconColor: 'linear-gradient(135deg, #7fb3d5 0%, #a8c8e8 100%)'
   },
   {
     id: 'periodic-decimal',
     title: 'Operaciones de n-males',
     description: 'Opera (sumas, restas, multiplicación y división) un n.mal con otro n.mal en la misma base',
     icon: Brain,
-    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+    iconColor: 'linear-gradient(135deg, #c8b8e6 0%, #ddd4f0 100%)'
   },
   {
     id: 'base-converter',
     title: 'Cambio de Base',
     description: 'Convierte números n-mal entre diferentes bases',
     icon: Sparkles,
-    gradient: 'linear-gradient(135deg, #10b981 0%, #14b8a6 100%)',
+    iconColor: 'linear-gradient(135deg, #82c4a5 0%, #a8dcc0 100%)',
     disabled: false
   }
 ]
@@ -39,16 +39,16 @@ export default function Menu({ onSelectProgram }) {
         whileTap={{ scale: 0.97 }}
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.4 }}
+        transition={{ delay: 0.3, duration: 0.3 }}
       >
-        📄 Regresar a Sistemas Numéricos
+        📄 Regresar
       </motion.a>
 
       <motion.div
         className="menu-header"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.5 }}
       >
         <h1>🧮 Centro de Programas Matemáticos</h1>
         <p>Selecciona una herramienta para comenzar</p>
@@ -58,7 +58,7 @@ export default function Menu({ onSelectProgram }) {
         className="programs-grid"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
+        transition={{ delay: 0.15, duration: 0.5 }}
       >
         {programs.map((program, index) => (
           <motion.div
@@ -66,13 +66,13 @@ export default function Menu({ onSelectProgram }) {
             className={`program-card ${program.disabled ? 'disabled' : ''}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 * index, duration: 0.4 }}
-            whileHover={!program.disabled ? { scale: 1.05 } : {}}
-            whileTap={!program.disabled ? { scale: 0.95 } : {}}
+            transition={{ delay: 0.1 * index, duration: 0.35 }}
+            whileHover={!program.disabled ? { scale: 1.03 } : {}}
+            whileTap={!program.disabled ? { scale: 0.97 } : {}}
             onClick={() => !program.disabled && onSelectProgram(program.id)}
           >
-            <div className="program-icon" style={{ background: program.gradient }}>
-              <program.icon size={32} />
+            <div className="program-icon" style={{ background: program.iconColor }}>
+              <program.icon size={28} />
             </div>
             <h3>{program.title}</h3>
             <p>{program.description}</p>

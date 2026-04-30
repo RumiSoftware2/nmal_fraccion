@@ -53,7 +53,7 @@ npm --version
 2. Ejecuta el siguiente comando:
 
 ```bash
-git clone https://github.com/[usuario]/math-tutor.git
+git https://github.com/RumiSoftware2/nmal_fraccion.git
 cd math-tutor
 ```
 

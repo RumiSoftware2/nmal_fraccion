@@ -88,7 +88,7 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
               placeholder=""
               type="text"
               icon={<Hash size={16} />}
-              helpText="Periódico: 0.1(6) | Periódico puro: 0.(3) | Sin período: 2.5 | Entero: 5"
+              helpText="Periódico: 0.1(6)=0.1666... | Periódico puro: 0.(3)=0.3333...  | Sin período: 2.5 | Entero: 5"
             />
           </motion.div>
           

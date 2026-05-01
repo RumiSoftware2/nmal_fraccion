@@ -6,13 +6,6 @@ import { Hash } from 'lucide-react'
 import './SimpleConversionForm.css'
 
 function parseNumero(numero) {
-  /**
-   * Parsea un número en diferentes formatos:
-   * - Periódico puro: 0.(3) => entero="0", no_periodo="", periodo="3"
-   * - Periódico mixto: 0.1(6) => entero="0", no_periodo="1", periodo="6"
-   * - Sin período: 2.5 => entero="2", no_periodo="5", periodo=""
-   * - Solo entero: 5 => entero="5", no_periodo="", periodo=""
-   */
   let entero = ''
   let no_periodo = ''
   let periodo = ''
@@ -21,26 +14,20 @@ function parseNumero(numero) {
   const parenIndex = numero.indexOf('(')
 
   if (dotIndex !== -1) {
-    // Hay punto decimal
     entero = numero.substring(0, dotIndex)
     if (parenIndex !== -1) {
-      // Hay paréntesis después del punto: número periódico mixto
       no_periodo = numero.substring(dotIndex + 1, parenIndex)
       periodo = numero.substring(parenIndex + 1, numero.indexOf(')'))
     } else {
-      // No hay paréntesis: número sin período (decimal finito)
       no_periodo = numero.substring(dotIndex + 1)
       periodo = ''
     }
   } else {
-    // No hay punto decimal
     if (parenIndex !== -1) {
-      // Hay paréntesis: número periódico puro como 5(3)
       entero = numero.substring(0, parenIndex)
       periodo = numero.substring(parenIndex + 1, numero.indexOf(')'))
       no_periodo = ''
     } else {
-      // Solo número entero
       entero = numero
       no_periodo = ''
       periodo = ''
@@ -50,21 +37,46 @@ function parseNumero(numero) {
   return { entero, no_periodo, periodo }
 }
 
+function isValidBase(val) {
+  if (val === '' || val === null || val === undefined) return false
+  const n = Number(val)
+  if (!Number.isInteger(n)) return false
+  if (n < 2) return false
+  return true
+}
+
+function getBaseError(val) {
+  if (val === '' || val === null || val === undefined) return ''
+  const n = Number(val)
+  if (!Number.isFinite(n)) return 'La base debe ser un número válido'
+  if (!Number.isInteger(n)) return 'La base debe ser un número entero'
+  if (n < 2) return 'La base debe ser un número entero ≥ 2'
+  return ''
+}
+
 export default function SimpleConversionForm({ onSubmit, loading }) {
   const [campos, setCampos] = useState({
     numero: '', 
     base: ''
   })
+  const [baseError, setBaseError] = useState('')
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    if (!isValidBase(campos.base)) return
     const { entero, no_periodo, periodo } = parseNumero(campos.numero)
     onSubmit({ entero, no_periodo, periodo, base: parseInt(campos.base) })
   }
 
   const handleChange = (e) => {
-    setCampos(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setCampos(prev => ({ ...prev, [name]: value }))
+    if (name === 'base') {
+      setBaseError(getBaseError(value))
+    }
   }
+
+  const canSubmit = isValidBase(campos.base) && campos.numero.trim() !== '' && !loading
 
   return (
     <motion.div 
@@ -88,7 +100,7 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
               placeholder=""
               type="text"
               icon={<Hash size={16} />}
-              helpText="Periódico: 0.1(6)=0.1666... | Periódico puro: 0.(3)=0.3333...  | Sin período: 2.5 | Entero: 5"
+              helpText="Periódico: 3.1(456)=3.1456456456... | Periódico puro: 0.(3)=0.3333...  | Sin período: 2.5 | Entero: 5"
             />
           </motion.div>
           
@@ -106,6 +118,9 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
               type="number"
               icon={<Hash size={16} />}
               helpText="Base numérica (entre 2 y 36)"
+              min="2"
+              step="1"
+              error={baseError}
             />
           </motion.div>
         </div>
@@ -119,7 +134,7 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
           <MathButton
             type="submit"
             loading={loading}
-            disabled={loading}
+            disabled={!canSubmit}
             variant="primary"
             size="large"
           >

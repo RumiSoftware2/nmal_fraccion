@@ -5,7 +5,7 @@ import './AppHeader.css'
 const PROGRAM_CONFIG = {
   'math-tutor': {
     title: 'N-mal como División de dos Naturales',
-    description: 'Convierte decimales periódicos y normales a fracciones',
+    description: 'Convierte n-males periódicos  a división de dos naturales',
     emoji: '📐'
   },
   'periodic-decimal': {

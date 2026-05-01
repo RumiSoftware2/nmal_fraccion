@@ -3,6 +3,14 @@
   margin-bottom: 18px;
 }
 
+.math-input-group.has-error .math-input {
+  border-color: #ef4444;
+}
+
+.math-input-group.has-error .label-icon {
+  color: #ef4444;
+}
+
 .math-label {
   display: flex;
   align-items: center;
@@ -47,4 +55,11 @@
   color: #6b7280;
   font-size: 0.8rem;
   margin: 4px 0 0 0;
+}
+
+.input-error-msg {
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin: 4px 0 0 0;
+  font-weight: 500;
 }

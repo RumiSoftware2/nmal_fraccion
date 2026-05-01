@@ -50,6 +50,13 @@
   color: #6366f1;
 }
 
+.base-subscript {
+  font-size: 0.35em;
+  vertical-align: sub;
+  font-weight: 600;
+  color: #6b7280;
+}
+
 .subscript {
   font-size: 0.8rem;
   color: #6b7280;

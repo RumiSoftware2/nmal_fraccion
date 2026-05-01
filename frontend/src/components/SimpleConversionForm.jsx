@@ -93,7 +93,7 @@ export default function SimpleConversionForm({ onSubmit, loading }) {
             transition={{ delay: 0.2, duration: 0.4 }}
           >
             <MathInput
-              label="Número (Periódico o Sin Período)"
+              label="Número N-mal"
               name="numero"
               value={campos.numero}
               onChange={handleChange}

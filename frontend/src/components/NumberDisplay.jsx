@@ -23,10 +23,10 @@ export default function NumberDisplay({ input }) {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
       >
-        <p className="display-label">Representación con x en base {base}:</p>
+        <p className="display-label">Representación  en base {base}:</p>
         <div className="math-expression">
           <span className="math-inline">x =</span>
-          <span className="math-value">{entero}{no_periodo ? `.${no_periodo}` : ''}{periodo ? `(${periodo})` : ''}</span>
+          <span className="math-value">{entero}.{no_periodo ? `${no_periodo}` : ''}{periodo ? `(${periodo})` : ''}</span>
           <span className="subscript">base {base}</span>
         </div>
         <motion.div 
@@ -73,29 +73,7 @@ export default function NumberDisplay({ input }) {
         </motion.div>
       </motion.div>
 
-      <motion.div 
-        className="number-legend"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.6, duration: 0.3 }}
-      >
-        <div className="legend-item">
-          <div className="legend-color entero-color"></div>
-          <span>Parte Entera</span>
-        </div>
-        {no_periodo && (
-          <div className="legend-item">
-            <div className="legend-color no-periodo-color"></div>
-            <span>No Período</span>
-          </div>
-        )}
-        {periodo && (
-          <div className="legend-item">
-            <div className="legend-color periodo-color"></div>
-            <span>Período (se repite)</span>
-          </div>
-        )}
-      </motion.div>
+    
     </motion.div>
   )
 }

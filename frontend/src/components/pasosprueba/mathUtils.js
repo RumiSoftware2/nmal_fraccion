@@ -1,6 +1,12 @@
 // Convierte dígito numérico → carácter (base > 10 usa A,B,C...)
 export const dChar = (d) => d < 10 ? String(d) : String.fromCharCode(55 + d)
 
+// Genera la representación en cadena de base^exponente en la base dada
+export function generarPotenciaEnBase(base, exponente) {
+  const valor = Math.pow(base, exponente)
+  return valor.toString(base).toUpperCase()
+}
+
 // Resta en base `base`, de derecha a izquierda, retorna dígitos y borrows
 export function restaEnBase(aStr, bStr, base) {
   const len = Math.max(aStr.length, bStr.length)

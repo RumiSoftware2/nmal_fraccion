@@ -2,6 +2,11 @@ import { motion } from 'framer-motion'
 import BlockMath from './BlockMath'
 
 export default function PasoResultado({ entero, no_periodo, periodo, base }) {
+  // Helper function to convert number to its representation in the given base
+  const convertToBase = (numero, baseDestino) => {
+    return numero.toString(baseDestino).toUpperCase()
+  }
+
   const fullDigits   = `${entero}${no_periodo}${periodo}`
   const beforeDigits = `${entero}${no_periodo}`
 
@@ -19,10 +24,15 @@ export default function PasoResultado({ entero, no_periodo, periodo, base }) {
   const denominadorValue10 = Math.pow(base, m + n) - Math.pow(base, m)
   const denominadorInBase = denominadorValue10.toString(base).toUpperCase()
 
+  // Convert all numbers to their correct base representation
+  const baseEnBase = convertToBase(base, base)
+  const exponentMNEnBase = convertToBase(m + n, base)
+  const exponentMEnBase = convertToBase(m, base)
+
   // LaTeX equations
-  const latexNumerador = `${fullDigits}_{${base}} - ${beforeDigits}_{${base}} = ${diffInBase}_{${base}} \;=\; ${diffValue10}_{10}`
-  const latexDenominador = `${base}^{${m+n}} - ${base}^{${m}} = ${denominadorInBase}_{${base}} \;=\; ${denominadorValue10}_{10}`
-  const latexFraccion = `\\frac{${diffInBase}}{${denominadorInBase}}_{(${base})}`
+  const latexNumerador = `${fullDigits}_{${baseEnBase}} - ${beforeDigits}_{${baseEnBase}} = ${diffInBase}_{${baseEnBase}} `
+  const latexDenominador = `${baseEnBase}^{${exponentMNEnBase}} - ${baseEnBase}^{${exponentMEnBase}} = ${denominadorInBase}_{${baseEnBase}} `
+  const latexFraccion = `\\frac{${diffInBase}}{${denominadorInBase}}_{(${baseEnBase})}`
 
   return (
     <motion.div

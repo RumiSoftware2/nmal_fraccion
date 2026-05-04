@@ -77,7 +77,7 @@ export default function Paso1prueba({ input }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
     >
-      <h3>Paso prueba: multiplicación en base {base} y resta</h3>
+      <h3>Paso prueba:  en base {base} recuerda el {base}=10 (uno cero) </h3>
 
       <div className="step-tabs">
         {steps.map((step, index) => (

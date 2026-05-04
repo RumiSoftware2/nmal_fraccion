@@ -3,6 +3,11 @@ import BlockMath from './BlockMath'
 import { latexRestaColumnas, generarPotenciaEnBase } from './mathUtils'
 
 export default function PasoRestaColumnas({ entero, no_periodo, periodo, base }) {
+  // Helper function to convert number to its representation in the given base
+  const convertToBase = (numero, baseDestino) => {
+    return numero.toString(baseDestino).toUpperCase()
+  }
+
   const m = no_periodo.length
   const n = periodo.length
   const fullDigits  = `${entero}${no_periodo}${periodo}`
@@ -12,7 +17,12 @@ export default function PasoRestaColumnas({ entero, no_periodo, periodo, base })
   const potenciaMN = generarPotenciaEnBase(base, m + n)
   const potenciaM = generarPotenciaEnBase(base, m)
 
-  const latexEcuacion = `(${base}^{${m + n}} - ${base}^{${m}})\\,x = ${fullDigits}_{${base}} - ${beforeDigits}_{${base}}`
+  // Convert all numbers to their correct base representation
+  const baseEnBase = convertToBase(base, base)
+  const exponentMNEnBase = convertToBase(m + n, base)
+  const exponentMEnBase = convertToBase(m, base)
+  
+  const latexEcuacion = `(${baseEnBase}^{${exponentMNEnBase}} - ${baseEnBase}^{${exponentMEnBase}})\\cdot x = ${fullDigits}_{${baseEnBase}} - ${beforeDigits}_{${baseEnBase}}`
   const latexRestaB   = latexRestaColumnas(fullDigits, beforeDigits, base)
   const latexRestaDen = latexRestaColumnas(potenciaMN, potenciaM, base)
 

@@ -14,7 +14,7 @@ export default function PasoMultiplicaTodo({ entero, no_periodo, periodo, base }
   // Convert all numbers to their correct base representation
   const baseEnBase = convertToBase(base, base)
   const exponentEnBase = convertToBase(m + n, base)
-  const latexAllDigits = `${baseEnBase}^{${exponentEnBase}} \\cdot x = ${fullDigits}_{${baseEnBase}}`
+  const latexAllDigits = `${baseEnBase}^{${exponentEnBase}} \\cdot x = ${fullDigits} \\cdot \\overline{${periodo}}_{${baseEnBase}}`
 
   return (
     <motion.div

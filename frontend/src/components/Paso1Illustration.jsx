@@ -97,7 +97,7 @@ export default function Paso1Illustration({ input }) {
     >
       <h3>Paso 1: multiplicación en base {base} y resta</h3>
 
-      <p>Definimos:</p>
+      <p>Asignamos un nombre al número:</p>
       <BlockMath math={latexX} />
 
       <p>Multiplicamos para capturar todos los dígitos incluyendo el periodo:</p>

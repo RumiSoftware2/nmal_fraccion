@@ -46,7 +46,7 @@ export default function PasoResultado({ entero, no_periodo, periodo, base }) {
       <p>Denominador:</p>
       <BlockMath math={latexDenominador} />
 
-      <p>Fracción final:</p>
+      <p>División final:</p>
       <BlockMath math={latexFraccion} />
     </motion.div>
   )

@@ -17,7 +17,7 @@ export default function Paso1prueba({ input }) {
   const steps = useMemo(
     () => [
       {
-        label: 'Definimos',
+        label: 'Nombramos el número',
         component: (
           <PasoDefinimos
             entero={entero}
@@ -28,7 +28,7 @@ export default function Paso1prueba({ input }) {
         ),
       },
       {
-        label: 'Multiplica todo',
+        label: 'Todos los dígitos',
         component: (
           <PasoMultiplicaTodo
             entero={entero}
@@ -39,9 +39,9 @@ export default function Paso1prueba({ input }) {
         ),
       },
       {
-        label: 'Multiplica antes',
+        label: 'Antes del periodo',
         component: (
-          <PasoMultiplicaAntes entero={entero} no_periodo={no_periodo} base={base} />
+          <PasoMultiplicaAntes entero={entero} no_periodo={no_periodo} base={base} periodo={periodo} />
         ),
       },
       {

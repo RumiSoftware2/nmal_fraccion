@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import BlockMath from './BlockMath'
 
-export default function PasoMultiplicaAntes({ entero, no_periodo, base }) {
+export default function PasoMultiplicaAntes({ entero, no_periodo,base,periodo }) {
   // Helper function to convert number to its representation in the given base
   const convertToBase = (numero, baseDestino) => {
     return numero.toString(baseDestino).toUpperCase()
@@ -13,7 +13,7 @@ export default function PasoMultiplicaAntes({ entero, no_periodo, base }) {
   // Convert all numbers to their correct base representation
   const baseEnBase = convertToBase(base, base)
   const exponentEnBase = convertToBase(m, base)
-  const latexBefore = `${baseEnBase}^{${exponentEnBase}} \\cdot x = ${beforeDigits}_{${baseEnBase}}`
+  const latexBefore = `${baseEnBase}^{${exponentEnBase}} \\cdot x = ${beforeDigits}\\cdot \\overline{${periodo}}_{${baseEnBase}}`
 
   return (
     <motion.div
@@ -21,7 +21,7 @@ export default function PasoMultiplicaAntes({ entero, no_periodo, base }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: 0.2 }}
     >
-      <p>Multiplicamos para capturar solo los dígitos antes del periodo (m = {m}):</p>
+      <p>Multiplicamos para capturar solo los dígitos antes del periodo:</p>
       <BlockMath math={latexBefore} />
     </motion.div>
   )

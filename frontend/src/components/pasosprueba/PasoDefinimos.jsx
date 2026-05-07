@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import BlockMath from './BlockMath'
 
 export default function PasoDefinimos({ entero, no_periodo, periodo, base }) {
-  const latexX = `x = ${entero}${no_periodo ? `.${no_periodo}` : ''}${periodo ? `\\overline{${periodo}}` : ''}`
+  const latexX = `x = ${entero}.${no_periodo ? `${no_periodo}` : ''}${periodo ? `\\overline{${periodo}}` : ''}`
 
   return (
     <motion.div
@@ -10,7 +10,7 @@ export default function PasoDefinimos({ entero, no_periodo, periodo, base }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
     >
-      <p>Definimos:</p>
+      <p>Asignamos un nombre al número:</p>
       <BlockMath math={latexX} />
     </motion.div>
   )

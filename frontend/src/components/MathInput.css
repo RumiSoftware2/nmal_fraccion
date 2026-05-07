@@ -31,13 +31,14 @@
 
 .math-input {
   width: 100%;
-  padding: clamp(12px, 3vw, 16px) clamp(14px, 3.5vw, 20px);
+  padding: clamp(10px, 2.5vw, 16px) clamp(12px, 3vw, 20px);
   border: 1.5px solid #e5e7eb;
   border-radius: 10px;
   font-size: clamp(0.9rem, 2.5vw, 1rem);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
   color: #1f2937;
+  box-sizing: border-box;
 }
 
 .math-input:focus {

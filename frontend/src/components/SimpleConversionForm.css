@@ -2,13 +2,14 @@
 .conversion-form {
   width: 100%;
   max-width: 600px;
-  margin: 0 clamp(16px, 4vw, 24px);
+  margin: 0 auto;
   background: linear-gradient(145deg, rgba(248, 250, 255, 0.95), rgba(243, 244, 248, 0.9));
   border-radius: 0;
-  padding: clamp(24px, 6vw, 40px);
+  padding: clamp(20px, 5vw, 40px);
   box-shadow: 0 12px 24px rgba(139, 149, 255, 0.08);
   border: 1px solid rgba(139, 149, 255, 0.06);
   backdrop-filter: blur(10px);
+  box-sizing: border-box;
 }
 
 
@@ -28,6 +29,15 @@
 @media (max-width: 480px) {
   .conversion-form {
     box-shadow: 0 8px 16px rgba(139, 149, 255, 0.12);
+    padding: 16px;
+  }
+  
+  .math-form {
+    gap: clamp(18px, 4vw, 28px);
+  }
+  
+  .input-grid {
+    gap: clamp(16px, 3.5vw, 24px);
   }
   
   .math-input {

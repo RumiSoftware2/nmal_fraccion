@@ -18,11 +18,11 @@
   font-weight: 500;
   color: #374151;
   margin-bottom: 6px;
-  font-size: 0.88rem;
+  font-size: clamp(0.85rem, 2vw, 0.88rem);
 }
 
 .label-icon {
-  color: #6366f1;
+  color: #8b95ff;
 }
 
 .input-wrapper {
@@ -31,19 +31,19 @@
 
 .math-input {
   width: 100%;
-  padding: 10px 14px;
-  border: 1.5px solid #d1d5db;
+  padding: clamp(12px, 3vw, 16px) clamp(14px, 3.5vw, 20px);
+  border: 1.5px solid #e5e7eb;
   border-radius: 10px;
-  font-size: 0.95rem;
-  transition: all 0.3s;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   background: white;
   color: #1f2937;
 }
 
 .math-input:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  border-color: #8b95ff;
+  box-shadow: 0 0 0 3px rgba(139, 149, 255, 0.08);
 }
 
 .input-wrapper.focused .input-border {

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, RotateCcw, ChevronDown } from 'lucide-react'
+import { useFraccionContinua } from '../hooks/useFraccionContinua'
 import './FraccionContinuaSimpl.css'
 
 /**
@@ -20,19 +21,17 @@ import './FraccionContinuaSimpl.css'
  *   4. Renderiza resultados
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 export default function FraccionContinuaSimpl() {
   // ============================================================
-  // ESTADO
+  // ESTADO Y HOOKS
   // ============================================================
   
   const [fraccion, setFraccion] = useState('')      // Entrada: "43/19"
   const [base, setBase] = useState(10)              // Base: 2-36
-  const [resultado, setResultado] = useState(null)  // Resultado del backend
-  const [loading, setLoading] = useState(false)     // Estado carga
-  const [error, setError] = useState(null)          // Mensajes error
   const [expandedStep, setExpandedStep] = useState(null)  // Paso expandido
+  
+  const { resultado, error, loading, calcular, limpiarError } = useFraccionContinua()
 
   // ============================================================
   // VALIDACIÓN
@@ -41,15 +40,13 @@ export default function FraccionContinuaSimpl() {
   const validarEntrada = () => {
     // Validar que la fracción tenga formato a/b
     if (!fraccion || !fraccion.includes('/')) {
-      setError('Ingresa la fracción en formato: numerador/denominador (ej: 43/19)')
-      return false
+      return 'Ingresa la fracción en formato: numerador/denominador (ej: 43/19)'
     }
 
     const [numerador_str, denominador_str] = fraccion.split('/').map(s => s.trim())
 
     if (!numerador_str || !denominador_str) {
-      setError('Fracción inválida. Usa el formato: numerador/denominador')
-      return false
+      return 'Fracción inválida. Usa el formato: numerador/denominador'
     }
 
     // Validar que numerador y denominador sean válidos en la base
@@ -58,26 +55,22 @@ export default function FraccionContinuaSimpl() {
       const den = parseInt(denominador_str, base)
 
       if (isNaN(num) || isNaN(den)) {
-        setError(`Los valores no son válidos en base ${base}`)
-        return false
+        return `Los valores no son válidos en base ${base}`
       }
 
       if (den === 0) {
-        setError('El denominador no puede ser cero')
-        return false
+        return 'El denominador no puede ser cero'
       }
     } catch (e) {
-      setError(`Error al validar: ${e.message}`)
-      return false
+      return `Error al validar: ${e.message}`
     }
 
     // Validar base
     if (base < 2 || base > 36) {
-      setError('La base debe estar entre 2 y 36')
-      return false
+      return 'La base debe estar entre 2 y 36'
     }
 
-    return true
+    return null // No hay error
   }
 
   // ============================================================
@@ -85,46 +78,15 @@ export default function FraccionContinuaSimpl() {
   // ============================================================
 
   const enviarAlBackend = async () => {
-    if (!validarEntrada()) return
-
-    setLoading(true)
-    setError(null)
-    setResultado(null)
-
-    try {
-      const [numerador_str, denominador_str] = fraccion.split('/').map(s => s.trim())
-
-      const response = await fetch(`${API_BASE_URL}/fraccion-continua-simple`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          numerador: numerador_str,
-          denominador: denominador_str,
-          base: parseInt(base)
-        })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.detail || `Error HTTP ${response.status}`)
-      }
-
-      const data = await response.json()
-
-      if (!data.exito) {
-        throw new Error(data.error || 'Error desconocido del servidor')
-      }
-
-      setResultado(data)
-      setError(null)
-    } catch (err) {
-      setError(`Error: ${err.message}`)
-      console.error('Error detallado:', err)
-    } finally {
-      setLoading(false)
-    }
+    const errorValidacion = validarEntrada()
+    
+    const [numerador_str, denominador_str] = fraccion.split('/').map(s => s.trim())
+    
+    await calcular({
+      numerador: numerador_str,
+      denominador: denominador_str,
+      base: parseInt(base)
+    }, errorValidacion)
   }
 
   // ============================================================
@@ -134,9 +96,8 @@ export default function FraccionContinuaSimpl() {
   const resetear = () => {
     setFraccion('')
     setBase(10)
-    setResultado(null)
-    setError(null)
     setExpandedStep(null)
+    limpiarError()
   }
 
   // ============================================================

@@ -13,6 +13,7 @@ from utils.prime_factors import get_common_prime_factors
 from utils.convertir_fraccion_base_comun import convertir_fracciones_a_base_comun
 from operaciones.fraccion_nmal import dividir_fraccion_en_base
 from operaciones.operaciones_fracciones import operar_fracciones_en_base, convertir_a_base_con_signo
+from operaciones.fraccion_simple_finita import calcular_fraccion_continua
 
 app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
 
@@ -136,7 +137,112 @@ class ConvertirFraccionANmalResponse(BaseModel):
     numerador_base10: int
     denominador_base10: int
 
-@app.get("/")
+class FraccionContinuaInput(BaseModel):
+    """Modelo de entrada para calcular fracción continua simple"""
+    numerador: str
+    denominador: str
+    base: int
+
+class PasoEuclidesResponse(BaseModel):
+    """Respuesta con detalles de cada paso del algoritmo de Euclides"""
+    paso: int
+    dividendo: int
+    dividendo_base: str
+    divisor: int
+    divisor_base: str
+    cociente: int
+    cociente_base: str
+    residuo: int
+    residuo_base: str
+    ecuacion: str
+
+class FraccionContinuaResponse(BaseModel):
+    """Respuesta con el cálculo completo de la fracción continua simple"""
+    exito: bool
+    base: int
+    input: dict
+    valores_base_10: dict
+    valores_en_base: dict
+    coeficientes: dict
+    fraccion_continua: dict
+    pasos_euclides: list[PasoEuclidesResponse]
+    reconstruccion: dict
+    mensaje: str
+
+@app.post("/fraccion-continua-simple", response_model=FraccionContinuaResponse)
+def fraccion_continua_simple(input_data: FraccionContinuaInput):
+    """
+    Calcula la fracción continua simple de un número racional c/d en cualquier base (2-36).
+    
+    Una fracción continua simple tiene la forma:
+        [a₁, a₂, a₃, ..., aₙ] = a₁ + 1/(a₂ + 1/(a₃ + ... + 1/aₙ))
+    
+    Cualquier número racional puede representarse así usando el algoritmo de Euclides.
+    
+    Ejemplo para base 10:
+    {
+        "numerador": "43",
+        "denominador": "19",
+        "base": 10
+    }
+    
+    Devuelve:
+    - Los coeficientes [a₁, a₂, ..., aₙ] en la base especificada
+    - Los pasos del algoritmo de Euclides
+    - La verificación de reconstrucción de la fracción original
+    
+    Soporta bases de 2 a 36 (binario, decimal, hexadecimal, etc.)
+    """
+    try:
+        # Validar base
+        if input_data.base < 2 or input_data.base > 36:
+            raise ValueError(f"La base debe estar entre 2 y 36, se recibió: {input_data.base}")
+        
+        # Calcular fracción continua
+        resultado = calcular_fraccion_continua(
+            input_data.numerador,
+            input_data.denominador,
+            input_data.base
+        )
+        
+        if not resultado.get('exito', False):
+            raise ValueError(resultado.get('error', 'Error desconocido'))
+        
+        # Convertir pasos a formato Pydantic
+        pasos_convertidos = []
+        for paso in resultado.get('pasos_euclides', []):
+            pasos_convertidos.append(PasoEuclidesResponse(
+                paso=paso['paso'],
+                dividendo=paso['dividendo'],
+                dividendo_base=paso['dividendo_base'],
+                divisor=paso['divisor'],
+                divisor_base=paso['divisor_base'],
+                cociente=paso['cociente'],
+                cociente_base=paso['cociente_base'],
+                residuo=paso['residuo'],
+                residuo_base=paso['residuo_base'],
+                ecuacion=paso['ecuacion']
+            ))
+        
+        return FraccionContinuaResponse(
+            exito=resultado['exito'],
+            base=resultado['base'],
+            input=resultado['input'],
+            valores_base_10=resultado['valores_base_10'],
+            valores_en_base=resultado['valores_en_base'],
+            coeficientes=resultado['coeficientes'],
+            fraccion_continua=resultado['fraccion_continua'],
+            pasos_euclides=pasos_convertidos,
+            reconstruccion=resultado['reconstruccion'],
+            mensaje=resultado['mensaje']
+        )
+    
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al calcular fracción continua: {str(e)}")
+
+
 def root():
     return {
         "mensaje": "Bienvenido a Math Tutor Backend",

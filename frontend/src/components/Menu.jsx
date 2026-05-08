@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Calculator, Brain, Sparkles } from 'lucide-react'
+import { Calculator, Brain, Sparkles, Link2 } from 'lucide-react'
 import './Menu.css'
 
 const programs = [
@@ -24,6 +24,13 @@ const programs = [
     icon: Sparkles,
     iconColor: 'linear-gradient(135deg, #82c4a5 0%, #a8dcc0 100%)',
     disabled: false
+  },
+  {
+    id: 'fraccion-continua',
+    title: 'Fracción Continua Simple',
+    description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ] usando el algoritmo de Euclides',
+    icon: Link2,
+    iconColor: 'linear-gradient(135deg, #f5a623 0%, #f7b731 100%)'
   }
 ]
 

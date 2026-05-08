@@ -17,6 +17,11 @@ const PROGRAM_CONFIG = {
     title: 'Conversor de Bases',
     description: 'Convierte números n-mal entre diferentes bases numéricas',
     emoji: '🔄'
+  },
+  'fraccion-continua': {
+    title: 'Fracción Continua Simple',
+    description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ]',
+    emoji: '🔗'
   }
 }
 

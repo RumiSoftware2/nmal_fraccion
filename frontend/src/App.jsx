@@ -7,6 +7,7 @@ import ResultPanel from './components/ResultPanel'
 import Menu from './components/Menu'
 import PeriodicDecimalApp from './componentes2/PeriodicDecimalApp'
 import ConversorBase from './componentes3/ConversorBase'
+import FraccionContinuaSimpl from './componentes4/FraccionContinuaSimpl'
 import AppHeader from './components/AppHeader'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png'
@@ -30,6 +31,8 @@ export default function App() {
       setCurrentView('periodic-app')
     } else if (programId === 'base-converter') {
       setCurrentView('base-converter')
+    } else if (programId === 'fraccion-continua') {
+      setCurrentView('fraccion-continua')
     }
   }
 
@@ -62,6 +65,21 @@ export default function App() {
         />
         <main className="math-main">
           <ConversorBase />
+        </main>
+      </div>
+    )
+  }
+
+  if (currentView === 'fraccion-continua') {
+    return (
+      <div className="math-tutor-app">
+        <AppHeader
+          programId="fraccion-continua"
+          onMenuClick={() => setCurrentView('menu')}
+          escudo={escudo}
+        />
+        <main className="math-main">
+          <FraccionContinuaSimpl />
         </main>
       </div>
     )

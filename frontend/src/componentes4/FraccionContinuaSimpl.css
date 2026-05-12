@@ -351,6 +351,74 @@
   word-break: break-all;
 }
 
+/* ====================================================================
+   LATEX SECTION
+   ==================================================================== */
+
+.latex-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.latex-header {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.latex-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #f0f4ff 0%, #f7fafc 100%);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid #e0e7ff;
+  display: inline-block;
+}
+
+.latex-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
+  border-radius: 10px;
+  border: 1px solid var(--color-border);
+  overflow-x: auto;
+  min-height: 60px;
+}
+
+.latex-display .katex {
+  font-size: 1.1em !important;
+}
+
+.latex-display .katex-display {
+  margin: 0 !important;
+}
+
+.fraccion-continua-latex {
+  width: 100%;
+}
+
+.latex-vacio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed var(--color-border);
+}
+
+.texto-vacio {
+  font-size: 14px;
+  color: var(--color-text);
+  font-style: italic;
+}
+
 .notacion-corchetes {
   font-size: 32px;
   color: var(--color-primary);
@@ -629,6 +697,15 @@
 
   .notacion-corchetes {
     font-size: 24px;
+  }
+
+  .latex-display {
+    padding: 16px;
+    min-height: 50px;
+  }
+
+  .latex-display .katex {
+    font-size: 1em !important;
   }
 
   .paso-header {

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, RotateCcw, ChevronDown } from 'lucide-react'
 import { useFraccionContinua } from '../hooks/useFraccionContinua'
+import FraccionContinuaSimpleLatex from './FraccionContinuaSimpleLatex'
 import './FraccionContinuaSimpl.css'
 
 /**
@@ -264,6 +265,16 @@ export default function FraccionContinuaSimpl() {
             <span className="notacion-corchetes">]</span>
           </div>
           
+          {/* Representación LaTeX */}
+          <div className="latex-section">
+            <div className="latex-header">
+              <span className="latex-label">Representación matemática:</span>
+            </div>
+            <FraccionContinuaSimpleLatex 
+              coeficientes={resultado.coeficientes.en_base}
+              className="latex-display"
+            />
+          </div>
         </motion.div>
 
         

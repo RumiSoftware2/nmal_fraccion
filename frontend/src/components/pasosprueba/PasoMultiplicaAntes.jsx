@@ -13,7 +13,7 @@ export default function PasoMultiplicaAntes({ entero, no_periodo,base,periodo })
   // Convert all numbers to their correct base representation
   const baseEnBase = convertToBase(base, base)
   const exponentEnBase = convertToBase(m, base)
-  const latexBefore = `${baseEnBase}^{${exponentEnBase}} \\cdot x = ${beforeDigits}\\cdot \\overline{${periodo}}_{${baseEnBase}}`
+  const latexBefore = `${baseEnBase}^{${exponentEnBase}} \\cdot x = ${beforeDigits}. \\overline{${periodo}}_{${baseEnBase}}`
 
   return (
     <motion.div

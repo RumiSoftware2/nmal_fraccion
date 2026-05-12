@@ -137,17 +137,13 @@ export default function SingleBasePeriodicApp() {
       {/* Sección de entrada - Se oculta cuando hay resultados */}
       {!showResult && (
         <div className="input-view">
-          <div className="app-header">
-            <h2>📊 Conversor de Números Periódicos</h2>
-            <p className="subtitle">Convierte números periódicos a fracciones en una base única</p>
-          </div>
-
+          
           <div className="inputs-container">
             {/* Base única */}
             <div className="base-section">
-              <h3>🔢 Base De Conversión</h3>
+              <h3>🔢 Base para ambos números</h3>
               <div className="input-group">
-                <label>Base para ambos números:</label>
+                
                 <div className="input-wrapper">
                   <input
                     type="number"
@@ -170,13 +166,13 @@ export default function SingleBasePeriodicApp() {
                   <h3>Número 1</h3>
                 </div>
                 <div className="input-group">
-                  <label>Número (formato: entero.decimal(periodo)):</label>
+                  <label>Ejemplo: 0.1(6)=0.1666... (período = 6)</label>
                   <div className="input-wrapper">
                     <input
                       type="text"
                       value={number1}
                       onChange={(e) => setNumber1(e.target.value)}
-                      placeholder="Ej: 0.1(6)"
+                      
                     />
                     <span className="input-hint">Con o sin período</span>
                   </div>
@@ -189,13 +185,13 @@ export default function SingleBasePeriodicApp() {
                   <h3>Número 2</h3>
                 </div>
                 <div className="input-group">
-                  <label>Número (formato: entero.decimal(periodo)):</label>
+                  <label>Ejemplo: 3.04(6)=3.04666... (período = 6)</label>
                   <div className="input-wrapper">
                     <input
                       type="text"
                       value={number2}
                       onChange={(e) => setNumber2(e.target.value)}
-                      placeholder="Ej: 0.1(6)"
+                      
                     />
                     <span className="input-hint">Con o sin período</span>
                   </div>

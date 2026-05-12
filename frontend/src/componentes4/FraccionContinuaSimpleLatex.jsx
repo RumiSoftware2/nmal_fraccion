@@ -9,8 +9,35 @@ import BlockMath from '../components/pasosprueba/BlockMath'
  * Props:
  *   - coeficientes: array de strings (ej: ["2", "B", "5"] para base 16)
  *   - className: clase CSS adicional (opcional)
+ *   - numeradorStr: numerador de la fracción original (opcional, para mostrar igualdad)
+ *   - denominadorStr: denominador de la fracción original (opcional, para mostrar igualdad)
+ *   - base: base numérica (opcional, para mostrar subíndice)
+ * 
+ * Si se proporcionan numeradorStr, denominadorStr y base, muestra:
+ *   \frac{\text{numerador}}{\text{denominador}}_{(base)} = a₀ + \cfrac{1}{a₁ + \cdots}
+ * 
+ * Si no, muestra solo la expansión de la fracción continua (comportamiento anterior).
  */
-export default function FraccionContinuaSimpleLatex({ coeficientes, className = '' }) {
+export default function FraccionContinuaSimpleLatex({ 
+  coeficientes, 
+  className = '', 
+  numeradorStr, 
+  denominadorStr, 
+  base 
+}) {
+  // Función para escapar texto LaTeX (copiada de PasoDelConversor.jsx)
+  const latexEscapeText = (s) => {
+    return String(s)
+      .replace(/\\/g, '\\textbackslash{}')
+      .replace(/\{/g, '\\{')
+      .replace(/\}/g, '\\}')
+      .replace(/\$/g, '\\$')
+      .replace(/#/g, '\\#')
+      .replace(/%/g, '\\%')
+      .replace(/&/g, '\\&')
+      .replace(/_/g, '\\_')
+  }
+
   // Función para generar LaTeX de fracción continua anidada
   const generarLatexFraccionContinua = (coeficientes) => {
     if (!coeficientes || coeficientes.length === 0) {
@@ -57,7 +84,15 @@ export default function FraccionContinuaSimpleLatex({ coeficientes, className = 
     )
   }
 
-  const latexString = generarLatexFraccionContinua(coeficientes)
+  const expansionLatex = generarLatexFraccionContinua(coeficientes)
+  
+  // Construir ecuación completa si hay datos de fracción del usuario
+  let latexString = expansionLatex
+  
+  if (numeradorStr && denominadorStr && base !== undefined) {
+    const fraccionUsuarioLatex = `\\frac{\\text{${latexEscapeText(numeradorStr)}}}{\\text{${latexEscapeText(denominadorStr)}}}_{(${base})}`
+    latexString = `${fraccionUsuarioLatex} \\;=\\; ${expansionLatex}`
+  }
 
   return (
     <div className={`fraccion-continua-latex ${className}`}>

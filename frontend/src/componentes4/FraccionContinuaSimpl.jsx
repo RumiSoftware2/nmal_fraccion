@@ -273,6 +273,9 @@ export default function FraccionContinuaSimpl() {
             <FraccionContinuaSimpleLatex 
               coeficientes={resultado.coeficientes.en_base}
               className="latex-display"
+              numeradorStr={resultado.input?.numerador_str}
+              denominadorStr={resultado.input?.denominador_str}
+              base={resultado.base}
             />
           </div>
         </motion.div>

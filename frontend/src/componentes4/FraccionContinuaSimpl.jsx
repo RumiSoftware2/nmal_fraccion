@@ -30,7 +30,7 @@ export default function FraccionContinuaSimpl() {
   // ============================================================
   
   const [fraccion, setFraccion] = useState('')      // Entrada: "43/19"
-  const [base, setBase] = useState(10)              // Base: 2-36
+  const [base, setBase] = useState('10')            // Base: 2-36
   const [expandedStep, setExpandedStep] = useState(null)  // Paso expandido
   
   const { resultado, error, loading, calcular, limpiarError } = useFraccionContinua()
@@ -68,8 +68,9 @@ export default function FraccionContinuaSimpl() {
     }
 
     // Validar base
-    if (base < 2 || base > 36) {
-      return 'La base debe estar entre 2 y 36'
+    const baseNum = parseInt(base, 10)
+    if (isNaN(baseNum) || baseNum < 2 || baseNum > 36) {
+      return 'La base debe ser un número entero entre 2 y 36'
     }
 
     return null // No hay error
@@ -97,7 +98,7 @@ export default function FraccionContinuaSimpl() {
 
   const resetear = () => {
     setFraccion('')
-    setBase(10)
+    setBase('10')
     setExpandedStep(null)
     limpiarError()
   }
@@ -140,13 +141,16 @@ export default function FraccionContinuaSimpl() {
           <label htmlFor="base">Base Numérica (2-36)</label>
           <input
             id="base"
-            type="number"
-            min="2"
-            max="36"
+            type="text"
             value={base}
-            onChange={(e) => setBase(Math.max(2, Math.min(36, parseInt(e.target.value) || 10)))}
+            onChange={(e) => {
+              const val = e.target.value.replace(/[^0-9]/g, '');
+              setBase(val);
+            }}
+            onKeyPress={(e) => e.key === 'Enter' && enviarAlBackend()}
             disabled={loading}
             className="input-base"
+            placeholder="ej: 10"
           />
           <small>Binaria (2), Octal (8), Decimal (10), Hexadecimal (16), etc.</small>
         </div>

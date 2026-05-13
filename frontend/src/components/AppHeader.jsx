@@ -22,6 +22,11 @@ const PROGRAM_CONFIG = {
     title: 'Fracción Continua Simple',
     description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ]',
     emoji: '🔗'
+  },
+  'conversor-fraccion-bases': {
+    title: 'Convertir fracción a otra base',
+    description: 'Ingresa una fracción en cualquier base de partida y transfórmala a otra base de llegada con pasos detallados',
+    emoji: '🔀'
   }
 }
 

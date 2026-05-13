@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Calculator, Brain, Sparkles, Link2 } from 'lucide-react'
+import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft } from 'lucide-react'
 import './Menu.css'
 
 const programs = [
@@ -31,6 +31,13 @@ const programs = [
     description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ] usando el algoritmo de Euclides',
     icon: Link2,
     iconColor: 'linear-gradient(135deg, #f5a623 0%, #f7b731 100%)'
+  },
+  {
+    id: 'conversor-fraccion-bases',
+    title: 'Convertir fracción a otra base',
+    description: 'Ingresa una fracción en cualquier base de partida y transfórmala a otra base de llegada con pasos detallados',
+    icon: ArrowRightLeft,
+    iconColor: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)'
   }
 ]
 

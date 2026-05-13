@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Send, RotateCcw, ChevronDown } from 'lucide-react'
 import { useFraccionContinua } from '../hooks/useFraccionContinua'
 import FraccionContinuaSimpleLatex from './FraccionContinuaSimpleLatex'
+import PasoFraccionContinuaLatex from './PasoFraccionContinuaLatex'
 import './FraccionContinuaSimpl.css'
 
 /**
@@ -280,7 +281,15 @@ export default function FraccionContinuaSimpl() {
           </div>
         </motion.div>
 
-        
+        {/* Pasos de la construcción (Euclides) */}
+        {resultado.pasos_euclides && resultado.pasos_euclides.length > 0 && (
+          <PasoFraccionContinuaLatex 
+            pasos={resultado.pasos_euclides} 
+            numeradorOriginal={resultado.input?.numerador_str}
+            denominadorOriginal={resultado.input?.denominador_str}
+            base={resultado.base}
+          />
+        )}
 
         {/* Mensaje final */}
         <motion.div

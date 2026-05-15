@@ -9,14 +9,13 @@ import './FraccionPeriodicaContinuaSimple.css'
 
 export default function FraccionPeriodicaContinuaSimple() {
   const [p, setP] = useState('')
-  const [indice, setIndice] = useState('2')
   const [expandedStep, setExpandedStep] = useState(null)
+
 
   const { resultado, error, loading, calcular, limpiar } = useFraccionContinuaPeriodica()
 
   const validarEntrada = () => {
     const pNum = parseInt(p, 10)
-    const indiceNum = parseInt(indice, 10)
 
     if (!p.trim() || Number.isNaN(pNum)) {
       return 'Ingresa un radicando p entero (ej: 7)'
@@ -24,25 +23,71 @@ export default function FraccionPeriodicaContinuaSimple() {
     if (pNum < 2) {
       return 'El radicando p debe ser mayor o igual a 2'
     }
-    if (Number.isNaN(indiceNum) || indiceNum !== 2) {
-      return 'Por ahora solo se soporta índice 2 (raíz cuadrada)'
-    }
     return null
   }
 
   const enviarAlBackend = async () => {
     const errorValidacion = validarEntrada()
     await calcular(
-      { p: parseInt(p, 10), indice: parseInt(indice, 10) },
+      { p: parseInt(p, 10), indice: 2 },
       errorValidacion
     )
   }
 
   const resetear = () => {
     setP('')
-    setIndice('2')
     setExpandedStep(null)
     limpiar()
+  }
+
+  const renderRationalization = (paso, pasoIndex, p, pasosArr) => {
+    const n = paso.paso
+    const m_n = paso.m
+    const d_n = paso.d
+    const a_n = paso.a_i
+    const d_prev = pasoIndex === 0 ? 1 : pasosArr[pasoIndex - 1].d
+    const m_n_sq = m_n * m_n
+    const den_unsimp = p - m_n_sq
+
+    let latex = `\\begin{aligned}\n`
+    latex += `\\alpha_{${n}} &= \\frac{${d_prev}}{\\sqrt{${p}} - ${m_n}} \\\\[8pt]\n`
+    
+    if (m_n > 0) {
+      latex += `&= \\frac{${d_prev}(\\sqrt{${p}} + ${m_n})}{(\\sqrt{${p}} - ${m_n})(\\sqrt{${p}} + ${m_n})} \\\\[8pt]\n`
+      latex += `&= \\frac{${d_prev}(\\sqrt{${p}} + ${m_n})}{${p} - ${m_n_sq}} \\\\[8pt]\n`
+    } else if (m_n < 0) {
+      latex += `&= \\frac{${d_prev}(\\sqrt{${p}} + ${Math.abs(m_n)})}{(\\sqrt{${p}} - ${m_n})(\\sqrt{${p}} + ${Math.abs(m_n)})} \\\\[8pt]\n`
+    } else {
+      latex += `&= \\frac{${d_prev}\\sqrt{${p}}}{\\sqrt{${p}}\\sqrt{${p}}} \\\\[8pt]\n`
+      latex += `&= \\frac{${d_prev}\\sqrt{${p}}}{${p}} \\\\[8pt]\n`
+    }
+
+    if (d_prev !== 1 || den_unsimp !== d_n) {
+      if (m_n > 0) {
+        latex += `&= \\frac{${d_prev}(\\sqrt{${p}} + ${m_n})}{${den_unsimp}} \\\\[8pt]\n`
+      }
+    }
+    
+    latex += `&= \\frac{\\sqrt{${p}} + ${m_n}}{${d_n}} \\\\[8pt]\n`
+    latex += `a_{${n}} &= \\left\\lfloor \\alpha_{${n}} \\right\\rfloor = \\left\\lfloor \\frac{\\sqrt{${p}} + ${m_n}}{${d_n}} \\right\\rfloor = ${a_n}\n`
+    latex += `\\end{aligned}`
+
+    return latex
+  }
+
+  const generarFraccionParcial = (pasoIndex, a0, pasosArr, p) => {
+    const a_seq = pasosArr.slice(0, pasoIndex + 1).map(step => step.a_i)
+    const elements = [a0, ...a_seq]
+    const n = pasosArr[pasoIndex].paso
+
+    const build = (idx) => {
+      if (idx === elements.length - 1) {
+        return `${elements[idx]} + \\cfrac{1}{\\alpha_{${n + 1}}}`
+      }
+      return `${elements[idx]} + \\cfrac{1}{${build(idx + 1)}}`
+    }
+
+    return `\\sqrt{${p}} = ` + build(0)
   }
 
   const renderEntrada = () => (
@@ -75,21 +120,6 @@ export default function FraccionPeriodicaContinuaSimple() {
           <small>Número natural ≥ 2 bajo la raíz</small>
         </div>
 
-        <div className="grupo-input">
-          <label htmlFor="indice-raiz">Índice de la raíz</label>
-          <input
-            id="indice-raiz"
-            type="number"
-            min="2"
-            max="2"
-            value={indice}
-            onChange={(e) => setIndice(e.target.value.replace(/[^0-9]/g, '') || '2')}
-            onKeyDown={(e) => e.key === 'Enter' && enviarAlBackend()}
-            disabled={loading}
-            className="input-base"
-          />
-          <small>V1: solo raíz cuadrada (índice 2)</small>
-        </div>
       </div>
 
       <div className="grupo-botones">
@@ -204,9 +234,9 @@ export default function FraccionPeriodicaContinuaSimple() {
 
         {pasos?.length > 0 && (
           <div className="pasos-algoritmo-card">
-            <h3>Pasos del algoritmo (m, d)</h3>
+            <h3>Pasos del algoritmo</h3>
             <div className="pasos-lista">
-              {pasos.map((paso) => (
+              {pasos.map((paso, pasoIndex) => (
                 <div
                   key={paso.paso}
                   className={`paso-item ${paso.es_inicio_periodo ? 'inicio-periodo' : ''}`}
@@ -238,10 +268,19 @@ export default function FraccionPeriodicaContinuaSimple() {
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
                       >
-                        <p>
-                          m = {paso.m}, d = {paso.d}
-                        </p>
-                        <BlockMath math={paso.estado_latex} />
+                        <div className="paso-explicacion">
+                          <h4 style={{marginBottom: '0.5rem', color: '#6366f1'}}>1. Racionalización y cálculo de a<sub>{paso.paso}</sub></h4>
+                          <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
+                            Multiplicamos por el conjugado para racionalizar el denominador y obtener el valor exacto de α<sub>{paso.paso}</sub>, luego tomamos su parte entera.
+                          </p>
+                          <BlockMath math={renderRationalization(paso, pasoIndex, input?.p, pasos)} />
+                          
+                          <h4 style={{marginBottom: '0.5rem', marginTop: '2rem', color: '#6366f1'}}>2. Fracción continua parcial</h4>
+                          <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
+                            Estado de la fracción continua en este paso.
+                          </p>
+                          <BlockMath math={generarFraccionParcial(pasoIndex, coeficientes.a0, pasos, input?.p)} />
+                        </div>
                       </motion.div>
                     )}
                   </AnimatePresence>

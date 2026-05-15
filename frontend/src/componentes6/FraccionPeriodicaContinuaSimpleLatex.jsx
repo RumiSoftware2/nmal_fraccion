@@ -23,13 +23,51 @@ export default function FraccionPeriodicaContinuaSimpleLatex({
     }
 
     const prefijo = cola.length
-      ? `${a0}, ${cola.map(formatearCoef).join(', ')}`
+      ? `${a0}; ${cola.map(formatearCoef).join(', ')}`
       : formatearCoef(a0)
 
     return `[${prefijo}; ${periodo.map(formatearCoef).join(', ')}...]`
   }
 
-  const latexString = latexBackend || '\\text{Sin representación LaTeX}'
+  // Función recursiva para construir la fracción anidada
+  const generarLatexFraccionContinua = () => {
+    const elementos = [
+      ...(preperiodo || []).map(p => ({ valor: p, esPeriodo: false })),
+      ...(periodo || []).map(p => ({ valor: p, esPeriodo: true }))
+    ]
+
+    if (elementos.length === 0) {
+      return latexBackend || '\\text{Sin representación LaTeX}'
+    }
+
+    if (elementos.length === 1) {
+      const el = elementos[0]
+      const coefStr = el.esPeriodo ? `\\textcolor{#3b82f6}{${el.valor}}` : el.valor
+      if (esPeriodico) {
+        return `${coefStr} + \\cfrac{1}{\\textcolor{#3b82f6}{\\ddots}}`
+      }
+      return coefStr
+    }
+
+    const construirFraccionAnidada = (indice = 0) => {
+      const el = elementos[indice]
+      const coefStr = el.esPeriodo ? `\\textcolor{#3b82f6}{${el.valor}}` : el.valor
+
+      if (indice === elementos.length - 1) {
+        if (esPeriodico) {
+          return `${coefStr} + \\cfrac{1}{\\textcolor{#3b82f6}{\\ddots}}`
+        }
+        return coefStr
+      }
+
+      const resto = construirFraccionAnidada(indice + 1)
+      return `${coefStr} + \\cfrac{1}{${resto}}`
+    }
+
+    return construirFraccionAnidada()
+  }
+
+  const latexString = generarLatexFraccionContinua()
 
   return (
     <div className={`fraccion-continua-latex ${className}`}>

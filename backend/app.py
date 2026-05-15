@@ -14,6 +14,7 @@ from utils.convertir_fraccion_base_comun import convertir_fracciones_a_base_comu
 from operaciones.fraccion_nmal import dividir_fraccion_en_base
 from operaciones.operaciones_fracciones import operar_fracciones_en_base, convertir_a_base_con_signo
 from operaciones.fraccion_simple_finita import calcular_fraccion_continua
+from utils.fraccion_continua_simple_periodica import calcular_fraccion_continua_periodica_raiz
 
 app = FastAPI(title="Math Tutor - Convertidor de Periódicos", version="1.0")
 
@@ -168,6 +169,76 @@ class FraccionContinuaResponse(BaseModel):
     pasos_euclides: list[PasoEuclidesResponse]
     reconstruccion: dict
     mensaje: str
+
+
+class RaizFraccionContinuaInput(BaseModel):
+    """Entrada para fracción continua periódica de √p"""
+    p: int
+    indice: int = 2
+
+
+class PasoRaizContinuaResponse(BaseModel):
+    paso: int
+    a_i: int
+    m: int
+    d: int
+    indice_coeficiente: int
+    estado_latex: str
+    es_inicio_periodo: bool
+
+
+class RaizFraccionContinuaResponse(BaseModel):
+    exito: bool
+    input: dict
+    es_racional: bool
+    es_periodico: bool
+    coeficientes: dict
+    fraccion_continua: dict
+    pasos: list[PasoRaizContinuaResponse]
+    mensaje: str
+    error: Optional[str] = None
+
+
+@app.post("/fraccion-continua-periodica", response_model=RaizFraccionContinuaResponse)
+def fraccion_continua_periodica(input_data: RaizFraccionContinuaInput):
+    """
+    Calcula la fracción continua simple periódica de √p (V1: indice=2).
+
+    Ejemplo: {"p": 7, "indice": 2} → √7 = [2; overline{1,1,1,4}]
+    """
+    try:
+        resultado = calcular_fraccion_continua_periodica_raiz(
+            input_data.p,
+            input_data.indice,
+        )
+
+        if not resultado.get('exito', False):
+            raise ValueError(resultado.get('error', 'Error desconocido'))
+
+        pasos_convertidos = [
+            PasoRaizContinuaResponse(**paso)
+            for paso in resultado.get('pasos', [])
+        ]
+
+        return RaizFraccionContinuaResponse(
+            exito=resultado['exito'],
+            input=resultado['input'],
+            es_racional=resultado['es_racional'],
+            es_periodico=resultado['es_periodico'],
+            coeficientes=resultado['coeficientes'],
+            fraccion_continua=resultado['fraccion_continua'],
+            pasos=pasos_convertidos,
+            mensaje=resultado['mensaje'],
+        )
+
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error al calcular fracción continua periódica: {str(e)}",
+        )
+
 
 @app.post("/fraccion-continua-simple", response_model=FraccionContinuaResponse)
 def fraccion_continua_simple(input_data: FraccionContinuaInput):

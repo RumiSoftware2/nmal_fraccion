@@ -23,6 +23,11 @@ const PROGRAM_CONFIG = {
     description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ]',
     emoji: '🔗'
   },
+  'fraccion-continua-periodica': {
+    title: 'Fracción Continua Periódica',
+    description: 'Expansión periódica de √p en fracción continua simple con detección del período',
+    emoji: '🔁'
+  },
   'conversor-fraccion-bases': {
     title: 'Convertir fracción a otra base',
     description: 'Ingresa una fracción en cualquier base de partida y transfórmala a otra base de llegada con pasos detallados',

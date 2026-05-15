@@ -1,0 +1,126 @@
+.fraccion-periodica-wrapper .formulario-radicando {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+  .fraccion-periodica-wrapper .formulario-radicando {
+    grid-template-columns: 1fr;
+  }
+}
+
+.badge-periodicidad {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.badge-periodicidad.periodico {
+  background: rgba(45, 206, 137, 0.15);
+  color: #1a8f5f;
+}
+
+.badge-periodicidad.finito {
+  background: rgba(94, 114, 228, 0.15);
+  color: #4a5fc1;
+}
+
+.detalle-simpl {
+  font-size: 0.85em;
+  color: var(--color-text);
+  font-weight: 400;
+}
+
+.periodo-valor {
+  font-family: ui-monospace, monospace;
+  color: var(--color-primary);
+}
+
+.notacion-brackets-display {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  background: var(--color-light);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.notacion-corchetes-label {
+  font-size: 0.8rem;
+  color: var(--color-text);
+  margin-right: 8px;
+}
+
+.notacion-corchetes-valor {
+  font-family: ui-monospace, monospace;
+  font-size: 0.95rem;
+  color: var(--color-dark);
+}
+
+.notacion-backend {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.pasos-algoritmo-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.pasos-algoritmo-card h3 {
+  margin: 0 0 16px;
+  color: var(--color-dark);
+}
+
+.paso-item {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.paso-item.inicio-periodo {
+  border-color: var(--color-success);
+  box-shadow: 0 0 0 1px rgba(45, 206, 137, 0.2);
+}
+
+.paso-header-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--color-light);
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--color-text-dark);
+  text-align: left;
+}
+
+.paso-header-btn:hover {
+  background: #edf2f7;
+}
+
+.badge-inicio-periodo {
+  color: var(--color-success);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.paso-detalle {
+  padding: 12px 16px 16px;
+  border-top: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.paso-detalle p {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: var(--color-text);
+}

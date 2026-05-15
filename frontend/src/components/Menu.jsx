@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft } from 'lucide-react'
+import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat } from 'lucide-react'
 import './Menu.css'
 
 const programs = [
@@ -31,6 +31,13 @@ const programs = [
     description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ] usando el algoritmo de Euclides',
     icon: Link2,
     iconColor: 'linear-gradient(135deg, #f5a623 0%, #f7b731 100%)'
+  },
+  {
+    id: 'fraccion-continua-periodica',
+    title: 'Fracción Continua Periódica',
+    description: 'Calcula la expansión periódica de √p en fracción continua simple (ej: √7 = [2; 1, 1, 1, 4, ...])',
+    icon: Repeat,
+    iconColor: 'linear-gradient(135deg, #5e72e4 0%, #825ee4 100%)'
   },
   {
     id: 'conversor-fraccion-bases',

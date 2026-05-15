@@ -53,7 +53,7 @@
 .notacion-corchetes-valor {
   font-family: ui-monospace, monospace;
   font-size: 0.95rem;
-  color: var(--color-dark);
+  color: var(--color-light);
 }
 
 .notacion-backend {

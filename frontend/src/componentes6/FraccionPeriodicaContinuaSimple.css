@@ -124,3 +124,8 @@
   font-size: 0.9rem;
   color: var(--color-text);
 }
+
+.paso-item.paso-inicial {
+  border-left: 3px solid #10b981; /* verde suave, distinto del período */
+}
+

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react'
 import { useFraccionContinuaPeriodica } from '../hooks/useFraccionContinuaPeriodica'
@@ -75,19 +76,93 @@ export default function FraccionPeriodicaContinuaSimple() {
     return latex
   }
 
+  // ==========================================================================
+  // CONVENCIÓN DE ÍNDICES PARA FRACCIÓN CONTINUA DE RAÍCES CUADRADAS
+  // ==========================================================================
+  // a₀ = coeficientes.a0 (parte entera de √p)
+  // r₀ = √p - a₀ (residuo, no es un coeficiente)
+  // α₁ = 1 / r₀ (primer residuo de la fracción continua)
+  // Paso UI 0: define α₁; la fracción parcial termina en 1/α₁
+  // Paso UI k (k ≥ 1, backend paso.paso = k):
+  //   - Racionaliza α_k (que fue introducido en el paso k-1)
+  //   - Encuentra a_k = ⌊α_k⌋
+  //   - La fracción parcial muestra:
+  //     - la expansión con 1/α_{k+1} si no es el último paso
+  //     - α_{k+1} = 1/(α_k - a_k) = d/(√p + m - a·d) con m,d,a del paso k
+  //     - o cierra en a_k si es el último paso (sin α futuro)
+  // ==========================================================================
+
+  /** Paso 0: descomposición entera de √p */
+  const renderPasoCeroDescomposicion = (p, a0) => {
+    return `\\begin{aligned}
+\\sqrt{${p}} &= ${a0} + \\bigl(\\sqrt{${p}} - ${a0}\\bigr)
+\\end{aligned}`
+  }
+
+  /** Paso 0: primera fracción y definición de α₁ */
+  const renderPasoCeroPrimeraFraccion = (p, a0) => {
+    return `\\begin{aligned}
+\\sqrt{${p}} &= ${a0} + \\cfrac{1}{\\alpha_1} \\\\[8pt]
+\\alpha_1 &= \\frac{1}{\\sqrt{${p}} - ${a0}}
+\\end{aligned}`
+  }
+
+  /** Paso 0: fracción continua parcial (solo α₁, sin α₂) */
+  const generarFraccionParcialPasoCero = (p, a0) => {
+    return `\\sqrt{${p}} = ${a0} + \\cfrac{1}{\\alpha_1}`
+  }
+
+  /**
+   * Fracción continua parcial en el paso del algoritmo con índice pasoIndex.
+   * - pasoIndex corresponde a pasos[pasoIndex] con paso.paso = k ≥ 1
+   * - En el paso k, coeficientes mostrados: a₀, a₁, …, a_k
+   * - Si no es el último paso de la lista, el último término es 1/α_{k+1}
+   * - Si es el último paso, cerrar sin placeholder α
+   */
   const generarFraccionParcial = (pasoIndex, a0, pasosArr, p) => {
-    const a_seq = pasosArr.slice(0, pasoIndex + 1).map(step => step.a_i)
-    const elements = [a0, ...a_seq]
-    const n = pasosArr[pasoIndex].paso
-
+    const k = pasosArr[pasoIndex].paso  // 1, 2, 3, ...
+    const coefs = [a0, ...pasosArr.slice(0, pasoIndex + 1).map(s => s.a_i)]
+    const esUltimo = pasoIndex === pasosArr.length - 1
     const build = (idx) => {
-      if (idx === elements.length - 1) {
-        return `${elements[idx]} + \\cfrac{1}{\\alpha_{${n + 1}}}`
+      if (idx === coefs.length - 1) {
+        if (esUltimo) {
+          return String(coefs[idx])
+        }
+        return `${coefs[idx]} + \\cfrac{1}{\\alpha_{${k + 1}}}`
       }
-      return `${elements[idx]} + \\cfrac{1}{${build(idx + 1)}}`
+      return `${coefs[idx]} + \\cfrac{1}{${build(idx + 1)}}`
     }
+    return `\\sqrt{${p}} = ${build(0)}`
+  }
 
-    return `\\sqrt{${p}} = ` + build(0)
+  /**
+   * Definición explícita de α_{k+1} al cerrar el paso k (paso.paso = k).
+   * Usa α_k = (√p+m)/d y a_k = paso.a_i ya obtenidos en la sección 1.
+   * Devuelve '' si es el último paso (no hay α siguiente en la parcial).
+   */
+  const renderDefinicionAlphaSiguiente = (paso, pasoIndex, pasosArr, p) => {
+    const esUltimo = pasoIndex === pasosArr.length - 1
+    if (esUltimo) return ''
+    const k = paso.paso
+    const j = k + 1
+    const m = paso.m
+    const d = paso.d
+    const a = paso.a_i
+    const numeradorResto = m - a * d  // √p + m - a·d en el denominador
+
+    const termM = m === 0 ? '' : ` + ${m}`
+    const formatDenominador = (rad, resto) => {
+      if (resto === 0) return `\\sqrt{${rad}}`
+      if (resto < 0) return `\\sqrt{${rad}} - ${Math.abs(resto)}`
+      return `\\sqrt{${rad}} + ${resto}`
+    }
+    const den = formatDenominador(p, numeradorResto)
+
+    return `\\begin{aligned}
+\\alpha_{${j}} &= \\frac{1}{\\alpha_{${k}} - ${a}}
+= \\frac{1}{\\dfrac{\\sqrt{${p}}${termM}}{${d}} - ${a}} \\\\[8pt]
+&= \\frac{${d}}{${den}}
+\\end{aligned}`
   }
 
   const renderEntrada = () => (
@@ -236,6 +311,57 @@ export default function FraccionPeriodicaContinuaSimple() {
           <div className="pasos-algoritmo-card">
             <h3>Pasos del algoritmo</h3>
             <div className="pasos-lista">
+              {/* Paso 0 (Nuevo) */}
+              <div className="paso-item paso-inicial">
+                <button
+                  type="button"
+                  className="paso-header-btn"
+                  onClick={() =>
+                    setExpandedStep(expandedStep === 0 ? null : 0)
+                  }
+                >
+                  <span>
+                    Paso 0: a<sub>0</sub> = {coeficientes?.a0}
+                  </span>
+                  {expandedStep === 0 ? (
+                    <ChevronUp size={18} />
+                  ) : (
+                    <ChevronDown size={18} />
+                  )}
+                </button>
+                <AnimatePresence>
+                  {expandedStep === 0 && (
+                    <motion.div
+                      className="paso-detalle"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <div className="paso-explicacion">
+                        <h4 style={{marginBottom: '0.5rem', color: '#6366f1'}}>0.1 Descomposición de &radic;p</h4>
+                        <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
+                          Descomponemos &radic;{input?.p} en su parte entera a<sub>0</sub> = {coeficientes?.a0} y un residuo.
+                        </p>
+                        <BlockMath math={renderPasoCeroDescomposicion(input?.p, coeficientes?.a0)} />
+                        
+                        <h4 style={{marginBottom: '0.5rem', marginTop: '2rem', color: '#6366f1'}}>0.2 Primera fracción continua y &alpha;₁</h4>
+                        <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
+                          El residuo &radic;{input?.p} &minus; {coeficientes?.a0} se invierte para obtener &alpha;₁.
+                        </p>
+                        <BlockMath math={renderPasoCeroPrimeraFraccion(input?.p, coeficientes?.a0)} />
+
+                        <h4 style={{marginBottom: '0.5rem', marginTop: '2rem', color: '#6366f1'}}>0.3 Fracción continua parcial</h4>
+                        <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
+                          Estado de la expansión; &alpha;₂ se definirá explícitamente al final del Paso 1.
+                        </p>
+                        <BlockMath math={generarFraccionParcialPasoCero(input?.p, coeficientes?.a0)} />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Pasos ≥ 1 */}
               {pasos.map((paso, pasoIndex) => (
                 <div
                   key={paso.paso}
@@ -269,17 +395,33 @@ export default function FraccionPeriodicaContinuaSimple() {
                         exit={{ opacity: 0, height: 0 }}
                       >
                         <div className="paso-explicacion">
-                          <h4 style={{marginBottom: '0.5rem', color: '#6366f1'}}>1. Racionalización y cálculo de a<sub>{paso.paso}</sub></h4>
+                          <h4 style={{marginBottom: '0.5rem', color: '#6366f1'}}>1. Racionalización de &alpha;<sub>{paso.paso}</sub> y cálculo de a<sub>{paso.paso}</sub></h4>
                           <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
-                            Multiplicamos por el conjugado para racionalizar el denominador y obtener el valor exacto de α<sub>{paso.paso}</sub>, luego tomamos su parte entera.
+                            {pasoIndex === 0 ? (
+                              <>Racionalizamos &alpha;<sub>1</sub>, definido en el Paso 0, para obtener a<sub>1</sub>.</>
+                            ) : (
+                              <>Racionalizamos &alpha;<sub>{paso.paso}</sub>, introducido en la fracción parcial del paso anterior.</>
+                            )}
                           </p>
                           <BlockMath math={renderRationalization(paso, pasoIndex, input?.p, pasos)} />
                           
                           <h4 style={{marginBottom: '0.5rem', marginTop: '2rem', color: '#6366f1'}}>2. Fracción continua parcial</h4>
                           <p style={{fontSize: '0.9rem', color: '#64748b', marginBottom: '1rem'}}>
-                            Estado de la fracción continua en este paso.
+                            {pasoIndex < pasos.length - 1 ? (
+                              <>Expansión hasta a<sub>{paso.paso}</sub>; &alpha;<sub>{paso.paso + 1}</sub> queda definido aquí (se racionalizará en el Paso {paso.paso + 1}).</>
+                            ) : (
+                              <>Expansión completa en este paso (sin &alpha; pendiente).</>
+                            )}
                           </p>
                           <BlockMath math={generarFraccionParcial(pasoIndex, coeficientes.a0, pasos, input?.p)} />
+                          {pasoIndex < pasos.length - 1 && (
+                            <>
+                              <p style={{ fontSize: '0.9rem', color: '#64748b', marginTop: '1.5rem', marginBottom: '1rem' }}>
+                                Definición explícita de &alpha;<sub>{paso.paso + 1}</sub> (inverso del residuo &alpha;<sub>{paso.paso}</sub> &minus; a<sub>{paso.paso}</sub>):
+                              </p>
+                              <BlockMath math={renderDefinicionAlphaSiguiente(paso, pasoIndex, pasos, input?.p)} />
+                            </>
+                          )}
                         </div>
                       </motion.div>
                     )}

@@ -1,0 +1,579 @@
+/* ====================================================================
+   REDUCTAS FINITAS - ESTILOS
+   ==================================================================== */
+
+:root {
+  --color-primary: #5e72e4;
+  --color-primary-light: #8594f7;
+  --color-success: #2dce89;
+  --color-danger: #f5365c;
+  --color-warning: #fb6340;
+  --color-info: #11cdef;
+  --color-dark: #32325d;
+  --color-light: #f7fafc;
+  --color-border: #dee2e6;
+  --color-text: #525f7f;
+  --color-text-dark: #2d3748;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ====================================================================
+   CONTENEDOR PRINCIPAL
+   ==================================================================== */
+
+.reductas-finitas-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ====================================================================
+   SECCIÓN DE ENTRADA
+   ==================================================================== */
+
+.entrada-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.entrada-container h2 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.entrada-container .subtitulo {
+  margin: 0 0 24px 0;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.formulario-contenedor {
+  margin-bottom: 20px;
+}
+
+.grupo-input {
+  margin-bottom: 16px;
+}
+
+.grupo-input label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  font-size: 14px;
+}
+
+.grupo-input input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  transition: all 0.2s ease;
+  background: #fff;
+}
+
+.grupo-input input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(94, 114, 228, 0.1);
+}
+
+.grupo-input input:disabled {
+  background: var(--color-light);
+  color: var(--color-text);
+  cursor: not-allowed;
+}
+
+.grupo-input small {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-text);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ====================================================================
+   BOTONES
+   ==================================================================== */
+
+.grupo-botones {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.btn-calcular,
+.btn-resetear {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-calcular {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.btn-calcular:hover:not(:disabled) {
+  background: var(--color-primary-light);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-calcular:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-resetear {
+  background: #f5f5f5;
+  color: var(--color-text-dark);
+  border: 1px solid var(--color-border);
+}
+
+.btn-resetear:hover:not(:disabled) {
+  background: #efefef;
+}
+
+.btn-resetear:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ====================================================================
+   MENSAJES
+   ==================================================================== */
+
+.mensaje-error {
+  background: rgba(245, 54, 92, 0.1);
+  border: 1px solid var(--color-danger);
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: var(--color-danger);
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.mensaje-exito {
+  background: rgba(45, 206, 137, 0.1);
+  border: 1px solid var(--color-success);
+  border-radius: 6px;
+  padding: 12px 16px;
+  color: var(--color-success);
+  font-size: 14px;
+  margin-top: 24px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ====================================================================
+   TARJETA RESUMEN
+   ==================================================================== */
+
+.resumen-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.resumen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.resumen-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.resumen-contenido {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .resumen-contenido {
+    grid-template-columns: 1fr;
+  }
+}
+
+.item-resumen {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.item-resumen .label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.item-resumen .valor {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  font-family: 'Courier New', monospace;
+}
+
+.item-resumen .notacion-valor {
+  font-size: 14px;
+  color: var(--color-primary);
+}
+
+.item-resumen .fraccion-valor {
+  font-size: 18px;
+  color: var(--color-success);
+}
+
+/* ====================================================================
+   LISTA DE REDUCTAS
+   ==================================================================== */
+
+.lista-reductas-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.lista-reductas-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.reductas-compactas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reducta-badge {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  box-shadow: var(--shadow);
+}
+
+/* ====================================================================
+   EXPANSIÓN COMPLETA
+   ==================================================================== */
+
+.expansion-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.expansion-fraccion-continua-card h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.notacion-brackets {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: var(--color-light);
+  border-radius: 6px;
+}
+
+.notacion-brackets .bracket {
+  font-size: 20px;
+  color: var(--color-text);
+  font-weight: bold;
+}
+
+.notacion-brackets .coefs-inline {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.expansion-latex {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.expansion-latex :global(.math) {
+  font-size: 16px;
+}
+
+.valor-final-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(45, 206, 137, 0.1);
+  border-radius: 6px;
+}
+
+.valor-final-display .valor-label {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.valor-final-display .valor-fraccion {
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--color-success);
+}
+
+/* ====================================================================
+   PASOS DEL ALGORITMO
+   ==================================================================== */
+
+.pasos-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+}
+
+.pasos-container h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.pasos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.paso-item {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.paso-toggle {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--color-light);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-weight: 600;
+  color: var(--color-text-dark);
+}
+
+.paso-toggle:hover {
+  background: #efefef;
+}
+
+.paso-toggle-label {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.paso-toggle .chevron {
+  transition: transform 0.2s ease;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.paso-toggle .chevron.expanded {
+  transform: rotate(180deg);
+}
+
+.paso-contenido-expandido {
+  padding: 16px;
+  background: #ffffff;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ====================================================================
+   TARJETA DE PASO (CONTENIDO EXPANDIDO)
+   ==================================================================== */
+
+.paso-reducta-card {
+  background: #fff;
+}
+
+.paso-reducta-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.paso-numero {
+  display: inline-block;
+  background: var(--color-primary);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.paso-descripcion {
+  font-size: 14px;
+  color: var(--color-text-dark);
+  font-weight: 600;
+}
+
+.paso-reducta-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subseccion-reducta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.subseccion-reducta h4 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.subseccion-reducta :global(.math) {
+  font-size: 14px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 4px;
+  border-left: 3px solid var(--color-primary);
+}
+
+.fraccion-continua-partial-label {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* ====================================================================
+   RESPONSIVE
+   ==================================================================== */
+
+@media (max-width: 768px) {
+  .reductas-finitas-wrapper {
+    padding: 12px;
+  }
+
+  .entrada-container {
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+
+  .entrada-container h2 {
+    font-size: 24px;
+  }
+
+  .grupo-botones {
+    gap: 8px;
+  }
+
+  .btn-calcular,
+  .btn-resetear {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .paso-toggle {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}

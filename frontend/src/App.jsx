@@ -10,6 +10,7 @@ import ConversorBase from './componentes3/ConversorBase'
 import FraccionContinuaSimpl from './componentes4/FraccionContinuaSimpl'
 import FraccionPeriodicaContinuaSimple from './componentes6/FraccionPeriodicaContinuaSimple'
 import ConversorFraccionBases from './componentes5/ConversorFraccionBases'
+import ReductasFinitas from './componete7/ReductasFinitas'
 import AppHeader from './components/AppHeader'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png'
@@ -39,6 +40,8 @@ export default function App() {
       setCurrentView('fraccion-continua-periodica')
     } else if (programId === 'conversor-fraccion-bases') {
       setCurrentView('conversor-fraccion-bases')
+    } else if (programId === 'reductas-finitas') {
+      setCurrentView('reductas-finitas')
     }
   }
 
@@ -116,6 +119,21 @@ export default function App() {
         />
         <main className="math-main">
           <ConversorFraccionBases />
+        </main>
+      </div>
+    )
+  }
+
+  if (currentView === 'reductas-finitas') {
+    return (
+      <div className="math-tutor-app">
+        <AppHeader
+          programId="reductas-finitas"
+          onMenuClick={() => setCurrentView('menu')}
+          escudo={escudo}
+        />
+        <main className="math-main">
+          <ReductasFinitas />
         </main>
       </div>
     )

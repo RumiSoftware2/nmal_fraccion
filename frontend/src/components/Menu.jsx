@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat } from 'lucide-react'
+import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat, Layers } from 'lucide-react'
 import './Menu.css'
 
 const programs = [
@@ -45,6 +45,13 @@ const programs = [
     description: 'Ingresa una fracción en cualquier base de partida y transfórmala a otra base de llegada con pasos detallados',
     icon: ArrowRightLeft,
     iconColor: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)'
+  },
+  {
+    id: 'reductas-finitas',
+    title: 'Reductas Finitas',
+    description: 'Ingresa [a₀; a₁, a₂, …] y obtén las reductas (convergentes) con paso a paso en LaTeX',
+    icon: Layers,
+    iconColor: 'linear-gradient(135deg, #14b8a6 0%, #2dd4bf 100%)'
   }
 ]
 

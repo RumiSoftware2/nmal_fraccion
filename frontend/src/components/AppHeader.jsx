@@ -32,6 +32,11 @@ const PROGRAM_CONFIG = {
     title: 'Convertir fracción a otra base',
     description: 'Ingresa una fracción en cualquier base de partida y transfórmala a otra base de llegada con pasos detallados',
     emoji: '🔀'
+  },
+  'reductas-finitas': {
+    title: 'Reductas Finitas',
+    description: 'Convergentes de una fracción continua simple finita',
+    emoji: '📉'
   }
 }
 

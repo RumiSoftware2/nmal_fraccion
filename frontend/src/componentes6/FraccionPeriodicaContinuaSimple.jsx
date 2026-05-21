@@ -8,6 +8,12 @@ import BlockMath from '../components/pasosprueba/BlockMath'
 import '../componentes4/FraccionContinuaSimpl.css'
 import './FraccionPeriodicaContinuaSimple.css'
 
+const esCuadradoPerfecto = (pNum) => {
+  if (typeof pNum !== 'number' || !Number.isFinite(pNum)) return false
+  const r = Math.floor(Math.sqrt(pNum))
+  return r * r === pNum
+}
+
 export default function FraccionPeriodicaContinuaSimple() {
   const [p, setP] = useState('')
   const [expandedStep, setExpandedStep] = useState(null)
@@ -246,6 +252,27 @@ export default function FraccionPeriodicaContinuaSimple() {
     if (!resultado) return null
 
     const { coeficientes, fraccion_continua: fc, input, pasos } = resultado
+    const pVal = input?.p ?? parseInt(p, 10)
+    if (esCuadradoPerfecto(pVal)) {
+      const n = Math.floor(Math.sqrt(pVal))
+      return (
+        <motion.div className="resultado-container" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="resumen-card">
+            <h3>Resultado</h3>
+            <p>
+              <strong>{pVal}</strong> es un cuadrado perfecto ({n}² = {pVal}).
+              La raíz es un entero exacto.
+            </p>
+          </div>
+          <div className="fraccion-continua-card">
+            <BlockMath math={`\\sqrt{${pVal}} = ${n}`} />
+          </div>
+          <motion.div className="mensaje-exito">
+            √{pVal} = {n}
+          </motion.div>
+        </motion.div>
+      )
+    }
     const pre = coeficientes?.preperiodo ?? []
     const per = coeficientes?.periodo ?? []
 

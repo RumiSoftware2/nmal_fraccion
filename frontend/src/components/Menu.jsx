@@ -53,7 +53,7 @@ export default function Menu({ onSelectProgram }) {
     <div className="menu-container">
       <motion.a
         className="return-report-btn"
-        href="https://sites.google.com/view/cursodesistemasnumericos/c%C3%B3digos"
+        href="https://sites.google.com/view/cursodesistemasnumericos/aplicativos"
         target="_blank"
         rel="noopener noreferrer"
         whileHover={{ scale: 1.03, y: -2 }}

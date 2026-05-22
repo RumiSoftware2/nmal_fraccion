@@ -37,6 +37,11 @@ const PROGRAM_CONFIG = {
     title: 'Reductas Finitas',
     description: 'Convergentes de una fracción continua simple finita',
     emoji: '📉'
+  },
+  'reductas-periodicas': {
+    title: 'Reductas periódicas',
+    description: 'FC eventualmente periódica → polinomio cuadrático irreducible',
+    emoji: '♾️'
   }
 }
 

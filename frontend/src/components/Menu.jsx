@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat, Layers } from 'lucide-react'
+import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat, Layers, Infinity } from 'lucide-react'
 import './Menu.css'
 
 const programs = [
@@ -52,6 +52,13 @@ const programs = [
     description: 'Ingresa [a₀; a₁, a₂, …] y obtén las reductas (convergentes) con paso a paso en LaTeX',
     icon: Layers,
     iconColor: 'linear-gradient(135deg, #14b8a6 0%, #2dd4bf 100%)'
+  },
+  {
+    id: 'reductas-periodicas',
+    title: 'Reductas periódicas',
+    description: 'Fracción continua eventualmente periódica → ecuación cuadrática (sin backend)',
+    icon: Infinity,
+    iconColor: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)'
   }
 ]
 

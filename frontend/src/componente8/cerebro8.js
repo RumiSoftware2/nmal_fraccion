@@ -137,13 +137,13 @@ function construirNotacion(preperiod, period) {
   const perStr = period.map(String).join(', ')
 
   if (preperiod.length === 0) {
-    return `[\\overline{${perStr}}]`
+    return `\\left[\\overline{${perStr}}\\right]`
   } else if (preperiod.length === 1) {
-    return `[${preperiod[0]};\\overline{${perStr}}]`
+    return `\\left[${preperiod[0]};\\overline{${perStr}}\\right]`
   } else {
     const a0 = preperiod[0]
     const rest = preperiod.slice(1).map(String).join(', ')
-    return `[${a0};${rest},\\overline{${perStr}}]`
+    return `\\left[${a0};${rest},\\overline{${perStr}}\\right]`
   }
 }
 
@@ -573,7 +573,7 @@ function construirPasosParaUI(datos) {
       titulo: 'Ecuación en y',
       descripcion: 'Cy² + (D-A)y - B = 0',
       ecuacion: equation_y,
-      latex: `${C}y^2 + ${equation_y.b}y + (${equation_y.c}) = 0`
+      latex: `${C}y^{2} + ${equation_y.b}y + (${equation_y.c}) = 0`
     },
     {
       numero: 4,
@@ -605,7 +605,7 @@ function construirPasosParaUI(datos) {
       numero: 7,
       titulo: 'Expansión',
       descripcion: 'Expandir y simplificar términos',
-      expansion: `${C}(${H}x - ${F})² + ${equation_y.b}(${H}x - ${F})(${E} - ${G}x) + ${equation_y.c}(${E} - ${G}x)² = 0`,
+      expansion: `${C}(${H}x - ${F})^{2} + ${equation_y.b}(${H}x - ${F})(${E} - ${G}x) + ${equation_y.c}(${E} - ${G}x)^{2} = 0`,
       ecuacion_expandida: equation_x_raw
     },
     {

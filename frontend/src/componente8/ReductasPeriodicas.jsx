@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react'
-import { BlockMath } from 'react-katex'
+import BlockMath from '../components/pasosprueba/BlockMath'
 import { procesarFCPeriodica } from './cerebro8'
 import { PasoReducta } from './ReductasPeriodicasLatex'
 import './ReductasPeriodicas.css'
@@ -124,7 +124,7 @@ export default function ReductasPeriodicas() {
               <div className="item-resumen">
                 <label>Notación</label>
                 <div className="latex-pequeno">
-                  <BlockMath>{resultado.continued_fraction}</BlockMath>
+                  <BlockMath math={resultado.continued_fraction} />
                 </div>
               </div>
 
@@ -138,7 +138,7 @@ export default function ReductasPeriodicas() {
               <div className="item-resumen">
                 <label>Solución (x)</label>
                 <div className="latex-pequeno">
-                  <BlockMath>{resultado.solution_as_root}</BlockMath>
+                  <BlockMath math={resultado.solution_as_root} />
                 </div>
               </div>
 
@@ -216,14 +216,14 @@ export default function ReductasPeriodicas() {
               <div className="ecuacion-item">
                 <h4>Ecuación en y</h4>
                 <div className="latex-ecuacion">
-                  <BlockMath>{`${resultado.equation_y.a}y^2 + ${resultado.equation_y.b}y + ${resultado.equation_y.c} = 0`}</BlockMath>
+                  <BlockMath math={`${resultado.equation_y.a}y^2 + ${resultado.equation_y.b}y + ${resultado.equation_y.c} = 0`} />
                 </div>
               </div>
 
               <div className="ecuacion-item">
                 <h4>Ecuación en x (normalizada)</h4>
                 <div className="latex-ecuacion">
-                  <BlockMath>{`${resultado.equation_x.a}x^2 ${resultado.equation_x.b >= 0 ? '+' : ''} ${resultado.equation_x.b}x ${resultado.equation_x.c >= 0 ? '+' : ''} ${resultado.equation_x.c} = 0`}</BlockMath>
+                  <BlockMath math={`${resultado.equation_x.a}x^2 ${resultado.equation_x.b >= 0 ? '+' : ''} ${resultado.equation_x.b}x ${resultado.equation_x.c >= 0 ? '+' : ''} ${resultado.equation_x.c} = 0`} />
                 </div>
               </div>
             </div>
@@ -234,7 +234,7 @@ export default function ReductasPeriodicas() {
             <h3>✓ Solución General</h3>
             <div className="solucion-contenido">
               <div className="latex-ecuacion solucion-latex">
-                <BlockMath>{resultado.solution_as_root}</BlockMath>
+                <BlockMath math={resultado.solution_as_root} />
               </div>
               <div className="valores-solucion">
                 <p>

@@ -597,3 +597,21 @@
     margin-top: -30px;
   }
 }
+
+/* ===== KATEX STYLES ===== */
+.latex-ecuacion,
+.latex-pequeno,
+.solucion-latex {
+  overflow-x: auto;
+}
+
+.latex-ecuacion .katex,
+.latex-pequeno .katex,
+.solucion-latex .katex {
+  font-size: 1.1em;
+}
+
+.latex-ecuacion .katex-display,
+.solucion-latex .katex-display {
+  margin: 0;
+}

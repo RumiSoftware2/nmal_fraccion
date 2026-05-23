@@ -3,7 +3,7 @@
  * Componentes para renderizar cada paso del algoritmo en LaTeX
  */
 
-import { BlockMath } from 'react-katex'
+import BlockMath from '../components/pasosprueba/BlockMath'
 
 /**
  * Paso 1: Matrices del período
@@ -21,7 +21,7 @@ export function PasoMatricesPeriodo({ paso }) {
       <p>{paso.descripcion}</p>
       {latexMatrices.map((latex, i) => (
         <div key={i} className="latex-ecuacion">
-          <BlockMath>{latex}</BlockMath>
+          <BlockMath math={latex} />
         </div>
       ))}
     </div>
@@ -41,7 +41,7 @@ export function PasoMatrizT({ paso }) {
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
       <div className="latex-ecuacion">
-        <BlockMath>{latex}</BlockMath>
+        <BlockMath math={latex} />
       </div>
       <p className="componentes-matriz">
         donde: <code>A = {A}, B = {B}, C = {C}, D = {D}</code>
@@ -64,7 +64,7 @@ export function PasoEcuacionY({ paso }) {
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
       <div className="latex-ecuacion">
-        <BlockMath>{latex}</BlockMath>
+        <BlockMath math={latex} />
       </div>
     </div>
   )
@@ -86,7 +86,7 @@ export function PasoMatrizP({ paso }) {
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
       <div className="latex-ecuacion">
-        <BlockMath>{latex}</BlockMath>
+        <BlockMath math={latex} />
       </div>
       <p className="componentes-matriz">
         donde: <code>E = {E}, F = {F}, G = {G}, H = {H}</code>
@@ -116,10 +116,10 @@ export function PasoRelacionXY({ paso }) {
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
       <div className="latex-ecuacion">
-        <BlockMath>{`x = \\frac{${G}y + ${H}}{${E}y + ${F}}`}</BlockMath>
+        <BlockMath math={`x = \\frac{${G}y + ${H}}{${E}y + ${F}}`} />
       </div>
       <div className="latex-ecuacion">
-        <BlockMath>{`y = \\frac{${E} - ${G}x}{${H}x - ${F}}`}</BlockMath>
+        <BlockMath math={`y = \\frac{${E} - ${G}x}{${H}x - ${F}}`} />
       </div>
     </div>
   )
@@ -138,7 +138,7 @@ export function PasoSustitucion({ paso }) {
       <p>{paso.descripcion}</p>
       <p>Sustituir esta expresión en la ecuación de <strong>y</strong>:</p>
       <div className="latex-ecuacion">
-        <BlockMath>{latex}</BlockMath>
+        <BlockMath math={latex} />
       </div>
     </div>
   )
@@ -159,11 +159,11 @@ export function PasoExpansion({ paso }) {
       <p>{paso.descripcion}</p>
       <p>Después de expandir los términos:</p>
       <div className="latex-ecuacion">
-        <BlockMath>{paso.expansion}</BlockMath>
+        <BlockMath math={paso.expansion} />
       </div>
       <p>Simplificando:</p>
       <div className="latex-ecuacion">
-        <BlockMath>{latex}</BlockMath>
+        <BlockMath math={latex} />
       </div>
     </div>
   )
@@ -191,7 +191,7 @@ export function PasoNormalizacion({ paso }) {
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
       <div className="latex-ecuacion">
-        <BlockMath>{latex}</BlockMath>
+        <BlockMath math={latex} />
       </div>
       <div className="resultado-paso">
         <p>
@@ -211,7 +211,7 @@ export function PasoNormalizacion({ paso }) {
           <strong>Solución general:</strong>
         </p>
         <div className="latex-ecuacion" style={{ marginTop: '10px' }}>
-          <BlockMath>{paso.solucion_como_raiz}</BlockMath>
+          <BlockMath math={paso.solucion_como_raiz} />
         </div>
       </div>
     </div>

@@ -244,7 +244,8 @@ export function construirMatrizPreperiodo(preperiod) {
 /**
  * Extrae los componentes de P para la relación x ↔ y
  * P = [[E, F], [G, H]]
- * x = (G*y + H) / (E*y + F)
+ * Convención Möbius: x = (E·y + F) / (G·y + H)
+ * Inversa: y = (H·x - F) / (E - G·x)
  */
 export function relacionXyDesdeP(P) {
   const [[E, F], [G, H]] = P
@@ -256,11 +257,11 @@ export function relacionXyDesdeP(P) {
 // ============================================================
 
 /**
- * Sustituye y = (E - G*x) / (H*x - F) en la ecuación cuadrática de y
+ * Sustituye y = (H*x - F) / (E - G*x) en la ecuación cuadrática de y
  * Cy² + (D-A)y - B = 0
  *
- * Cuando multiplicamos por (Hx-F)²:
- * C(E-Gx)² + (D-A)(E-Gx)(Hx-F) - B(Hx-F)² = 0
+ * Cuando multiplicamos por (E - Gx)²:
+ * C(Hx - F)² + (D-A)(Hx - F)(E - Gx) - B(E - Gx)² = 0
  *
  * Expandir y recopilar términos en x
  */
@@ -269,40 +270,40 @@ export function sustituirYenCuadratica(eqY, relacion) {
   const { E, F, G, H } = relacion
 
   // Expandir término por término
-  // T1 = C(E - Gx)²
-  const t1_e_gx_sq = () => {
-    // (E - Gx)² = E² - 2EGx + G²x²
-    const e2 = E * E
-    const g2 = G * G
-    const eg2 = 2 * E * G
-    return { coef_x2: C * g2, coef_x1: C * (-eg2), coef_x0: C * e2 }
+  // T1 = C(Hx - F)²
+  const t1_hx_f_sq = () => {
+    // (Hx - F)² = H²x² - 2HFx + F²
+    const h2 = H * H
+    const f2 = F * F
+    const hf2 = 2 * H * F
+    return { coef_x2: C * h2, coef_x1: C * (-hf2), coef_x0: C * f2 }
   }
-  const t1 = t1_e_gx_sq()
+  const t1 = t1_hx_f_sq()
 
-  // T2 = (D-A)(E-Gx)(Hx-F)
-  // (E-Gx)(Hx-F) = EHx - EF - GHx² + GFx = -GH*x² + (EH + GF)*x - EF
-  const t2_e_gx_hx_f = () => {
-    const gh = G * H
-    const eh_gf = E * H + G * F
-    const ef = E * F
-    return { coef_x2: -gh, coef_x1: eh_gf, coef_x0: -ef }
+  // T2 = (D-A)(Hx - F)(E - Gx)
+  // (Hx - F)(E - Gx) = HEx - HGx² - FE + FGx = -HG*x² + (HE + FG)*x - FE
+  const t2_hx_f_e_gx = () => {
+    const hg = H * G
+    const he_fg = H * E + F * G
+    const fe = F * E
+    return { coef_x2: -hg, coef_x1: he_fg, coef_x0: -fe }
   }
-  const t2_inner = t2_e_gx_hx_f()
+  const t2_inner = t2_hx_f_e_gx()
   const t2 = {
     coef_x2: DA * t2_inner.coef_x2,
     coef_x1: DA * t2_inner.coef_x1,
     coef_x0: DA * t2_inner.coef_x0
   }
 
-  // T3 = -B(Hx - F)²
-  // (Hx - F)² = H²x² - 2HFx + F²
-  const h2 = H * H
-  const f2 = F * F
-  const hf2 = 2 * H * F
+  // T3 = -B(E - Gx)²
+  // (E - Gx)² = E² - 2EGx + G²x²
+  const e2 = E * E
+  const g2 = G * G
+  const eg2 = 2 * E * G
   const t3 = {
-    coef_x2: negB * h2,
-    coef_x1: negB * (-hf2),
-    coef_x0: negB * f2
+    coef_x2: negB * g2,
+    coef_x1: negB * (-eg2),
+    coef_x0: negB * e2
   }
 
   // Sumar los tres términos
@@ -467,6 +468,7 @@ export function procesarFCPeriodica(texto) {
       equation_y,
       equation_x_raw,
       equation_x: { a, b, c },
+      normalization_factor: gcd,
       relacion,
       validation,
       notacion,
@@ -542,6 +544,7 @@ function construirPasosParaUI(datos) {
     equation_y,
     equation_x_raw,
     equation_x,
+    normalization_factor,
     relacion,
     validation,
     notacion,
@@ -590,8 +593,8 @@ function construirPasosParaUI(datos) {
       titulo: 'Relación x ↔ y',
       descripcion: 'x en función de y según P',
       relacion: {
-        x_en_y: `x = (${G}y + ${H}) / (${E}y + ${F})`,
-        y_en_x: `y = (${E} - ${G}x) / (${H}x - ${F})`
+        x_en_y: `x = (${E}y + ${F}) / (${G}y + ${H})`,
+        y_en_x: `y = (${H}x - ${F}) / (${E} - ${G}x)`
       },
       coeficientes: { E, F, G, H }
     },
@@ -599,7 +602,7 @@ function construirPasosParaUI(datos) {
       numero: 6,
       titulo: 'Sustitución',
       descripcion: 'Sustituir y en la ecuación cuadrática',
-      sustitucion: `y = (${E} - ${G}x) / (${H}x - ${F})`
+      sustitucion: `y = (${H}x - ${F}) / (${E} - ${G}x)`
     },
     {
       numero: 7,
@@ -612,6 +615,8 @@ function construirPasosParaUI(datos) {
       numero: 8,
       titulo: 'Normalización',
       descripcion: 'Dividir por MCD y hacer a > 0',
+      ecuacion_raw: equation_x_raw,
+      normalization_factor,
       ecuacion_final: equation_x,
       discriminant: validation.discriminant,
       raiz_positiva: validation.raizPositiva,

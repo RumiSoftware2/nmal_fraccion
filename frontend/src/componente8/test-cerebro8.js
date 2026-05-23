@@ -1,6 +1,7 @@
 /**
  * test-cerebro8.js
- * Pruebas manuales para el módulo de reductas periódicas
+ * Pruebas para verificar que el polinomio en x es correcto
+ * después de la corrección de la fórmula de Möbius
  */
 
 import {
@@ -17,9 +18,158 @@ import {
   relacionXyDesdeP
 } from './cerebro8.js'
 
-console.log('='.repeat(60))
-console.log('TESTS DE CEREBRO8.JS')
-console.log('='.repeat(60))
+console.log('='.repeat(70))
+console.log('TESTS CRÍTICOS: CORRECCIÓN DE FÓRMULA MÖBIUS EN x ↔ y')
+console.log('='.repeat(70))
+
+// ============================================================
+// FUNCIÓN AUXILIAR PARA ASSERTIONS
+// ============================================================
+function assertPolinomio(res, a, b, c, testName) {
+  const pass = res.equation_x.a === a && res.equation_x.b === b && res.equation_x.c === c
+  const status = pass ? '✓ PASS' : '✗ FAIL'
+  console.log(
+    `${status}: ${testName}`
+  )
+  if (!pass) {
+    console.log(`  Esperado: ${a}x² + ${b}x + ${c} = 0`)
+    console.log(`  Obtuvo:   ${res.equation_x.a}x² + ${res.equation_x.b}x + ${res.equation_x.c} = 0`)
+  }
+  return pass
+}
+
+function assertRaizAprox(res, expected, tolerance = 0.0001, testName = '') {
+  if (res.numerical_approximation === null) {
+    console.log(`  ✗ No hay raíz positiva`)
+    return false
+  }
+  const diff = Math.abs(res.numerical_approximation - expected)
+  const pass = diff < tolerance
+  console.log(
+    `  ${pass ? '✓' : '✗'} Raíz positiva: ${res.numerical_approximation.toFixed(10)} (esperada ≈ ${expected.toFixed(10)})`
+  )
+  return pass
+}
+
+// ============================================================
+// TEST 1 OBLIGATORIO: Número áureo 1;(1) → φ
+// ============================================================
+console.log('\n' + '-'.repeat(70))
+console.log('TEST 1 OBLIGATORIO: φ (Número Áureo)')
+console.log('-'.repeat(70))
+
+const testAureo = procesarFCPeriodica('1;(1)')
+if (!testAureo.ok) {
+  console.log('✗ Error en parseo:', testAureo.error)
+} else {
+  console.log(`Notación: ${testAureo.continued_fraction}`)
+  console.log(`Ecuación en y: ${testAureo.equation_y.a}y² + ${testAureo.equation_y.b}y ${testAureo.equation_y.c >= 0 ? '+' : ''} ${testAureo.equation_y.c} = 0`)
+  
+  // OBLIGATORIO: x² - x - 1 = 0
+  const passAureo = assertPolinomio(testAureo, 1, -1, -1, '1;(1) → x² - x - 1 = 0')
+  assertRaizAprox(testAureo, 1.618034, 0.0001, 'Raíz positiva ≈ φ')
+  console.log(`Discriminante: ${testAureo.discriminant} (esperado: 5)`)
+  console.log(`Polinomio mínimo: ${testAureo.minimal_polynomial}`)
+}
+
+// ============================================================
+// TEST 2 OBLIGATORIO: Raíz cuadrada de 2 → 1;(2)
+// ============================================================
+console.log('\n' + '-'.repeat(70))
+console.log('TEST 2 OBLIGATORIO: √2')
+console.log('-'.repeat(70))
+
+const testRaiz2 = procesarFCPeriodica('1;(2)')
+if (!testRaiz2.ok) {
+  console.log('✗ Error en parseo:', testRaiz2.error)
+} else {
+  console.log(`Notación: ${testRaiz2.continued_fraction}`)
+  console.log(`Ecuación en y: ${testRaiz2.equation_y.a}y² + ${testRaiz2.equation_y.b}y ${testRaiz2.equation_y.c >= 0 ? '+' : ''} ${testRaiz2.equation_y.c} = 0`)
+  
+  // OBLIGATORIO: x² - 2x - 1 = 0
+  const passRaiz2 = assertPolinomio(testRaiz2, 1, -2, -1, '1;(2) → x² - 2x - 1 = 0')
+  assertRaizAprox(testRaiz2, 1.414213, 0.0001, 'Raíz positiva ≈ √2')
+  console.log(`Discriminante: ${testRaiz2.discriminant} (esperado: 8)`)
+  console.log(`Polinomio mínimo: ${testRaiz2.minimal_polynomial}`)
+}
+
+// ============================================================
+// TEST 3 OBLIGATORIO: Referencia 1;2(34)
+// ============================================================
+console.log('\n' + '-'.repeat(70))
+console.log('TEST 3 OBLIGATORIO: Referencia [1;2(34)]')
+console.log('-'.repeat(70))
+
+const testReferencia = procesarFCPeriodica('1;2(34)')
+if (!testReferencia.ok) {
+  console.log('✗ Error en parseo:', testReferencia.error)
+} else {
+  console.log(`Notación: ${testReferencia.continued_fraction}`)
+  console.log(`Preperíodo: [${testReferencia.preperiod.join(',')}]`)
+  console.log(`Período: [${testReferencia.period.join(',')}]`)
+  console.log(`Ecuación en y: ${testReferencia.equation_y.a}y² + ${testReferencia.equation_y.b}y ${testReferencia.equation_y.c >= 0 ? '+' : ''} ${testReferencia.equation_y.c} = 0`)
+  
+  // Comprobar que da 8x² - 10x - 11 = 0 (o documentar si cambia)
+  const passRef = assertPolinomio(testReferencia, 8, -10, -11, '1;2(34) → 8x² - 10x - 11 = 0')
+  if (!passRef) {
+    console.log(`  NOTA: Resultado obtenido: ${testReferencia.minimal_polynomial}`)
+  }
+  assertRaizAprox(testReferencia, 1.456, 0.01, 'Raíz positiva aproximada')
+  console.log(`Discriminante: ${testReferencia.discriminant}`)
+  console.log(`Polinomio mínimo: ${testReferencia.minimal_polynomial}`)
+}
+
+// ============================================================
+// TEST 4: Solo período `;(1)` → debería dar φ
+// ============================================================
+console.log('\n' + '-'.repeat(70))
+console.log('TEST 4: Solo período ;(1) → φ')
+console.log('-'.repeat(70))
+
+const testSoloPeriodo = procesarFCPeriodica(';(1)')
+if (!testSoloPeriodo.ok) {
+  console.log('✗ Error en parseo:', testSoloPeriodo.error)
+} else {
+  console.log(`Notación: ${testSoloPeriodo.continued_fraction}`)
+  // Preperíodo vacío → P = I → E=1, F=0, G=0, H=1
+  // x = y, y = y (identidad) → debe dar lo mismo que período
+  const passEmpty = assertPolinomio(testSoloPeriodo, 1, -1, -1, ';(1) → x² - x - 1 = 0')
+  assertRaizAprox(testSoloPeriodo, 1.618034, 0.0001)
+}
+
+// ============================================================
+// TESTS ADICIONALES: Verificación de ecuaciones en y
+// ============================================================
+console.log('\n' + '-'.repeat(70))
+console.log('VERIFICACIÓN: Ecuaciones en y no deben cambiar')
+console.log('-'.repeat(70))
+
+const testYaureo = procesarFCPeriodica('1;(1)')
+const yOK1 = assertPolinomio(
+  { equation_x: testYaureo.equation_y },
+  1, -1, -1,
+  'Ecuación en y para 1;(1): y² - y - 1 = 0'
+)
+
+const testYraiz2 = procesarFCPeriodica('1;(2)')
+const yOK2 = assertPolinomio(
+  { equation_x: testYraiz2.equation_y },
+  1, -2, -1,
+  'Ecuación en y para 1;(2): y² - 2y - 1 = 0'
+)
+
+// ============================================================
+// RESUMEN
+// ============================================================
+console.log('\n' + '='.repeat(70))
+console.log('RESUMEN DE TESTS')
+console.log('='.repeat(70))
+console.log('Los tests OBLIGATORIOS son:')
+console.log('  1. φ → x² - x - 1 = 0, raíz ≈ 1.618')
+console.log('  2. √2 → x² - 2x - 1 = 0, raíz ≈ 1.414')
+console.log('  3. 1;2(34) → 8x² - 10x - 11 = 0 (o nueva documentación)')
+console.log('\nSi todos pasan, la corrección de Möbius es exitosa.')
+console.log('='.repeat(70))
 
 // ============================================================
 // TEST 1: Parseo

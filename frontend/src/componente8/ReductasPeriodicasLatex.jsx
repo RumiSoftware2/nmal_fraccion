@@ -115,11 +115,13 @@ export function PasoRelacionXY({ paso }) {
   return (
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
+      <p>Transformación de Möbius según M(a) = [[a,1],[1,0]]:</p>
       <div className="latex-ecuacion">
-        <BlockMath math={`x = \\frac{${G}y + ${H}}{${E}y + ${F}}`} />
+        <BlockMath math={`x = \\frac{${E}y + ${F}}{${G}y + ${H}}`} />
       </div>
+      <p>Inversa:</p>
       <div className="latex-ecuacion">
-        <BlockMath math={`y = \\frac{${E} - ${G}x}{${H}x - ${F}}`} />
+        <BlockMath math={`y = \\frac{${H}x - ${F}}{${E} - ${G}x}`} />
       </div>
     </div>
   )
@@ -176,6 +178,7 @@ export function PasoNormalizacion({ paso }) {
   if (!paso || paso.numero !== 8) return null
 
   const { a, b, c } = paso.ecuacion_final
+  const { a: raw_a, b: raw_b, c: raw_c } = paso.ecuacion_raw || {}
   const discText =
     paso.discriminant === null
       ? 'no calculable (a=0)'
@@ -185,13 +188,30 @@ export function PasoNormalizacion({ paso }) {
           ? '= 0 (raíz doble)'
           : '< 0 (sin raíces reales)'
 
-  const latex = `${a}x^2 ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c} = 0`
+  const latex_final = `${a}x^{2} ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c} = 0`
+  const latex_raw = raw_a !== undefined 
+    ? `${raw_a}x^{2} ${raw_b >= 0 ? '+' : ''} ${raw_b}x ${raw_c >= 0 ? '+' : ''} ${raw_c} = 0`
+    : null
 
   return (
     <div className="paso-latex">
       <p>{paso.descripcion}</p>
+      
+      {latex_raw && paso.normalization_factor > 1 && (
+        <>
+          <p><strong>Ecuación sin normalizar:</strong></p>
+          <div className="latex-ecuacion">
+            <BlockMath math={latex_raw} />
+          </div>
+          <p className="componentes-matriz">
+            MCD de coeficientes: {paso.normalization_factor}
+          </p>
+        </>
+      )}
+      
+      <p><strong>Ecuación normalizada:</strong></p>
       <div className="latex-ecuacion">
-        <BlockMath math={latex} />
+        <BlockMath math={latex_final} />
       </div>
       <div className="resultado-paso">
         <p>

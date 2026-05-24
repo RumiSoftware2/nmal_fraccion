@@ -8,6 +8,7 @@ import { useState } from 'react'
 import BlockMath from '../components/pasosprueba/BlockMath'
 import { procesarFCPeriodica } from './cerebro8'
 import { PasoReducta } from './ReductasPeriodicasLatex'
+import PasosPapelFC from './PeriodicaFraccionLatex'
 import './ReductasPeriodicas.css'
 
 /**
@@ -167,111 +168,59 @@ export default function ReductasPeriodicas() {
             </div>
           </div>
 
-          {/* Matrices */}
+          {/* Resumen compacto y pasos en papel */}
           <div className="bloque-resultado">
-            <h3>Matrices</h3>
-            <div className="matrices-grid">
-              <div className="matriz-item">
-                <h4>Matriz T (Período)</h4>
-                <div className="tabla-matriz">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td>{resultado.matrix_T[0][0]}</td>
-                        <td>{resultado.matrix_T[0][1]}</td>
-                      </tr>
-                      <tr>
-                        <td>{resultado.matrix_T[1][0]}</td>
-                        <td>{resultado.matrix_T[1][1]}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <h3>Resumen</h3>
+            <div className="resumen-contenido">
+              <div className="item-resumen">
+                <label>Notación</label>
+                <div className="latex-pequeno">
+                  <BlockMath math={resultado.continued_fraction} />
                 </div>
               </div>
 
-              <div className="matriz-item">
-                <h4>Matriz P (Preperíodo)</h4>
-                <div className="tabla-matriz">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td>{resultado.matrix_P[0][0]}</td>
-                        <td>{resultado.matrix_P[0][1]}</td>
-                      </tr>
-                      <tr>
-                        <td>{resultado.matrix_P[1][0]}</td>
-                        <td>{resultado.matrix_P[1][1]}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <div className="item-resumen">
+                <label>Polinomio Mínimo</label>
+                <div className="valor-resumen">
+                  <code>{resultado.minimal_polynomial}</code>
+                </div>
+              </div>
+
+              <div className="item-resumen">
+                <label>Solución simplificada (x)</label>
+                <div className="latex-pequeno">
+                  <BlockMath math={resultado.solution_simplified || resultado.solution_as_root} />
+                </div>
+              </div>
+
+              <div className="item-resumen">
+                <label>Discriminante</label>
+                <div className="valor-resumen">
+                  <code>Δ = {resultado.discriminant}</code>
+                </div>
+              </div>
+
+              {resultado.numerical_approximation !== null && (
+                <div className="item-resumen">
+                  <label>Raíz Positiva</label>
+                  <div className="valor-resumen">
+                    <code>{resultado.numerical_approximation.toFixed(10)}</code>
+                  </div>
+                </div>
+              )}
+
+              <div className="item-resumen">
+                <label>Irreducible</label>
+                <div className="valor-resumen">
+                  <code>{resultado.is_irreducible ? 'Sí' : 'No'}</code>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Ecuaciones */}
           <div className="bloque-resultado">
-            <h3>Ecuaciones</h3>
-            <div className="ecuaciones-grid">
-              <div className="ecuacion-item">
-                <h4>Ecuación en y</h4>
-                <div className="latex-ecuacion">
-                  <BlockMath math={`${resultado.equation_y.a}y^2 + ${resultado.equation_y.b}y + ${resultado.equation_y.c} = 0`} />
-                </div>
-              </div>
-
-              <div className="ecuacion-item">
-                <h4>Ecuación en x (normalizada)</h4>
-                <div className="latex-ecuacion">
-                  <BlockMath math={`${resultado.equation_x.a}x^2 ${resultado.equation_x.b >= 0 ? '+' : ''} ${resultado.equation_x.b}x ${resultado.equation_x.c >= 0 ? '+' : ''} ${resultado.equation_x.c} = 0`} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Solución General */}
-          <div className="bloque-resultado bloque-solucion">
-            <h3>✓ Solución General</h3>
-            <div className="solucion-contenido">
-              <div className="latex-ecuacion solucion-latex">
-                <BlockMath math={resultado.solution_as_root} />
-              </div>
-              <div className="valores-solucion">
-                <p>
-                  <strong>Raíz positiva:</strong>{' '}
-                  <code>{resultado.numerical_approximation?.toFixed(10) || 'No existe'}</code>
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Acordeón de pasos */}
-          <div className="bloque-resultado">
-            <h3>Pasos del Algoritmo</h3>
-            <div className="acordeon">
-              {resultado.pasos.map((paso, idx) => (
-                <div key={idx} className="paso-acordeon">
-                  <button
-                    className={`paso-boton ${expandedStep === paso.numero ? 'expanded' : ''}`}
-                    onClick={() =>
-                      setExpandedStep(expandedStep === paso.numero ? null : paso.numero)
-                    }
-                  >
-                    <span className="paso-numero">Paso {paso.numero}</span>
-                    <span className="paso-titulo">{paso.titulo}</span>
-                    <span className="paso-toggle">
-                      {expandedStep === paso.numero ? '▼' : '▶'}
-                    </span>
-                  </button>
-
-                  {expandedStep === paso.numero && (
-                    <div className="paso-contenido">
-                      <PasoReducta paso={paso} />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+            <h3>Proceso paso a paso</h3>
+            <PasosPapelFC pasos={resultado.pasos_papel || []} />
           </div>
         </div>
       )}

@@ -118,6 +118,33 @@ if (!testReferencia.ok) {
   console.log(`Discriminante: ${testReferencia.discriminant}`)
   console.log(`Polinomio mínimo: ${testReferencia.minimal_polynomial}`)
 }
+// ============================================================
+// TEST 7: Ejemplo del papel: 1;3,(1,4)
+// ============================================================
+
+console.log('\n' + '-'.repeat(70))
+console.log('TEST 7: Ejemplo del papel 1;3,(1,4)')
+console.log('-'.repeat(70))
+
+const testPapel = procesarFCPeriodica('1;3,(1,4)')
+if (!testPapel.ok) {
+  console.log('✗ Error en parseo:', testPapel.error)
+} else {
+  console.log(`Notación: ${testPapel.continued_fraction}`)
+  console.log(`Ecuación en x: ${testPapel.equation_x.a}x² + ${testPapel.equation_x.b}x + ${testPapel.equation_x.c} = 0`)
+  console.log(`Solución simplificada: ${testPapel.solution_simplified}`)
+
+  const passPol = testPapel.equation_x.a === 7 && testPapel.equation_x.b === -12 && testPapel.equation_x.c === 4
+  console.log(`${passPol ? '✓' : '✗'} Polinomio esperado 7x² - 12x + 4 = 0`)
+
+  const expectedSol = 'x = \\frac{6 + 2\\sqrt{2}}{7}'
+  const passSol = testPapel.solution_simplified === expectedSol
+  console.log(`${passSol ? '✓' : '✗'} Solución simplificada esperada ${expectedSol}`)
+
+  if (!passSol) {
+    console.log('  Obtenido:', testPapel.solution_simplified)
+  }
+}
 
 // ============================================================
 // TEST 4: Solo período `;(1)` → debería dar φ

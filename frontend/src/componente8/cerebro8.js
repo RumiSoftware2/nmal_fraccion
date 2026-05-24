@@ -1,3 +1,4 @@
+import { construirPasosPapel, raizPositivaSimplificadaFromQuadratic, latexSurd } from './cerebro8Papel.js'
 /**
  * cerebro8.js
  * Procesamiento de fracciones continuas eventualmente periódicas
@@ -451,6 +452,9 @@ export function procesarFCPeriodica(texto) {
   const matrix_P = construirMatrizPreperiodo(preperiod)
   const relacion = relacionXyDesdeP(matrix_P)
 
+  // Solución simplificada: intentar escribir la raíz positiva como (p + q sqrt(r)) / d
+  let solution_simplified = null
+
   // Paso 6-7: Sustitución y expansión
   const equation_x_raw = sustituirYenCuadratica(equation_y, relacion)
 
@@ -463,6 +467,17 @@ export function procesarFCPeriodica(texto) {
 
   // Solución como raíz
   const solucionComoRaiz = formatearSolucionComoRaiz(a, b, c, validation.discriminant)
+
+  const rx = raizPositivaSimplificadaFromQuadratic(a, b, c)
+  if (rx) {
+    solution_simplified = `x = ${latexSurd(rx.p, rx.q, rx.r, rx.d)}`
+  }
+
+  const pasos_papel = construirPasosPapel(parsed, {
+    equation_y,
+    equation_x: { a, b, c },
+    relacion
+  })
 
   return {
     ok: true,
@@ -498,6 +513,9 @@ export function procesarFCPeriodica(texto) {
       notacion,
       solucionComoRaiz
     })
+    ,
+    solution_simplified,
+    pasos_papel
   }
 }
 

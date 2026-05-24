@@ -259,7 +259,6 @@
   border-color: var(--menu-accent);
   transform: translateY(-4px);
 }
-  box-shadow: 0 16px 40px rgba(107, 139, 200, 0.18);
 .program-card:hover::after {
   left: 100%;
 }

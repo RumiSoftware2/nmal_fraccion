@@ -119,7 +119,7 @@ export default function Menu({ onSelectProgram }) {
   const currentCategory = categories.find(c => c.id === view)
 
   return (
-    <div className="menu-container">
+    <div className="menu-container" data-theme={view === 'home' ? 'home' : view}>
       <motion.a
         className="return-report-btn"
         href="https://sites.google.com/view/cursodesistemasnumericos/aplicativos"
@@ -158,18 +158,21 @@ export default function Menu({ onSelectProgram }) {
 
           {view !== 'home' && (
             <motion.div key={view} custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit" transition={{ type: 'spring', stiffness: 300, damping: 30 }}>
-              <div className="menu-subheader">
-                <button className="menu-back-btn" onClick={goHome} aria-label="Volver al menú">← Volver</button>
-                <div className="menu-header">
-                  <h1>{currentCategory ? `${currentCategory.title} — elige una herramienta` : 'Módulo'}</h1>
-                  <p>{currentCategory ? currentCategory.description : ''}</p>
+              <header className="menu-module-banner">
+                <button type="button" className="menu-back-btn" onClick={goHome}>
+                  <span className="menu-back-icon" aria-hidden>←</span>
+                  <span>Volver al menú</span>
+                </button>
+                <div className="menu-module-header">
+                  <h2 className="menu-module-title">{currentCategory ? currentCategory.title : 'Módulo'}</h2>
+                  <p className="menu-module-subtitle">{currentCategory ? currentCategory.description : ''}</p>
                 </div>
-              </div>
+              </header>
 
-              <div className="programs-grid programs-grid--sub">
+              <div className={`programs-grid programs-grid--sub ${view === 'nmales' ? 'programs-grid--nmales' : ''}`}>
                 {programs.filter(p => p.category === view).map((program, index) => (
                   <motion.div key={program.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 * index, duration: 0.35 }}>
-                    <MenuProgramCard program={program} onClick={onSelectProgram} />
+                    <MenuProgramCard program={program} onClick={onSelectProgram} moduleTheme={view} />
                   </motion.div>
                 ))}
               </div>

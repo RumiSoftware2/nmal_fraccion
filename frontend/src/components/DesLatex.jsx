@@ -1,9 +1,16 @@
 import React from 'react'
 import BlockMath from './pasosprueba/BlockMath'
 
-export default function DesLatex({ math, compact = true, className = '' }) {
+export default function DesLatex({ math, compact = true, className = '', variant = 'inline', scroll = false }) {
   if (!math) return null
-  const classes = [`des-latex`, compact ? 'des-latex--compact' : '', className].filter(Boolean).join(' ')
+  const classes = [
+    'des-latex',
+    compact ? 'des-latex--compact' : '',
+    variant === 'card' ? 'des-latex--card' : '',
+    scroll ? 'des-latex--scroll' : '',
+    className
+  ].filter(Boolean).join(' ')
+
   return (
     <div className={classes}>
       <BlockMath math={math} />

@@ -473,11 +473,14 @@ export function procesarFCPeriodica(texto) {
     solution_simplified = `x = ${latexSurd(rx.p, rx.q, rx.r, rx.d)}`
   }
 
-  const pasos_papel = construirPasosPapel(parsed, {
-    equation_y,
-    equation_x: { a, b, c },
-    relacion
-  })
+  const pasos_papel = construirPasosPapel(
+    { preperiod: parsed.preperiod, period: parsed.period, continued_fraction: notacion },
+    {
+      equation_y,
+      equation_x: { a, b, c },
+      relacion
+    }
+  )
 
   return {
     ok: true,

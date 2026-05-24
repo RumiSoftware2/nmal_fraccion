@@ -144,6 +144,38 @@ if (!testPapel.ok) {
   if (!passSol) {
     console.log('  Obtenido:', testPapel.solution_simplified)
   }
+
+  // Validar que los pasos tienen contenido LaTeX detallado
+  console.log('\n  Validación de pasos en papel:')
+  const pasos = testPapel.pasos_papel
+  if (pasos && pasos.length === 8) {
+    console.log(`  ✓ Se generaron 8 pasos`)
+    
+    // Verificar paso 1 tiene cfrac
+    const paso1 = pasos.find(p => p.numero === 1)
+    const paso1HasCfrac = paso1 && paso1.lineasLatex.some(l => l.includes('\\cfrac'))
+    console.log(`  ${paso1HasCfrac ? '✓' : '✗'} Paso 1 contiene \\cfrac`)
+
+    // Verificar paso 3 tiene desarrollo algebraico (múltiples líneas)
+    const paso3 = pasos.find(p => p.numero === 3)
+    const paso3Lines = paso3 ? paso3.lineasLatex.length : 0
+    console.log(`  ${paso3Lines >= 6 ? '✓' : '✗'} Paso 3 tiene ${paso3Lines} líneas de desarrollo algebraico`)
+
+    // Verificar paso 7 es destacado
+    const paso7 = pasos.find(p => p.numero === 7)
+    console.log(`  ${paso7 && paso7.destacado ? '✓' : '✗'} Paso 7 es destacado`)
+
+    // Verificar paso 7 contiene sqrt
+    const paso7HasSqrt = paso7 && paso7.lineasLatex.some(l => l.includes('\\sqrt'))
+    console.log(`  ${paso7HasSqrt ? '✓' : '✗'} Paso 7 contiene \\sqrt (forma simplificada)`)
+
+    // Verificar paso 8 contiene polinomio
+    const paso8 = pasos.find(p => p.numero === 8)
+    const paso8HasPoly = paso8 && paso8.lineasLatex.some(l => l.includes('7x^2'))
+    console.log(`  ${paso8HasPoly ? '✓' : '✗'} Paso 8 contiene el polinomio 7x^2`)
+  } else {
+    console.log(`  ✗ Se generaron ${pasos ? pasos.length : 0} pasos (esperado 8)`)
+  }
 }
 
 // ============================================================

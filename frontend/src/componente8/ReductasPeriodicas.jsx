@@ -7,7 +7,6 @@
 import { useState } from 'react'
 import BlockMath from '../components/pasosprueba/BlockMath'
 import { procesarFCPeriodica } from './cerebro8'
-import { PasoReducta } from './ReductasPeriodicasLatex'
 import PasosPapelFC from './PeriodicaFraccionLatex'
 import './ReductasPeriodicas.css'
 
@@ -118,7 +117,7 @@ export default function ReductasPeriodicas() {
       {/* Sección de resultados */}
       {resultado && (
         <div className="resultados-section">
-          {/* Resumen */}
+          {/* Resumen único con solución simplificada */}
           <div className="bloque-resultado">
             <h3>Resumen</h3>
             <div className="resumen-contenido">
@@ -139,67 +138,10 @@ export default function ReductasPeriodicas() {
               <div className="item-resumen">
                 <label>Solución (x)</label>
                 <div className="latex-pequeno">
-                  <BlockMath math={resultado.solution_as_root} />
-                </div>
-              </div>
-
-              <div className="item-resumen">
-                <label>Discriminante</label>
-                <div className="valor-resumen">
-                  <code>Δ = {resultado.discriminant}</code>
-                </div>
-              </div>
-
-              {resultado.numerical_approximation !== null && (
-                <div className="item-resumen">
-                  <label>Raíz Positiva</label>
-                  <div className="valor-resumen">
-                    <code>{resultado.numerical_approximation.toFixed(10)}</code>
-                  </div>
-                </div>
-              )}
-
-              <div className="item-resumen">
-                <label>Irreducible</label>
-                <div className="valor-resumen">
-                  <code>{resultado.is_irreducible ? 'Sí' : 'No'}</code>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Resumen compacto y pasos en papel */}
-          <div className="bloque-resultado">
-            <h3>Resumen</h3>
-            <div className="resumen-contenido">
-              <div className="item-resumen">
-                <label>Notación</label>
-                <div className="latex-pequeno">
-                  <BlockMath math={resultado.continued_fraction} />
-                </div>
-              </div>
-
-              <div className="item-resumen">
-                <label>Polinomio Mínimo</label>
-                <div className="valor-resumen">
-                  <code>{resultado.minimal_polynomial}</code>
-                </div>
-              </div>
-
-              <div className="item-resumen">
-                <label>Solución simplificada (x)</label>
-                <div className="latex-pequeno">
                   <BlockMath math={resultado.solution_simplified || resultado.solution_as_root} />
                 </div>
               </div>
 
-              <div className="item-resumen">
-                <label>Discriminante</label>
-                <div className="valor-resumen">
-                  <code>Δ = {resultado.discriminant}</code>
-                </div>
-              </div>
-
               {resultado.numerical_approximation !== null && (
                 <div className="item-resumen">
                   <label>Raíz Positiva</label>
@@ -208,13 +150,6 @@ export default function ReductasPeriodicas() {
                   </div>
                 </div>
               )}
-
-              <div className="item-resumen">
-                <label>Irreducible</label>
-                <div className="valor-resumen">
-                  <code>{resultado.is_irreducible ? 'Sí' : 'No'}</code>
-                </div>
-              </div>
             </div>
           </div>
 

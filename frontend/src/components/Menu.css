@@ -21,6 +21,65 @@
   overflow: hidden;
 }
 
+/* Stage for slide transitions */
+.menu-stage {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(20px, 3vw, 28px);
+}
+
+.category-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: clamp(28px, 5vw, 40px);
+  box-shadow: 0 10px 30px rgba(107, 139, 200, 0.08);
+  text-align: center;
+  cursor: pointer;
+  border: 1.5px solid #e8eef7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+}
+
+.category-card .program-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 18px;
+  margin-bottom: 14px;
+}
+
+.menu-back-btn {
+  background: transparent;
+  border: none;
+  color: #2d3748;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 12px;
+}
+
+.menu-subheader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.programs-grid--sub {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(16px, 3vw, 24px);
+}
+
 .menu-container::before {
   content: '';
   position: absolute;
@@ -229,6 +288,11 @@
     grid-template-columns: 1fr;
     gap: 14px;
     max-width: 100%;
+  }
+
+  .categories-grid,
+  .programs-grid--sub {
+    grid-template-columns: 1fr;
   }
 
   .program-card {

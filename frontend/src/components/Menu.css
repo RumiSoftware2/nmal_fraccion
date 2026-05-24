@@ -286,3 +286,23 @@
     font-size: 0.82rem;
   }
 }
+
+/* LaTeX compact notation for menu cards */
+.des-latex {
+  width: 100%;
+  margin: 0.5rem 0 0.75rem;
+  padding: 0.5rem 0.25rem;
+  overflow-x: auto;
+}
+
+.des-latex--compact .katex {
+  font-size: 0.85em;
+}
+
+.des-latex--compact .katex-display {
+  margin: 0.25em 0;
+}
+
+.program-card {
+  max-width: 100%;
+}

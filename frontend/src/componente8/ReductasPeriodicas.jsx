@@ -84,13 +84,13 @@ export default function ReductasPeriodicas() {
             value={expresion}
             onChange={(e) => setExpresion(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ej: 1;2(34) o [1;2(34)]"
+            placeholder="Ej: 1;2(34) o 1;2,3,(4,5) — 0;1,2,(3,4) — ;(1)"
             className="fc-input"
             disabled={loading}
           />
           <div className="input-help">
-            Use <code>;</code> para separar, <code>()</code> para el período.
-            Puedes escribir con o sin corchetes: <strong>1;2(34)</strong> o <strong>[1;2(34)]</strong>
+            Use <code>;</code> para separar y <code>()</code> para el período. `a₀` debe ser un solo entero antes del <code>;</code>.
+            Use comas para coeficientes multi-dígito en cola o período: <strong>1;23(45)</strong> o <strong>1;2,3,(4,5)</strong>
           </div>
         </div>
 

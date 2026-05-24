@@ -9,9 +9,16 @@
 // ============================================================
 
 /**
- * Parsea una FC eventualmente periódica: preperiodo;cola(periodo)
- * Ej: "1;2(34)" → preperiod: [1,2], period: [3,4]
- * Ej: "1234;12(323)" → se parsean dígitos individuales
+ * Parsea una FC eventualmente periódica: a0;cola(periodo)
+ * Notación aceptada (ejemplos):
+ *  - "1;2,3,(4,5)" → a0=1, cola=[2,3], periodo=[4,5]
+ *  - "0;1,2,(3,4)" → a0=0, cola=[1,2], periodo=[3,4]
+ *  - ";(1)" → sin a0, cola=[], periodo=[1]
+ *  - "1;23(45)" → a0=1, cola digit-by-digit [2,3], periodo digit-by-digit [4,5]
+ * Reglas principales:
+ *  - Izquierda de ";": único entero a0 ≥ 0 o vacío. Comas en la izquierda → error.
+ *  - Entre ";" y "(": cola del preperíodo (usar comas para coef. multi-dígito).
+ *  - Dentro de "()": período (comas o dígito-a-dígito, como en parseCoeficientes).
  */
 export function parsearFCPeriodica(texto) {
   if (!texto || typeof texto !== 'string') {
@@ -36,18 +43,28 @@ export function parsearFCPeriodica(texto) {
   // Dividir por ;
   const [leftPart, rightPart] = trimmed.split(';')
 
-  // Parte derecha: texto antes de ( más período
-  const rightBeforeParen = rightPart.substring(0, rightPart.indexOf('('))
+  // Parte derecha: texto antes de ( (quitar coma final opcional)
+  const rightBeforeParen = rightPart.substring(0, rightPart.indexOf('(')).replace(/,\s*$/, '')
 
-  // Concatenar: preperíodo = leftPart + rightBeforeParen
-  const preperiodStr = leftPart + rightBeforeParen
-
-  // Parsear preperíodo
+  // Parsea a0 (izquierda del ';') — puede estar vacío
   let preperiod = []
-  if (preperiodStr) {
-    preperiod = parseCoeficientes(preperiodStr)
-    if (!preperiod.ok) return preperiod
-    preperiod = preperiod.coefs
+  const leftTrim = leftPart.trim()
+  if (leftTrim !== '') {
+    if (leftTrim.includes(',')) {
+      return { ok: false, error: 'a₀ debe ser un solo entero antes del ";" (sin comas)' }
+    }
+    const a0 = parseInt(leftTrim, 10)
+    if (isNaN(a0) || a0 < 0) {
+      return { ok: false, error: 'a₀ inválido (debe ser entero ≥ 0)'}
+    }
+    preperiod.push(a0)
+  }
+
+  // Cola del preperíodo (texto entre ";" y "(")
+  if (rightBeforeParen.trim()) {
+    const tail = parseCoeficientes(rightBeforeParen.trim())
+    if (!tail.ok) return tail
+    preperiod.push(...tail.coefs)
   }
 
   // Parsear período
@@ -59,11 +76,18 @@ export function parsearFCPeriodica(texto) {
     return { ok: false, error: 'Período debe tener al menos 1 coeficiente' }
   }
 
-  // Validar que todos sean ≥ 1
-  const allCoefs = [...preperiod, ...period]
-  for (const c of allCoefs) {
+  // Validación: a0 (si existe) ≥ 0, resto del preperíodo y período ≥ 1
+  if (preperiod.length > 0 && preperiod[0] < 0) {
+    return { ok: false, error: 'a₀ inválido (debe ser ≥ 0)'}
+  }
+  for (let i = 1; i < preperiod.length; i++) {
+    if (preperiod[i] < 1) {
+      return { ok: false, error: 'Coeficientes del preperíodo deben ser ≥ 1' }
+    }
+  }
+  for (const c of period) {
     if (c < 1) {
-      return { ok: false, error: 'Todos los coeficientes deben ser ≥ 1' }
+      return { ok: false, error: 'Coeficientes del período deben ser ≥ 1' }
     }
   }
 

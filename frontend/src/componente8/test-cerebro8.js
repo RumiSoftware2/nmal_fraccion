@@ -181,8 +181,12 @@ const testParseos = [
   { input: '1;2(34)', expected: { preperiod: [1, 2], period: [3, 4] } },
   { input: '5;(12)', expected: { preperiod: [5], period: [1, 2] } },
   { input: ';(3,4)', expected: { preperiod: [], period: [3, 4] } },
-  { input: '1234;12(323)', expected: { preperiod: [1, 2, 3, 4, 1, 2], period: [3, 2, 3] } },
-  { input: '1;2,3(3,4)', expected: { preperiod: [1, 2, 3], period: [3, 4] } }
+  { input: '1234;12(323)', expected: { preperiod: [1234, 1, 2], period: [3, 2, 3] } },
+  { input: '1;2,3(3,4)', expected: { preperiod: [1, 2, 3], period: [3, 4] } },
+  { input: '0;1,2(3,4)', expected: { preperiod: [0,1,2], period: [3,4] } },
+  { input: '1;2,3,(4,5)', expected: { preperiod: [1,2,3], period: [4,5] } },
+  { input: '0;(1)', expected: { preperiod: [0], period: [1] } },
+  { input: '1;23(45)', expected: { preperiod: [1,2,3], period: [4,5] } }
 ]
 
 testParseos.forEach(({ input, expected }) => {
@@ -302,7 +306,8 @@ const testErrors = [
   { input: '1;2', error: 'sin período' },
   { input: '1;2()', error: 'período vacío' },
   { input: '1;;2(34)', error: 'dos puntos y coma' },
-  { input: '1;2(0)', error: '0 en período' }
+  { input: '1;2(0)', error: '0 en período' },
+  { input: '1,2;3,4(5,6)', error: 'coma en a0' }
 ]
 
 testErrors.forEach(({ input, error }) => {

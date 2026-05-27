@@ -11,7 +11,7 @@ const programs = [
     id: 'math-tutor',
     title: 'n-mal como división de dos naturales',
     description: 'Convierte n-males a división de dos naturales',
-    notationLatex: "[a_0;a_1,\\ldots,a_k,\\overline{a_{k+1},\\ldots,a_n}] = \\frac{n}{m}",
+    notationLatex: "a_0.a_1 \\ldots a_k \\overline {a_{k+1} \\ldots a_n} = \\frac{n}{m}",
     category: 'nmales',
     icon: Calculator,
     iconColor: 'linear-gradient(135deg, #7fb3d5 0%, #a8c8e8 100%)'
@@ -20,7 +20,7 @@ const programs = [
     id: 'periodic-decimal',
     title: 'Operaciones de n-males',
     description: 'Opera (sumas, restas, multiplicación y división) un n.mal con otro n.mal en la misma base',
-    notationLatex: "[a_0;a_1,\\ldots,a_k,\\overline{a_{k+1},\\ldots,a_n}] \\pm [b_0;b_1,\\ldots,b_k,\\overline{b_{k+1},\\ldots,b_n}]",
+    notationLatex: "a_0.a_1 \\ldots a_k \\overline {a_{k+1} \\ldots a_n} \\pm b_0.b_1 \\ldots b_k \\overline {b_{k+1} \\ldots b_n}",
     category: 'nmales',
     icon: Brain,
     iconColor: 'linear-gradient(135deg, #c8b8e6 0%, #ddd4f0 100%)'
@@ -29,7 +29,7 @@ const programs = [
     id: 'base-converter',
     title: 'Cambio de Base',
     description: 'Convierte números n-mal entre diferentes bases',
-    notationLatex: "[a_0;a_1,\\ldots,a_k,\\overline{a_{k+1},\\ldots,a_n}]_{B} \\Longleftrightarrow [c_0;c_1,\\ldots,c_k,\\overline{c_{k+1},\\ldots,c_n}]_{B}",
+    notationLatex: "a_0.a_1 \\ldots a_k \\overline {a_{k+1} \\ldots a_n}_{(B_1)} \\Longleftrightarrow c_0.c_1 \\ldots c_k \\overline {c_{k+1} \\ldots c_n}_{(B_2)}",
     category: 'nmales',
     icon: Sparkles,
     iconColor: 'linear-gradient(135deg, #82c4a5 0%, #a8dcc0 100%)',
@@ -37,7 +37,7 @@ const programs = [
   },
   {
     id: 'fraccion-continua',
-    title: 'Fracción Continua Simple',
+    title: 'Fracción Continua Simple finita',
     description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ] usando el algoritmo de Euclides',
     notationLatex: "\\frac{c}{d} = [a_0;a_1,\\ldots,a_n]",
     category: 'fracciones-continuas',
@@ -46,7 +46,7 @@ const programs = [
   },
   {
     id: 'fraccion-continua-periodica',
-    title: 'Fracción Continua Periódica',
+    title: 'Fracción Continua  simple Periódica infinita',
     description: 'Calcula la expansión periódica de √p en fracción continua simple (ej: √7 = [2; 1, 1, 1, 4, ...])',
     notationLatex: "\\sqrt{7} = [2;\\overline{1,1,1,4}]",
     category: 'fracciones-continuas',
@@ -87,7 +87,7 @@ const categories = [
     id: 'nmales',
     title: 'Números n-males',
     description: 'Representación, operaciones y cambio de base',
-    notationLatex: "[a_0;\\ldots,\\overline{\\ldots}] \\leftrightarrow \\frac{n}{m}",
+    notationLatex: "a_0.a_1 \\ldots a_k \\overline{a_{k+1} \\ldots a_n}_{(b)}",
     icon: Calculator,
     iconColor: 'linear-gradient(135deg, #7fb3d5 0%, #a8c8e8 100%)',
     programCount: 4
@@ -131,7 +131,7 @@ export default function Menu({ onSelectProgram }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.3 }}
       >
-        📄 Regresar
+        📄 Regresar sistemas númericos
       </motion.a>
 
       <motion.div

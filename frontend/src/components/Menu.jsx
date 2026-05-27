@@ -73,7 +73,7 @@ const programs = [
   },
   {
     id: 'reductas-periodicas',
-    title: 'Reductas periódicas',
+    title: 'Fracción continua a irracional cuadrático',
     description: 'Fracción continua eventualmente periódica → ecuación cuadrática (sin backend)',
     notationLatex: "[a_0;a_1,\\ldots,a_k,\\overline{a_{k+1},\\ldots,a_n}] = \\frac{a \\pm \\sqrt{p}}{b}",
     category: 'fracciones-continuas',

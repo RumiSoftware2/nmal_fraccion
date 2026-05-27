@@ -94,13 +94,13 @@ if (!testRaiz2.ok) {
 }
 
 // ============================================================
-// TEST 3 OBLIGATORIO: Referencia 1;2(34)
+// TEST 3 OBLIGATORIO: Referencia 1;2(3,4)
 // ============================================================
 console.log('\n' + '-'.repeat(70))
-console.log('TEST 3 OBLIGATORIO: Referencia [1;2(34)]')
+console.log('TEST 3 OBLIGATORIO: Referencia [1;2(3,4)]')
 console.log('-'.repeat(70))
 
-const testReferencia = procesarFCPeriodica('1;2(34)')
+const testReferencia = procesarFCPeriodica('1;2(3,4)')
 if (!testReferencia.ok) {
   console.log('✗ Error en parseo:', testReferencia.error)
 } else {
@@ -110,7 +110,7 @@ if (!testReferencia.ok) {
   console.log(`Ecuación en y: ${testReferencia.equation_y.a}y² + ${testReferencia.equation_y.b}y ${testReferencia.equation_y.c >= 0 ? '+' : ''} ${testReferencia.equation_y.c} = 0`)
   
   // Comprobar que da 8x² - 10x - 11 = 0 (o documentar si cambia)
-  const passRef = assertPolinomio(testReferencia, 8, -10, -11, '1;2(34) → 8x² - 10x - 11 = 0')
+  const passRef = assertPolinomio(testReferencia, 8, -10, -11, '1;2(3,4) → 8x² - 10x - 11 = 0')
   if (!passRef) {
     console.log(`  NOTA: Resultado obtenido: ${testReferencia.minimal_polynomial}`)
   }
@@ -226,7 +226,7 @@ console.log('='.repeat(70))
 console.log('Los tests OBLIGATORIOS son:')
 console.log('  1. φ → x² - x - 1 = 0, raíz ≈ 1.618')
 console.log('  2. √2 → x² - 2x - 1 = 0, raíz ≈ 1.414')
-console.log('  3. 1;2(34) → 8x² - 10x - 11 = 0 (o nueva documentación)')
+console.log('  3. 1;2(3,4) → 8x² - 10x - 11 = 0 (o nueva documentación)')
 console.log('\nSi todos pasan, la corrección de Möbius es exitosa.')
 console.log('='.repeat(70))
 
@@ -237,15 +237,15 @@ console.log('\nTEST 1: Parseo')
 console.log('-'.repeat(60))
 
 const testParseos = [
-  { input: '1;2(34)', expected: { preperiod: [1, 2], period: [3, 4] } },
-  { input: '5;(12)', expected: { preperiod: [5], period: [1, 2] } },
+  { input: '1;2(3,4)', expected: { preperiod: [1, 2], period: [3, 4] } },
+  { input: '5;(12)', expected: { preperiod: [5], period: [12] } },
   { input: ';(3,4)', expected: { preperiod: [], period: [3, 4] } },
-  { input: '1234;12(323)', expected: { preperiod: [1234, 1, 2], period: [3, 2, 3] } },
+  { input: '1234;12(323)', expected: { preperiod: [1234, 12], period: [323] } },
   { input: '1;2,3(3,4)', expected: { preperiod: [1, 2, 3], period: [3, 4] } },
   { input: '0;1,2(3,4)', expected: { preperiod: [0,1,2], period: [3,4] } },
   { input: '1;2,3,(4,5)', expected: { preperiod: [1,2,3], period: [4,5] } },
   { input: '0;(1)', expected: { preperiod: [0], period: [1] } },
-  { input: '1;23(45)', expected: { preperiod: [1,2,3], period: [4,5] } }
+  { input: '1;23(45)', expected: { preperiod: [1,23], period: [45] } }
 ]
 
 testParseos.forEach(({ input, expected }) => {
@@ -283,12 +283,12 @@ const passM3M4 = JSON.stringify(m3m4) === expectedM3M4
 console.log(`✓ Correcta` + (passM3M4 ? '' : ' (EXPECTED ' + expectedM3M4 + ')'))
 
 // ============================================================
-// TEST 3: Caso de referencia: 1;2(34)
+// TEST 3: Caso de referencia: 1;2(3,4)
 // ============================================================
-console.log('\nTEST 3: Referencia [1;2(34)] → 8x² - 10x - 11 = 0')
+console.log('\nTEST 3: Referencia [1;2(3,4)] → 8x² - 10x - 11 = 0')
 console.log('-'.repeat(60))
 
-const result = procesarFCPeriodica('1;2(34)')
+const result = procesarFCPeriodica('1;2(3,4)')
 
 if (!result.ok) {
   console.log('✗ Error en parseo:', result.error)
@@ -385,7 +385,7 @@ console.log('\nTEST 6: Formatos alternativos')
 console.log('-'.repeat(60))
 
 const alternativas = [
-  { input: '1;2(34)', desc: 'sin comas' },
+  { input: '1;2(3,4)', desc: 'período con comas' },
   { input: '1;2(3,4)', desc: 'período con comas' },
   { input: '1,2;3,4(5,6)', desc: 'todo con comas' },
   { input: '123;4(567)', desc: 'preperíodo sin comas, período sin comas' }

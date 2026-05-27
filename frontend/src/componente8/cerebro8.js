@@ -15,11 +15,11 @@ import { construirPasosPapel, raizPositivaSimplificadaFromQuadratic, latexSurd }
  *  - "1;2,3,(4,5)" → a0=1, cola=[2,3], periodo=[4,5]
  *  - "0;1,2,(3,4)" → a0=0, cola=[1,2], periodo=[3,4]
  *  - ";(1)" → sin a0, cola=[], periodo=[1]
- *  - "1;23(45)" → a0=1, cola digit-by-digit [2,3], periodo digit-by-digit [4,5]
+ *  - "1;23(45)" → a0=1, cola=[23], periodo=[45] (sin comas = un solo coeficiente)
  * Reglas principales:
  *  - Izquierda de ";": único entero a0 ≥ 0 o vacío. Comas en la izquierda → error.
- *  - Entre ";" y "(": cola del preperíodo (usar comas para coef. multi-dígito).
- *  - Dentro de "()": período (comas o dígito-a-dígito, como en parseCoeficientes).
+ *  - Entre ";" y "(": cola del preperíodo (si no hay comas, todo el bloque es UN coeficiente).
+ *  - Dentro de "()": período (si no hay comas, el contenido entero es un coeficiente).
  */
 export function parsearFCPeriodica(texto) {
   if (!texto || typeof texto !== 'string') {
@@ -111,7 +111,7 @@ export function parsearFCPeriodica(texto) {
 /**
  * Parsea un string de coeficientes:
  * - Si tiene comas: "2,3" → [2, 3]
- * - Si solo dígitos: "1234" → [1, 2, 3, 4]
+ * - Si NO tiene comas: todo el string se interpreta como UN entero: "34" → [34]
  */
 function parseCoeficientes(str) {
   str = str.trim()
@@ -135,20 +135,18 @@ function parseCoeficientes(str) {
       coefs.push(num)
     }
   } else {
-    // Formato sin comas: cada dígito
+    // Formato sin comas: interpretar TODO el bloque como un único entero
     if (!/^\d+$/.test(str)) {
       return { ok: false, error: `Caracteres inválidos: "${str}"` }
     }
-    for (const char of str) {
-      const digit = parseInt(char, 10)
-      if (digit === 0) {
-        return {
-          ok: false,
-          error: `Dígito 0 no permitido en fracciones continuas (debe ser ≥ 1)`
-        }
+    const num = parseInt(str, 10)
+    if (isNaN(num) || num < 1) {
+      return {
+        ok: false,
+        error: `Coeficiente inválido: "${str}" (debe ser entero ≥ 1)`
       }
-      coefs.push(digit)
     }
+    coefs.push(num)
   }
 
   return { ok: true, coefs }

@@ -208,7 +208,7 @@ export default function Menu({ onSelectProgram }) {
         </AnimatePresence>
       </div>
       <footer className="menu-footer">
-        <p className="menu-footer-credit">Desarrollado por <strong>Sebastián Mendoza</strong> · Duitama</p>
+        <p className="menu-footer-credit">Desarrollado por <strong>Sebastián Mendoza Duitama.</strong> </p>
         <motion.a
           className="menu-portfolio-btn"
           href="https://portafoliosmendo.netlify.app/"

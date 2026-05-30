@@ -44,6 +44,24 @@ export function AcordeonDesarrolloReducta({ lineasLatex = [], expanded }) {
   )
 }
 
+export function ListaReductasCompacta({ reductas, selectedK, onSelect }) {
+  return (
+    <div className="reductas-compactas">
+      {reductas.map((r) => (
+        <button
+          key={r.k}
+          type="button"
+          className={`reducta-badge ${selectedK === r.k ? 'selected' : ''}`}
+          onClick={() => onSelect(r.k)}
+          title={`Nivel k=${r.k}`}
+        >
+          {r.p}/{r.q}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 export default {
   LatexBlock,
   RepresentacionFC,

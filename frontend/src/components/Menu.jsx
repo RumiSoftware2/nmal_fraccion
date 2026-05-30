@@ -9,6 +9,8 @@ import MenuProgramCard from './MenuProgramCard'
 const programs = [
   {
     id: 'math-tutor',
+    moduleIndex: 1,
+    folder: 'components',
     title: 'n-mal como división de dos naturales',
     description: 'Convierte n-males a división de dos naturales',
     notationLatex: "a_0.a_1 \\ldots a_k \\overline {a_{k+1} \\ldots a_n} = \\frac{n}{m}",
@@ -18,6 +20,8 @@ const programs = [
   },
   {
     id: 'periodic-decimal',
+    moduleIndex: 2,
+    folder: 'componentes2',
     title: 'Operaciones de n-males',
     description: 'Opera (sumas, restas, multiplicación y división) un n.mal con otro n.mal en la misma base',
     notationLatex: "a_0.a_1 \\ldots a_k \\overline {a_{k+1} \\ldots a_n} \\pm b_0.b_1 \\ldots b_k \\overline {b_{k+1} \\ldots b_n}",
@@ -27,6 +31,8 @@ const programs = [
   },
   {
     id: 'base-converter',
+    moduleIndex: 3,
+    folder: 'componentes3',
     title: 'Cambio de Base',
     description: 'Convierte números n-mal entre diferentes bases',
     notationLatex: "a_0.a_1 \\ldots a_k \\overline {a_{k+1} \\ldots a_n}_{(B_1)} \\Longleftrightarrow c_0.c_1 \\ldots c_k \\overline {c_{k+1} \\ldots c_n}_{(B_2)}",
@@ -37,6 +43,8 @@ const programs = [
   },
   {
     id: 'fraccion-continua',
+    moduleIndex: 4,
+    folder: 'componentes4',
     title: 'Fracción Continua Simple finita',
     description: 'Descompone una fracción c/d en su representación como fracción continua [a₁, a₂, ..., aₙ] usando el algoritmo de Euclides',
     notationLatex: "\\frac{c}{d} = [a_0;a_1,\\ldots,a_n]",
@@ -46,6 +54,8 @@ const programs = [
   },
   {
     id: 'fraccion-continua-periodica',
+    moduleIndex: 6,
+    folder: 'componentes6',
     title: 'Fracción Continua  simple Periódica infinita',
     description: 'Calcula la expansión periódica de √p en fracción continua simple (ej: √7 = [2; 1, 1, 1, 4, ...])',
     notationLatex: "\\sqrt{7} = [2;\\overline{1,1,1,4}]",
@@ -55,6 +65,8 @@ const programs = [
   },
   {
     id: 'conversor-fraccion-bases',
+    moduleIndex: 5,
+    folder: 'componentes5',
     title: 'Convertir fracción a otra base',
     description: 'Ingresa una fracción en cualquier base de partida y transfórmala a otra base de llegada con pasos detallados',
     notationLatex: "{\\frac{c}{d}}_{(B_2)} \\Longleftrightarrow {\\frac{a}{b}}_{(B_1)}",
@@ -64,6 +76,8 @@ const programs = [
   },
   {
     id: 'reductas-finitas',
+    moduleIndex: 7,
+    folder: 'componete7',
     title: 'Reductas Finitas',
     description: 'Ingresa [a₀; a₁, a₂, …] y obtén las reductas (convergentes) con paso a paso en LaTeX',
     notationLatex: "[a_0;a_1,a_2,\\ldots] \\Rightarrow \\frac{p}{q},\\frac{r}{s},\\ldots",
@@ -73,6 +87,8 @@ const programs = [
   },
   {
     id: 'reductas-fc-generalizadas',
+    moduleIndex: 9,
+    folder: 'componente9',
     title: 'Reductas FC Generalizadas',
     description: 'Reductas de fracciones continuas generalizadas finitas (pares a_i,b_i)',
     notationLatex: 'a_0 + \\cfrac{a_1}{b_0 + \\cfrac{a_2}{b_1 + \\ddots}}',
@@ -82,6 +98,8 @@ const programs = [
   },
   {
     id: 'reductas-periodicas',
+    moduleIndex: 8,
+    folder: 'componente8',
     title: 'Fracción continua a irracional cuadrático',
     description: 'Fracción continua eventualmente periódica → ecuación cuadrática (sin backend)',
     notationLatex: "[a_0;a_1,\\ldots,a_k,\\overline{a_{k+1},\\ldots,a_n}] = \\frac{a \\pm \\sqrt{p}}{b}",
@@ -179,7 +197,7 @@ export default function Menu({ onSelectProgram }) {
               </header>
 
               <div className={`programs-grid programs-grid--sub ${view === 'nmales' ? 'programs-grid--nmales' : ''}`}>
-                {programs.filter(p => p.category === view).map((program, index) => (
+                {programs.filter(p => p.category === view).sort((a, b) => (a.moduleIndex || 0) - (b.moduleIndex || 0)).map((program, index) => (
                   <motion.div key={program.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 * index, duration: 0.35 }}>
                     <MenuProgramCard program={program} onClick={onSelectProgram} moduleTheme={view} />
                   </motion.div>
@@ -190,7 +208,7 @@ export default function Menu({ onSelectProgram }) {
         </AnimatePresence>
       </div>
       <footer className="menu-footer">
-        <p className="menu-footer-credit">Desarrollado por <strong>Sebastián Mendoza</strong> — Duitama</p>
+        <p className="menu-footer-credit">Desarrollado por <strong>Sebastián Mendoza</strong> · Duitama</p>
         <motion.a
           className="menu-portfolio-btn"
           href="https://portafoliosmendo.netlify.app/"
@@ -200,8 +218,9 @@ export default function Menu({ onSelectProgram }) {
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.97 }}
         >
-          <ExternalLink size={16} />
-          Ver portafolio
+          <Sparkles size={16} style={{ marginRight: 8 }} />
+          <ExternalLink size={14} />
+          Visitar mi portafolio
         </motion.a>
       </footer>
     </div>

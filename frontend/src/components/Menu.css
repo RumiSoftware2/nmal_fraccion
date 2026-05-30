@@ -400,6 +400,57 @@
   }
 
 
+/* Module badge for program cards */
+.program-module-badge {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: linear-gradient(90deg, #06b6d4 0%, #7c3aed 100%);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(124,58,237,0.16);
+}
+
+.program-folder.muted { color: #94a3b8 }
+
+/* Menu footer / portfolio card */
+.menu-footer {
+  max-width: 480px;
+  margin: 48px auto 24px;
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  border: 1.5px solid #e8eef7;
+  box-shadow: 0 12px 40px rgba(107, 139, 200, 0.12);
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.menu-footer-credit { margin: 0; color: #334155 }
+
+.menu-portfolio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  font-size: 1rem;
+  color: #fff;
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #8b5cf6 100%);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+  border-radius: 12px;
+  border: none;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, filter 0.15s;
+}
+
+.menu-portfolio-btn:hover { box-shadow: 0 14px 36px rgba(99, 102, 241, 0.55); transform: translateY(-3px) }
+
+
 /* Footer */
 .menu-footer {
   margin-top: clamp(32px, 6vw, 48px);

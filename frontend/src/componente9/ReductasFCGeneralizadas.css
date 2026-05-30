@@ -1,5 +1,5 @@
 .reductas-generalizadas-wrapper {
-  max-width: 100%;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 40px 30px;
   background: linear-gradient(135deg, #f5f7ff 0%, #f9f9ff 100%);
@@ -51,4 +51,21 @@
 
 .latex-bloque { overflow-x: auto; padding: 8px 0 }
 .linea-latex { margin-bottom: 8px }
+
+.module-badge-small { display:inline-block; background:#06b6d4; color:white; padding:6px 10px; border-radius:999px; font-weight:700; margin-right:10px; font-size:0.85rem }
+
+/* Lista compacta similar a Reductas Finitas */
+.lista-reductas-card { padding-bottom: 12px }
+.reductas-compactas { display:flex; gap:8px; flex-wrap:wrap }
+.reducta-badge {
+  background: #f8fafc;
+  border: 1px solid #e6f4fb;
+  color: #0b2545;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.reducta-badge.selected { border-color: #06b6d4; transform: scale(1.03); box-shadow: 0 8px 18px rgba(6,182,212,0.08) }
+
 

@@ -3,7 +3,8 @@ import { procesarFCGeneralizada } from './cerebro9.js'
 import {
   RepresentacionFC,
   TablaReductaFila,
-  AcordeonDesarrolloReducta
+  AcordeonDesarrolloReducta,
+  ListaReductasCompacta
 } from './ReductasFCGeneralizadasLatex'
 import './ReductasFCGeneralizadas.css'
 
@@ -69,7 +70,7 @@ export default function ReductasFCGeneralizadas() {
 
   return (
     <div className="reductas-generalizadas-wrapper">
-      <h2>Reductas — Fracciones Continuas Generalizadas (finitas)</h2>
+      <h2><span className="module-badge-small">Módulo 9</span> Reductas FC Generalizadas</h2>
 
       <div className="controls entrada-section">
         <label>Niveles (n):</label>
@@ -107,18 +108,14 @@ export default function ReductasFCGeneralizadas() {
             <RepresentacionFC latexExpandida={resultado.latexExpandida} latexPares={resultado.latexPares} />
           </div>
 
-          <div className="bloque-resultado">
+          <div className="bloque-resultado lista-reductas-card">
             <h3>Reductas</h3>
-            <div className="reductas-table">
-              <div className="reductas-header"><div>k</div><div>fracción</div><div>decimal</div></div>
-              {resultado.reductas.map(r => (
-                <div key={r.k} className={`reductas-row ${selectedK === r.k ? 'selected' : ''}`} onClick={() => setSelectedK(r.k)}>
-                  <div className="col-k">{r.k}</div>
-                  <div className="col-frac"><TablaReductaFila k={r.k} p={r.p} q={r.q} decimal={r.decimal} /></div>
-                  <div className="col-dec">{r.decimal}</div>
-                </div>
-              ))}
-            </div>
+            <p className="lista-reductas-hint">Clic en una fracción para ver el desarrollo paso a paso.</p>
+            <ListaReductasCompacta
+              reductas={resultado.reductas}
+              selectedK={selectedK}
+              onSelect={setSelectedK}
+            />
           </div>
 
           <div className="bloque-resultado">

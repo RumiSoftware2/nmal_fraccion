@@ -38,6 +38,11 @@ const PROGRAM_CONFIG = {
     description: 'Convergentes de una fracción continua simple finita',
     emoji: '📉'
   },
+  'reductas-fc-generalizadas': {
+    title: 'Reductas FC Generalizadas',
+    description: 'Reductas de fracciones continuas generalizadas finitas (pares a_i,b_i)',
+    emoji: '🔢'
+  },
   'reductas-periodicas': {
     title: 'Reductas periódicas',
     description: 'FC eventualmente periódica → polinomio cuadrático irreducible',

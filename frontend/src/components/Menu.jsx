@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
-import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat, Layers, Infinity } from 'lucide-react'
+import { Calculator, Brain, Sparkles, Link2, ArrowRightLeft, Repeat, Layers, Infinity, ExternalLink } from 'lucide-react'
 import './Menu.css'
 import DesLatex from './DesLatex'
 import MenuCategoryCard from './MenuCategoryCard'
@@ -72,6 +72,15 @@ const programs = [
     iconColor: 'linear-gradient(135deg, #14b8a6 0%, #2dd4bf 100%)'
   },
   {
+    id: 'reductas-fc-generalizadas',
+    title: 'Reductas FC Generalizadas',
+    description: 'Reductas de fracciones continuas generalizadas finitas (pares a_i,b_i)',
+    notationLatex: 'a_0 + \\cfrac{a_1}{b_0 + \\cfrac{a_2}{b_1 + \\ddots}}',
+    category: 'fracciones-continuas',
+    icon: Layers,
+    iconColor: 'linear-gradient(135deg, #0ea5e9 0%, #38bdf8 100%)'
+  },
+  {
     id: 'reductas-periodicas',
     title: 'Fracción continua a irracional cuadrático',
     description: 'Fracción continua eventualmente periódica → ecuación cuadrática (sin backend)',
@@ -99,7 +108,7 @@ const categories = [
     notationLatex: "\\frac{c}{d} = [a_0;a_1,\\ldots] \\quad ; \\quad \\frac{a \\pm \\sqrt{p}}{b}",
     icon: Infinity,
     iconColor: 'linear-gradient(135deg, #5e72e4 0%, #8b5cf6 100%)',
-    programCount: 4
+    programCount: 5
   }
 ]
 
@@ -180,6 +189,21 @@ export default function Menu({ onSelectProgram }) {
           )}
         </AnimatePresence>
       </div>
+      <footer className="menu-footer">
+        <p className="menu-footer-credit">Desarrollado por <strong>Sebastián Mendoza</strong> — Duitama</p>
+        <motion.a
+          className="menu-portfolio-btn"
+          href="https://portafoliosmendo.netlify.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Portafolio de Sebastián Mendoza"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.97 }}
+        >
+          <ExternalLink size={16} />
+          Ver portafolio
+        </motion.a>
+      </footer>
     </div>
   )
 }

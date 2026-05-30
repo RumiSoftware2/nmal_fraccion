@@ -12,6 +12,7 @@ import FraccionPeriodicaContinuaSimple from './componentes6/FraccionPeriodicaCon
 import ConversorFraccionBases from './componentes5/ConversorFraccionBases'
 import ReductasFinitas from './componete7/ReductasFinitas'
 import ReductasPeriodicas from './componente8/ReductasPeriodicas'
+import ReductasFCGeneralizadas from './componente9/ReductasFCGeneralizadas'
 import AppHeader from './components/AppHeader'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png'
@@ -45,6 +46,8 @@ export default function App() {
       setCurrentView('reductas-finitas')
     } else if (programId === 'reductas-periodicas') {
       setCurrentView('reductas-periodicas')
+      } else if (programId === 'reductas-fc-generalizadas') {
+        setCurrentView('reductas-fc-generalizadas')
     }
   }
 
@@ -152,6 +155,21 @@ export default function App() {
         />
         <main className="math-main">
           <ReductasPeriodicas />
+        </main>
+      </div>
+    )
+  }
+
+  if (currentView === 'reductas-fc-generalizadas') {
+    return (
+      <div className="math-tutor-app">
+        <AppHeader
+          programId="reductas-fc-generalizadas"
+          onMenuClick={() => setCurrentView('menu')}
+          escudo={escudo}
+        />
+        <main className="math-main">
+          <ReductasFCGeneralizadas />
         </main>
       </div>
     )

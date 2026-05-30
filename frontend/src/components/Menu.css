@@ -399,6 +399,35 @@
     transform: translateY(-3px) scale(1.01);
   }
 
+
+/* Footer */
+.menu-footer {
+  margin-top: clamp(32px, 6vw, 48px);
+  padding: 20px;
+  text-align: center;
+  z-index: 2;
+  position: relative;
+}
+
+.menu-footer-credit {
+  color: #4a5568;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.menu-portfolio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #6da3d4 0%, #5e72e4 100%);
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(94, 114, 228, 0.35);
+}
+
   .program-icon {
     width: 52px;
     height: 52px;

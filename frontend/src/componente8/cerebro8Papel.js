@@ -168,6 +168,75 @@ function desarrolloAlgebraicoY(period, eqY) {
 // CONSTRUCCIÓN DE 8 PASOS
 // ============================================================
 
+// Helper: construir la relación x = (A y + B) / (C y + D) a partir del preperíodo
+function construirRelacionXenY(preperiod) {
+  const k = preperiod ? preperiod.length : 0
+
+  // t_k = y
+  let A = 1, B = 0, C = 0, D = 1
+
+  const pasos = []
+  // Representar t_k
+  pasos.push({ idx: k, latex: `\\displaystyle t_{${k}} = y` })
+
+  // Iterar desde a_{k-1} hasta a_0
+  for (let i = k - 1; i >= 0; i--) {
+    const ai = preperiod[i]
+
+    // t_{i+1} = (A y + B) / (C y + D)
+    // Construir la línea LaTeX para este paso:
+    // t_i = a_i + 1/t_{i+1} = a_i + (C y + D)/(A y + B) = ((a_i A + C) y + (a_i B + D)) / (A y + B)
+    const numerA = ai * A + C
+    const numerB = ai * B + D
+    const denomA = A
+    const denomB = B
+
+    const line = `\\displaystyle t_{${i}} = ${ai} + \\cfrac{1}{t_{${i+1}}} = ${ai} + \\cfrac{${C}y + ${D}}{${A}y + ${B}} = \\frac{${numerA}y + ${numerB}}{${denomA}y + ${denomB}}`
+    pasos.push({ idx: i, latex: line })
+
+    // Actualizar coeficientes según la recurrencia
+    const Anew = numerA
+    const Bnew = numerB
+    const Cnew = A
+    const Dnew = B
+
+    A = Anew
+    B = Bnew
+    C = Cnew
+    D = Dnew
+  }
+
+  // Simplificar por gcd común
+  const absVals = [Math.abs(A), Math.abs(B), Math.abs(C), Math.abs(D)]
+  const g = absVals.reduce((acc, v) => {
+    if (acc === 0) return v
+    let a = acc, b = v
+    while (b !== 0) {
+      const t = b
+      b = a % b
+      a = t
+    }
+    return a
+  }, 0) || 1
+
+  if (g > 1) {
+    A = Math.round(A / g)
+    B = Math.round(B / g)
+    C = Math.round(C / g)
+    D = Math.round(D / g)
+  }
+
+  // Asegurar denominador consistente: preferir C>0, o si C==0 entonces D>0
+  if (C < 0 || (C === 0 && D < 0)) {
+    A = -A
+    B = -B
+    C = -C
+    D = -D
+  }
+
+  return { A, B, C, D, pasos }
+}
+
 export function construirPasosPapel(parsed, result) {
   const { preperiod, period, continued_fraction } = parsed
   const { equation_y, equation_x } = result
@@ -258,16 +327,53 @@ export function construirPasosPapel(parsed, result) {
   // PASO 5: Reescribiendo x en términos de y
   {
     const lineas = []
+
+    // Línea: definición de x con y
     if (preperiod.length > 0) {
-      lineas.push(`x = ${latexFCConY(preperiod)}`)
+      lineas.push(`\\displaystyle x = [${preperiod.join(', ')} , y]`)
+      lineas.push(`\\displaystyle x = ${latexFCConY(preperiod)}`)
     } else {
-      lineas.push(`x = y`)
+      lineas.push(`\\displaystyle x = y`)
+      lineas.push(`\\displaystyle x = \\frac{1\\cdot y + 0}{0\\cdot y + 1}`)
     }
-    
+
+    // Construir relación mediante reductas finitas desde adentro
+    const relacion = construirRelacionXenY(preperiod)
+
+    // Si hay pasos intermedios, decidir qué mostrar
+    const k = preperiod.length
+    if (k >= 2) {
+      // Mostrar t_k = y siempre
+      // Si preperiod no es muy largo, mostrar todos los pasos; si es largo, recortar
+      if (k <= 6) {
+        for (const p of relacion.pasos) {
+          lineas.push(p.latex)
+        }
+      } else {
+        // Mostrar últimos 3 (t_k, t_{k-1}, t_{k-2}), luego \vdots, luego t_0
+        const pasosMap = new Map(relacion.pasos.map(p => [p.idx, p.latex]))
+        lineas.push(pasosMap.get(k))
+        lineas.push(pasosMap.get(k - 1))
+        lineas.push(pasosMap.get(k - 2))
+        lineas.push('\\displaystyle \\vdots')
+        lineas.push(pasosMap.get(0))
+      }
+    } else if (k === 1) {
+      // Mostrar único paso para a0
+      for (const p of relacion.pasos) {
+        lineas.push(p.latex)
+      }
+    }
+
+    // Resultado final: fracción lineal
+    const { A, B, C, D } = relacion
+    lineas.push(`\\displaystyle x = \\frac{${A}y + ${B}}{${C}y + ${D}}`)
+
     pasos.push({
       numero: 5,
       titulo: 'Reescribiendo x en términos de y',
       lineasLatex: lineas,
+      relacionXY: { A, B, C, D },
       destacado: false
     })
   }

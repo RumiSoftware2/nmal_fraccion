@@ -176,6 +176,29 @@ if (!testPapel.ok) {
   } else {
     console.log(`  ✗ Se generaron ${pasos ? pasos.length : 0} pasos (esperado 8)`)
   }
+
+    // NUEVO: Verificación específica del Paso 5 (reductas finitas)
+    const paso5 = pasos.find(p => p.numero === 5)
+    if (paso5) {
+      const hasFractionLine = paso5.lineasLatex.some(l => l.includes('\\frac'))
+      const hasTline = paso5.lineasLatex.some(l => /t_\{?\d+\}?/.test(l) || /t_\d+/.test(l))
+      console.log(`  ${hasFractionLine ? '✓' : '✗'} Paso 5 contiene una fracción escrita (\\frac)`)
+      console.log(`  ${hasTline ? '✓' : '✗'} Paso 5 contiene líneas intermedias t_i = ...`)
+
+      // Comprobación numérica: evaluar f(y) = (A y + B)/(C y + D)
+      if (paso5.relacionXY && testPapel.numerical_approximation !== null) {
+        const { A, B, C, D } = paso5.relacionXY
+        const yVal = testPapel.numerical_approximation
+        const xFromRel = (A * yVal + B) / (C * yVal + D)
+        const diff = Math.abs(xFromRel - testPapel.numerical_approximation)
+        const passNum = diff < 1e-9
+        console.log(`  ${passNum ? '✓' : '✗'} Evaluación numérica f(y) coincide con x (diff=${diff})`)
+      } else {
+        console.log('  ✗ No se pudo verificar numéricamente (faltan datos)')
+      }
+    } else {
+      console.log('  ✗ Paso 5 no encontrado')
+    }
 }
 
 // ============================================================

@@ -1,0 +1,12 @@
+.mt-start-btn {
+  background: linear-gradient(90deg,#6dd3ff 0%,#ffd6a5 100%);
+  border: none;
+  color: #06283D;
+  padding: 12px 22px;
+  font-size: 1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(10,10,10,0.08);
+}
+
+.mt-start-btn:focus { outline: none; }

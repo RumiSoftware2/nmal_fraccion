@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { Trophy, Sparkles } from 'lucide-react'
 import ConversionForm from './components/ConversionForm'
 import SimpleConversionForm from './components/SimpleConversionForm'
@@ -17,11 +17,14 @@ import AppHeader from './components/AppHeader'
 import { useConversion } from './hooks/useConversion'
 import escudo from './assets/logoupn.png'
 import './components/App.css'
+import WelcomeFallback from './menu3d/WelcomeFallback'
+
+const WelcomeMenu = lazy(() => import('./menu3d/WelcomeMenu'))
 
 export default function App() {
   const { resultado, error, loading, convertir } = useConversion()
   const [showResult, setShowResult] = useState(false)
-  const [currentView, setCurrentView] = useState('menu')
+  const [currentView, setCurrentView] = useState('welcome')
 
   const handleConvert = async (campos) => {
     setShowResult(false)
@@ -49,6 +52,14 @@ export default function App() {
       } else if (programId === 'reductas-fc-generalizadas') {
         setCurrentView('reductas-fc-generalizadas')
     }
+  }
+
+  if (currentView === 'welcome') {
+    return (
+      <Suspense fallback={<WelcomeFallback />}>
+        <WelcomeMenu onStart={() => setCurrentView('menu')} />
+      </Suspense>
+    )
   }
 
   if (currentView === 'menu') {

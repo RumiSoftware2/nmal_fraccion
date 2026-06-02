@@ -1,0 +1,27 @@
+.welcome-menu {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f6f7fb 0%, #fffaf6 100%);
+}
+
+.welcome-menu canvas {
+  display: block;
+  width: 100%;
+  height: 100vh;
+}
+
+.welcome-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8vh;
+  pointer-events: none;
+}
+
+.welcome-overlay > * {
+  pointer-events: auto;
+}

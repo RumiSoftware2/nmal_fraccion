@@ -1,10 +1,12 @@
 import React from 'react'
 import StartButton from './ui/StartButton'
+import WelcomeTypography from './ui/WelcomeTypography'
+import { WelcomePointerProvider } from './context/WelcomePointerContext'
 import './WelcomeMenu.css'
 
 export default function WelcomeStatic({ onStart }) {
   return (
-    <div className="welcome-menu">
+    <WelcomePointerProvider>
       <div style={{
         width: '100%',
         height: '100vh',
@@ -14,11 +16,13 @@ export default function WelcomeStatic({ onStart }) {
         background: 'linear-gradient(135deg,#f6f7fb 0%,#fffaf6 100%)'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <h1 style={{ marginBottom: 12 }}>Bienvenido a Math Tutor</h1>
-          <p style={{ marginBottom: 18 }}>Una experiencia interactiva para aprender matemáticas.</p>
-          <StartButton onClick={onStart} />
+          <WelcomeTypography isStatic />
+          <div style={{ marginTop: 18 }}>
+            <StartButton onClick={onStart} delay={0.75} />
+          </div>
         </div>
       </div>
-    </div>
+    </WelcomePointerProvider>
   )
 }
+

@@ -25,5 +25,9 @@
   pointer-events: none;
 }
 
-.welcome-overlay > * { pointer-events: auto; transform: translate3d(calc(var(--mx) * 12px), calc(var(--my) * 8px), 0); }
+.welcome-overlay > .welcome-typography,
+.welcome-overlay > .mt-start-btn { pointer-events: auto; transform: translate3d(calc(var(--mx) * 12px), calc(var(--my) * 8px), 0); }
+
+/* Ensure decorative elements like continued fraction do not get parallax transform */
+.welcome-overlay > .cf-decor { pointer-events: none; transform: none }
 

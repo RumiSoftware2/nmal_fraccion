@@ -8,6 +8,7 @@ import WelcomeStatic from './WelcomeStatic'
 import WelcomeErrorBoundary from './WelcomeErrorBoundary'
 import { WelcomePointerProvider } from './context/WelcomePointerContext'
 import WelcomeTypography from './ui/WelcomeTypography'
+import ContinuedFractionDecor from './ui/ContinuedFractionDecor'
 import './WelcomeMenu.css'
 
 export default function WelcomeMenu({ onStart }) {
@@ -29,6 +30,7 @@ export default function WelcomeMenu({ onStart }) {
       <div className="welcome-overlay">
         <WelcomeTypography />
         <StartButton onClick={onStart} delay={0.75} />
+        <ContinuedFractionDecor />
       </div>
     </WelcomePointerProvider>
   )
